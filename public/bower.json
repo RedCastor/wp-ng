@@ -1,0 +1,125 @@
+{
+  "name": "wp-ng-public",
+  "homepage": "http://redcastor.io/",
+  "authors": [
+    "RedCastor <team@redcastor.io>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "angular": "1.5.8",
+    "angular-route": "1.5.8",
+    "angular-sanitize": "1.5.8",
+    "angular-animate": "1.5.8",
+    "angular-resource": "1.5.8",
+    "angular-cookies": "1.5.8",
+    "angular-messages": "1.5.8",
+    "angular-touch": "1.5.8",
+    "angular-simple-logger": "0.1.7",
+    "angular-animate-css": "0.0.4",
+    "angular-bootstrap": "2.1.4",
+    "bootstrap": "3.3.7",
+    "angular-ui-router": "0.3.1",
+    "angular-translate": "2.12.1",
+    "angular-off-click": "1.0.8",
+    "font-awesome": "4.6.3",
+    "nya-bootstrap-select": "2.1.9",
+    "ng-dialog": "0.6.4",
+    "ng-magnify": "*",
+    "ngSmoothScroll": "2.0.0",
+    "ng-scrollbars": "0.0.11",
+    "angular-slick": "0.2.1",
+    "angular-slick-carousel": "3.1.7",
+    "ng-infinite-scroll": "0.0.1",
+    "ui-leaflet-layers": "*",
+    "ui-leaflet": "master",
+    "leaflet-plugins": "1.9.1",
+    "Leaflet.awesome-markers": "2.0.2",
+    "Leaflet.vector-markers": "0.0.6",
+    "angular-foundation-6": "0.10.12",
+    "foundation-sites": "6.2.3",
+    "jquery": "2.2.4",
+    "what-input": "2.0.1",
+    "angular-scroll": "1.0.0",
+    "angular-pageslide-directive": "2.1.1",
+    "angular-ui-grid": "3.2.9",
+    "angular-ui-validate": "1.2.2",
+    "ng-geonames": "1.0.5",
+    "ng-antimoderate": "1.0.0"
+  },
+  "resolutions": {
+    "jquery": "~2.2.0",
+    "what-input": "~2.0.0",
+    "angular": "~1.5.8",
+    "angular-route": "~1.5.8",
+    "angular-mocks": "~1.5.8",
+    "slick-carousel": "~1.6.0"
+  },
+  "overrides": {
+    "bootstrap": {
+      "main": [
+        "dist/js/bootstrap.js",
+        "dist/css/bootstrap.css"
+      ]
+    },
+    "font-awesome": {
+      "main": [
+        "css/font-awesome.min.css",
+        "fonts/*"
+      ]
+    },
+    "ng-magnify": {
+      "main": [
+        "src/css/ng-magnify.css",
+        "src/js/ng-magnify.js"
+      ]
+    },
+    "slick-carousel": {
+      "main": [
+        "slick/slick.scss",
+        "slick/slick.js",
+        "slick/ajax-loader.gif",
+        "slick/fonts/*"
+      ]
+    },
+    "ui-leaflet": {
+      "main": "dist/ui-leaflet.js"
+    },
+    "ui-leaflet-layers": {
+      "main": "dist/ui-leaflet-layers.js"
+    },
+    "leaflet": {
+      "main": [
+        "./dist/leaflet.css",
+        "./dist/leaflet-src.js",
+        "./dist/images/*"
+      ]
+    },
+    "leaflet-plugins": {
+      "main": "./layer/tile/Google.js"
+    },
+    "Leaflet.awesome-markers": {
+      "main": [
+        "./dist/images/*",
+        "./dist/leaflet.awesome-markers.js",
+        "./dist/leaflet.awesome-markers.css"
+      ]
+    },
+    "Leaflet.vector-markers": {
+      "main": [
+        "./dist/leaflet-vector-markers.js",
+        "./src/leaflet-vector-markers.scss"
+      ]
+    },
+    "angular-ui-grid": {
+      "main": [
+        "ui-grid.css",
+        "ui-grid.js",
+        "ui-grid.svg",
+        "ui-grid.eot",
+        "ui-grid.ttf",
+        "ui-grid.woff"
+      ]
+    }
+  }
+}

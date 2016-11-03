@@ -1,0 +1,81 @@
+# Translation of the WordPress plugin WP NG 1.0-beta1  by RedCastor.
+# Copyright (C) 2016 RedCastor
+# This file is distributed under the same license as the WP NG package.
+# RedCastor <team@redcastor.io>, 2016.
+#
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Project-Id-Version: wp-ng V1.0-beta6\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: RedCastor <team@redcastor.io>\n"
+"MIME-Version: 1.0\n"
+"X-Generator: Poedit 1.8.8\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
+"_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_ex:1,2c;"
+"esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Poedit-Basepath: ..\n"
+"Last-Translator: \n"
+"Language: fr\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: includes/class-wp-ng-settings.php:633
+msgid "Choose File"
+msgstr "Sélectionnez un fichier"
+
+#: includes/wp-ng-settings-descriptor.php:23
+msgid "General"
+msgstr "Générale"
+
+#: includes/wp-ng-settings-descriptor.php:26
+msgid "General Settings"
+msgstr "Réglages généraux"
+
+#: includes/wp-ng-settings-descriptor.php:30
+msgid "Application name"
+msgstr "Nom de l'application"
+
+#: includes/wp-ng-settings-descriptor.php:39
+msgid "Combine modules"
+msgstr "Combiner des modules"
+
+#: includes/wp-ng-settings-descriptor.php:40
+msgid ""
+"Combine the modules script and style. Combine create file in cache based on "
+"modification timestamp and module loaded in current context."
+msgstr ""
+"Combiner les modules script et style. Combiner crée un fichier en cache basé "
+"sur la date et heure du fichier source et sur le nombre de module chargé "
+"pour le contexte courant."
+
+#: includes/wp-ng-settings-descriptor.php:48
+msgid "Body Cloak"
+msgstr "Body Cloak"
+
+#: includes/wp-ng-settings-descriptor.php:49
+msgid "Cloak the body. More info see"
+msgstr "Cloak le body. Plus d'information voir "
+
+#: includes/wp-ng-settings-descriptor.php:57
+msgid "Cache File Hours"
+msgstr "Heures de fichier cache"
+
+#: includes/wp-ng-settings-descriptor.php:58
+msgid "Remove file in cache base on timestamp and your hours value."
+msgstr ""
+"Supprime le fichier en cache basé sur la date heure et votre valeur d'heure."
+
+#: includes/wp-ng-settings-descriptor.php:67
+msgid "Purge Cache"
+msgstr "Supprimer le cache"
+
+#: includes/wp-ng-settings-descriptor.php:68
+#, php-format
+msgid "Purge the cache directory. Number of file in cache: %s script, %s style"
+msgstr ""
+"Suppression du dossier de mise en cache. Nombre de fichier en cache: %s "
+"script, %s style"

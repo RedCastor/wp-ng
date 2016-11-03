@@ -1,0 +1,187 @@
+{
+  "dependencies": {
+    "wp-ng.css": {
+      "files": "styles/wp-ng.scss",
+      "main": true
+    },
+    "angular-animate-css.css": {
+      "bower": ["angular-animate-css"]
+    },
+    "bootstrap.css": {
+      "bower": ["bootstrap"]
+    },
+    "foundation.css": {
+      "files": "styles/foundation.scss",
+      "main": true,
+      "bower": ["foundation-sites"]
+    },
+    "foundation-flex.css": {
+      "files": "styles/foundation-flex.scss",
+      "main": true,
+      "bower": ["foundation-sites"]
+    },
+    "font-awesome.css": {
+      "bower": ["font-awesome"]
+    },
+    "nya-bootstrap-select.css": {
+      "bower": ["nya-bootstrap-select"]
+    },
+    "ng-dialog.css": {
+      "bower": ["ng-dialog"]
+    },
+    "ng-magnify.css": {
+      "bower": ["ng-magnify"]
+    },
+    "slick-carousel.css": {
+      "files": "styles/slick-carousel-theme.scss",
+      "main": true,
+      "bower": ["slick-carousel"]
+    },
+    "ng-scrollbars.css": {
+      "files": "styles/ng-scrollbars.scss",
+      "main": true
+    },
+    "leaflet.css": {
+      "files": "styles/leaflet.scss",
+      "main": true,
+      "bower": [
+        "leaflet",
+        "Leaflet.awesome-markers",
+        "Leaflet.vector-markers"
+      ]
+    },
+    "angular-ui-grid.css": {
+      "bower": ["angular-ui-grid"]
+    },
+    "angular-pageslide-directive.css": {
+      "files": "styles/angular-pageslide-directive.scss",
+      "main": true,
+      "bower": ["angular-pageslide-directive"]
+    },
+    "wp-ng.js": {
+      "files": [
+        "scripts/angular-deferred-bootstrap.js",
+        "scripts/wp-ng.js"
+      ],
+      "main": true
+    },
+    "wp-ng-rest.js": {
+      "files": "scripts/wp-ng-rest.js",
+      "main": true
+    },
+    "bootstrap.js": {
+      "bower": ["bootstrap"]
+    },
+    "foundation.js": {
+      "bower": [
+        "what-input",
+        "foundation-sites"
+      ]
+    },
+	  "angular.js": {
+      "bower": ["angular"]
+    },
+    "angular-simple-logger.js": {
+      "bower": ["angular-simple-logger"]
+    },
+    "angular-route.js": {
+      "bower": ["angular-route"]
+    },
+    "angular-sanitize.js": {
+      "bower": ["angular-sanitize"]
+    },
+    "angular-cookies.js": {
+      "bower": ["angular-cookies"]
+    },
+    "angular-messages.js": {
+      "bower": ["angular-messages"]
+    },
+    "angular-touch.js": {
+      "bower": ["angular-touch"]
+    },
+    "angular-animate.js": {
+      "bower": ["angular-animate"]
+    },
+    "angular-resource.js": {
+      "bower": ["angular-resource"]
+    },
+    "angular-ui-router.js": {
+      "bower": ["angular-ui-router"]
+    },
+    "angular-bootstrap.js": {
+      "bower": ["angular-bootstrap"]
+    },
+    "angular-foundation-6.js": {
+      "bower": ["angular-foundation-6"]
+    },
+    "angular-translate.js": {
+      "bower": ["angular-translate"]
+    },
+    "angular-off-click.js": {
+      "bower": ["angular-off-click"]
+    },
+    "nya-bootstrap-select.js": {
+      "bower": ["nya-bootstrap-select"]
+    },
+    "ng-dialog.js": {
+      "bower": ["ng-dialog"]
+    },
+    "ng-magnify.js": {
+      "bower": ["ng-magnify"]
+    },
+    "ngSmoothScroll.js": {
+      "bower": ["ngSmoothScroll"]
+    },
+    "ng-scrollbars.js": {
+      "bower": [
+        "malihu-custom-scrollbar-plugin",
+        "jquery-mousewheel",
+        "ng-scrollbars"
+      ]
+    },
+    "angular-slick.js": {
+      "bower": [
+        "angular-slick",
+        "slick-carousel"
+      ]
+    },
+    "angular-slick-carousel.js": {
+      "bower": [
+        "angular-slick-carousel"]
+    },
+    "ng-infinite-scroll.js": {
+      "bower": ["ng-infinite-scroll"]
+    },
+    "ui-leaflet.js": {
+      "bower": [
+        "leaflet",
+        "leaflet-plugins",
+        "Leaflet.awesome-markers",
+        "Leaflet.vector-markers",
+        "ui-leaflet-layers",
+        "ui-leaflet"
+      ]
+    },
+    "angular-scroll.js": {
+      "bower": ["angular-scroll"]
+    },
+    "angular-pageslide-directive.js": {
+      "bower": ["angular-pageslide-directive"]
+    },
+    "angular-ui-grid.js": {
+      "bower": ["angular-ui-grid"]
+    },
+    "angular-ui-validate.js" : {
+      "bower": ["angular-ui-validate"]
+    },
+    "ng-geonames.js" : {
+      "bower": ["ng-geonames"]
+    },
+    "ng-antimoderate.js" : {
+      "bower": ["ng-antimoderate"]
+    },
+    "jquery.js": {
+      "bower": ["jquery"]
+    }
+  }
+}

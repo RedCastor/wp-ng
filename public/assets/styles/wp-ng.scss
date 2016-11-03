@@ -1,0 +1,9 @@
+//
+// WP-NG
+// --------------------------------------------------
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+[ng\:cloak\:animation], [ng-cloak-animation], [data-ng-cloak-animation], [x-ng-cloak-animation], .ng-cloak-animation, .x-ng-cloak-animation {
+  transition: none !important;
+}

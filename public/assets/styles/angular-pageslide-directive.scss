@@ -1,0 +1,63 @@
+//
+// Angular Page Slide Directive
+// --------------------------------------------------
+
+//== page slide
+//
+$slidebar-backdrop-zindex:          980;
+$slidebar-backdrop-bg:              #000 !default;
+$slidebar-backdrop-opacity:         .5 !default;
+
+
+
+.ng-pageslide {
+  background: #eee;
+}
+
+
+body {
+  overflow: auto;
+
+  &.ng-pageslide-body-open:before {
+    position: fixed ;
+    width: 100%;
+  }
+  &.ng-pageslide-body-closed:before {
+    position: fixed;
+    width: 100%;
+  }
+}
+
+.ng-pageslide-body-open {
+  overflow: hidden !important;
+}
+
+.ng-pageslide-body-open:before {
+  content: '.' !important;
+  background-color: $slidebar-backdrop-bg;
+  display: block !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: $slidebar-backdrop-zindex;
+  opacity: $slidebar-backdrop-opacity;
+  transition: opacity 1s;
+  pointer-events: all;
+}
+
+.ng-pageslide-body-closed:before {
+  content: '.' !important;
+  background-color: $slidebar-backdrop-bg;
+  display: block !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  transition: opacity 1s;
+  opacity: 0;
+  pointer-events: none;
+}

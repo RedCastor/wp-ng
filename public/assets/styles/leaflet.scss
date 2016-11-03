@@ -1,0 +1,47 @@
+//
+// Leaflet
+// --------------------------------------------------
+
+@import "../../bower_components/leaflet/dist/leaflet.css";
+@import "../../bower_components/Leaflet.vector-markers/src/leaflet-vector-markers.scss";
+@import "../../bower_components/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css";
+
+//== Leaflet
+$leaflet-images-path:               "../images/" !default;
+
+.leaflet-control-layers-toggle {
+  background-image: url( $leaflet-images-path + 'layers.png') !important;
+}
+.leaflet-retina .leaflet-control-layers-toggle {
+  background-image: url( $leaflet-images-path + 'layers-2x.png') !important;
+}
+
+/* Awesome Marker setup */
+.awesome-marker {
+  background-image: url( $leaflet-images-path + 'markers-soft.png') !important;
+}
+
+.awesome-marker-shadow {
+  background-image: url( $leaflet-images-path + 'markers-shadow.png') !important;
+}
+
+/* Awesome Retina displays */
+@media (min--moz-device-pixel-ratio: 1.5),(-o-min-device-pixel-ratio: 3/2),
+(-webkit-min-device-pixel-ratio: 1.5),(min-device-pixel-ratio: 1.5),(min-resolution: 1.5dppx) {
+  .awesome-marker {
+    background-image: url( $leaflet-images-path + 'markers-soft@2x.png') !important;
+  }
+  .awesome-marker-shadow {
+    background-image: url( $leaflet-images-path + 'markers-shadow@2x.png') !important;
+  }
+}
+
+
+/* Vector Marker setup */
+.vector-marker path {
+  stroke-opacity: 0 !important;
+}
+
+.vector-marker-shadow {
+  opacity: 0.6 !important;
+}
