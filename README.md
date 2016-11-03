@@ -95,18 +95,24 @@ wp_enqueue_style( 'wp-ng_myModule', '/my-module.css', array('wp-ng'), null, 'all
 wp_enqueue_script( 'wp-ng_app', '/your_app.js', array('wp-ng'), null, true );
 ```
 
-or with wordpress filter 'wp_ng_register_modules':
+or with wordpress filter 'wp_ng_register_handles_module':
 ```php
 <?php
-add_filter('app_root_register_handles_module', function( $ng_handles ) {
-  $ng_handles[] = 'wp-ng_myModule';
+/**
+ * Register Angular Module
+ */
+function register_handles_module ( $ng_handles ) {
   
+  $ng_handles[] = 'wp-ng_myModule';
+
   return $ng_handles;
-});
+}
+add_filter('wp_ng_register_handles_module', 'register_handles_module');
+
 wp_enqueue_script( 'wp-ng_myModule', 'my-module.js', array(), null, true );
 ```
 
-Multiple module in one js. This is possible with concat module name with '+' : "moduleService1+moduleService2"
+Multiple module in one js. This is possible with concat module name with '+' : "wp-ng_moduleService1+moduleService2"
 ```php
 <?php
 wp_enqueue_script( 'wp-ng_moduleService1+moduleService2', asset_path('scripts/module.js'), array('wp-ng'), null, true );
