@@ -53,6 +53,8 @@ The ng modules include only the handle with dependencie of 'wp-ng'.
 | wp-ng_ui.validate            | wp-ng   | ui.validate             | 1.2.2       |
 | wp-ng_ui.grid                | wp-ng   | ui.grid                 | 3.2.9       |
 | wp-ng_ngPJAX                 | wp-ng   | ngPJAX                  | 0.0.2       |
+| wp-ng_ngAntimoderate         | wp-ng   |                         | 1.0.0       |
+| wp-ng_ngGeonames             | wp-ng   |                         | 1.0.5       |
 | wp-ng_bootstrap              | jquery  |                         | 3.3.7       |
 | wp-ng_foundation             | jquery  |                         | 6.2.3       |
 
