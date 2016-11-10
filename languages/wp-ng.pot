@@ -14,7 +14,7 @@ msgstr ""
 "Last-Translator: \n"
 "Language-Team: RedCastor <team@redcastor.io>\n"
 "MIME-Version: 1.0\n"
-"X-Generator: Poedit 1.8.8\n"
+"X-Generator: Poedit 1.8.11\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,"
 "_nc:4c,1,2;_x:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_ex:1,2c;esc_attr__;esc_attr_e;"
@@ -23,7 +23,7 @@ msgstr ""
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: includes/class-wp-ng-settings.php:633
+#: includes/class-wp-ng-settings.php:644
 msgid "Choose File"
 msgstr ""
 
@@ -72,4 +72,12 @@ msgstr ""
 #: includes/wp-ng-settings-descriptor.php:68
 #, php-format
 msgid "Purge the cache directory. Number of file in cache: %s script, %s style"
+msgstr ""
+
+#: public/includes/class-wp-ng-public-rest-api.php:76
+msgid "Cookie nonce is invalid"
+msgstr ""
+
+#: wp-ng.php:63
+msgid "WP NG require minimum wp version: "
 msgstr ""

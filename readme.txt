@@ -3,11 +3,11 @@ Contributors: redcastor
 Tags: angular, bootstrapper, bootstrap, module, ng, script, enqueue
 Requires at least: 4.5
 Tested up to: 4.6
-Stable tag: 1.0.0
+Stable tag: 1.0.2
 License: MIT License
 License URI: http://opensource.org/licenses/MIT
 
-WORDPRESS + ANGULAR = wp-ng
+
 WP-NG is a plugin to automatic bootstrap angular application and inject module in your application.
 
 == Description ==
@@ -270,16 +270,19 @@ wp-ng include generic angular filter
 2. Activate the plugin through the 'Plugins' screen in WordPress
 3. Use the Settings->Plugin Name screen to configure the plugin
 
+== Screenshots ==
+
+1. Settings Page
 
 == Frequently Asked Questions ==
 
 == Upgrade Notice ==
 
-== Screenshots ==
-
-1. Settings Page
-
 == Changelog ==
+
+= 1.0.2 =
+* Update version readme
+* Update Language FR
 
 = 1.0.1 =
 * Update readme
