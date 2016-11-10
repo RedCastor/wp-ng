@@ -15,8 +15,9 @@
  * Version:           1.0.0
  * Author:            RedCastor
  * Author URI:        http://redcastor.io
+ * Copyright:         Copyright (c) 2016, RedCastor.
  * License:           MIT License
- * License URI:        http://opensource.org/licenses/MIT
+ * License URI:       http://opensource.org/licenses/MIT
  * Text Domain:       wp-ng
  * Domain Path:       /languages
  */

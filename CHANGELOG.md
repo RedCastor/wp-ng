@@ -1,5 +1,8 @@
 ### HEAD
 
+### 1.0.0: November 8th, 2016
+* First Release
+
 ### 1.0-beta17: November 2th, 2016
 * Add ng-cloak-animation
 

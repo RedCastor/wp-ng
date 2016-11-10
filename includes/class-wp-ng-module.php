@@ -20,11 +20,12 @@
 class Wp_Ng_Module {
 
   private $prefix;
-  private $exclude_modules;
+  private $exclude_handles_module;
 
   private $scripts_src = array();
   private $styles_src = array();
 
+  const HANDLE_NOT_REGISTERED = 0;
   const HANDLE_NG_MODULE = 1;
   const HANDLE_NOT_NG_MODULE = 2;
 
@@ -41,7 +42,7 @@ class Wp_Ng_Module {
   public function __construct() {
 
     $this->prefix = WP_NG_PLUGIN_NAME;
-    $this->exclude_modules = $this->exclude_ng_modules();
+    $this->exclude_handles_module = $this->exclude_handles_module();
   }
 
   /**
@@ -63,7 +64,7 @@ class Wp_Ng_Module {
    *
    * @return mixed
    */
-  public function exclude_ng_modules() {
+  public function exclude_handles_module() {
 
     return apply_filters( 'wp_ng_exclude_handles_module', array(
       $this->prefix => true,
@@ -83,6 +84,7 @@ class Wp_Ng_Module {
 
     $scripts->add( 'wp-ng_bootstrap',     wp_ng_get_asset_path('scripts/bootstrap.js'), array( 'jquery' ), $bower->get_version('bootstrap'), 1 );
     $scripts->add( 'wp-ng_foundation',    wp_ng_get_asset_path('scripts/foundation.js'), array( 'jquery' ), $bower->get_version('foundation-sites'), 1 );
+    $scripts->add( 'wp-ng_slick-carousel',    wp_ng_get_asset_path('scripts/slick-carousel.js'), array( 'jquery' ), $bower->get_version('slick-carousel'), 1 );
 
     $scripts->add( 'wp-ng_nemLogging', wp_ng_get_asset_path('scripts/angular-simple-logger.js'),  array( $this->prefix ), $bower->get_version('angular-simple-logger'),  1 );
 
@@ -91,12 +93,15 @@ class Wp_Ng_Module {
     $scripts->add( 'wp-ng_wpNgRest',      wp_ng_get_asset_path('scripts/wp-ng-rest.js'),        array( $this->prefix, 'wp-ng_ngResource' ), WP_NG_PLUGIN_VERSION,       1 );
     add_filter('wp_ng_wpNgRest_config', function ( $config ) {
 
+      $_lang = apply_filters('wp_ng_get_langguage', null);
+
       $defaults = array(
         'restUrl'     => get_rest_url(),
         'restPath'    => '/',
-        'restNonceKey'=> 'X-Wp-Ng-Nonce',
-        'restLangKey' => 'X-Wp-Ng-Lang',
+        'restNonceKey'=> 'X-WP-NG-Nonce',
+        'restLangKey' => 'X-WP-NG-Lang',
         'restNonceVal'=> wp_create_nonce('wp_ng_rest'),
+        'restLangVal' => $_lang['current'],
       );
 
       return array_merge($config, $defaults);
@@ -113,10 +118,13 @@ class Wp_Ng_Module {
 
     $scripts->add( 'wp-ng_ui.bootstrap',  wp_ng_get_asset_path('scripts/angular-bootstrap.js'), array( $this->prefix ), $bower->get_version('angular-bootstrap'), 1 );
     $scripts->add( 'wp-ng_ui.router',     wp_ng_get_asset_path('scripts/angular-ui-router.js'), array( $this->prefix ), $bower->get_version('angular-ui-router'), 1 );
-    $scripts->add( 'wp-ng_ui.grid',       wp_ng_get_asset_path('scripts/angular-ui-grid.js'),   array( $this->prefix, 'wp-ng_nemLogging' ), $bower->get_version('angular-ui-grid'), 1 );
-    $scripts->add( 'wp-ng_ui.validate',       wp_ng_get_asset_path('scripts/angular-ui-validate.js'),   array( $this->prefix, 'wp-ng_nemLogging' ), $bower->get_version('angular-ui-validate'), 1 );
+    $scripts->add( 'wp-ng_ui.grid',       wp_ng_get_asset_path('scripts/angular-ui-grid.js'),   array( $this->prefix ), $bower->get_version('angular-ui-grid'), 1 );
+    $scripts->add( 'wp-ng_ui.validate',   wp_ng_get_asset_path('scripts/angular-ui-validate.js'), array( $this->prefix ), $bower->get_version('angular-ui-validate'), 1 );
+    $scripts->add( 'wp-ng_ui.select',     wp_ng_get_asset_path('scripts/angular-ui-select.js'), array( $this->prefix), $bower->get_version('angular-ui-select'), 1 );
 
     $scripts->add( 'wp-ng_pascalprecht.translate', wp_ng_get_asset_path('scripts/angular-translate.js'), array( $this->prefix ), $bower->get_version('angular-translate'), 1 );
+    $scripts->add( 'wp-ng_angular-translate-loader-static-files', wp_ng_get_asset_path('scripts/angular-translate-loader-static-files.js'),  array( 'wp-ng_pascalprecht.translate' ), $bower->get_version('angular-translate-loader-static-files'),  1 );
+
     $scripts->add( 'wp-ng_offClick',      wp_ng_get_asset_path('scripts/angular-off-click.js'), array( $this->prefix ), $bower->get_version('angular-off-click'), 1 );
     $scripts->add( 'wp-ng_nya.bootstrap.select', wp_ng_get_asset_path('scripts/nya-bootstrap-select.js'), array( $this->prefix ), $bower->get_version('nya-bootstrap-select'), 1 );
     $scripts->add( 'wp-ng_ngDialog',      wp_ng_get_asset_path('scripts/ng-dialog.js'),         array( $this->prefix ), $bower->get_version('ng-dialog'), 1 );
@@ -142,13 +150,15 @@ class Wp_Ng_Module {
     });
 
     $scripts->add( 'wp-ng_duScroll',      wp_ng_get_asset_path('scripts/angular-scroll.js'),    array( $this->prefix ), $bower->get_version('angular-scroll'), 1 );
-    $scripts->add( 'wp-ng_slick',         wp_ng_get_asset_path('scripts/angular-slick.js'),     array( $this->prefix ), $bower->get_version('angular-slick'), 1 );
-    $scripts->add( 'wp-ng_slickCarousel', wp_ng_get_asset_path('scripts/angular-slick-carousel.js'), array( $this->prefix ), $bower->get_version('angular-slick-carousel'), 1 );
-    $scripts->add( 'wp-ng_ngInfiniteScroll', wp_ng_get_asset_path('scripts/ng-infinite-scroll.js'), array( $this->prefix ), $bower->get_version('ng-infinite-scroll'), 1 );
+    $scripts->add( 'wp-ng_slick',         wp_ng_get_asset_path('scripts/angular-slick.js'),     array( $this->prefix, 'wp-ng_slick-carousel' ), $bower->get_version('angular-slick'), 1 );
+    $scripts->add( 'wp-ng_slickCarousel', wp_ng_get_asset_path('scripts/angular-slick-carousel.js'), array( $this->prefix, 'wp-ng_slick-carousel' ), $bower->get_version('angular-slick-carousel'), 1 );
+    $scripts->add( 'wp-ng_infinite-scroll', wp_ng_get_asset_path('scripts/ngInfiniteScroll.js'), array( $this->prefix ), $bower->get_version('ngInfiniteScroll'), 1 );
     $scripts->add( 'wp-ng_ui-leaflet',    wp_ng_get_asset_path('scripts/ui-leaflet.js'),        array( $this->prefix, 'wp-ng_nemLogging' ), $bower->get_version('ui-leaflet'), 1 );
     $scripts->add( 'wp-ng_pageslide-directive', wp_ng_get_asset_path('scripts/angular-pageslide-directive.js'), array( $this->prefix ), $bower->get_version('angular-pageslide-directive'), 1 );
     $scripts->add( 'wp-ng_ngGeonames',    wp_ng_get_asset_path('scripts/ng-geonames.js'),       array( $this->prefix ), $bower->get_version('ng-geonames'), 1 );
     $scripts->add( 'wp-ng_ngAntimoderate',wp_ng_get_asset_path('scripts/ng-antimoderate.js'),   array( $this->prefix ), $bower->get_version('ng-antimoderate'), 1 );
+    $scripts->add( 'wp-ng_socialLinks',   wp_ng_get_asset_path('scripts/angular-social-links.js'),   array( $this->prefix ), $bower->get_version('angular-social-links'), 1 );
+    $scripts->add( 'wp-ng_ngMagnify',     wp_ng_get_asset_path('scripts/ng-magnify.js'),   array( $this->prefix ),      $bower->get_version('ng-magnify'), 1 );
 
   }
 
@@ -170,11 +180,16 @@ class Wp_Ng_Module {
     $styles->add( 'wp-ng_font-awesome', wp_ng_get_asset_path('styles/font-awesome.css'),        array(), $bower->get_version('font-awesome'), 'all' );
     $styles->add( 'wp-ng_nya.bootstrap.select', wp_ng_get_asset_path('styles/nya-bootstrap-select.css'), array( $this->prefix ), $bower->get_version('nya-bootstrap-select'), 'all' );
     $styles->add( 'wp-ng_ngDialog',     wp_ng_get_asset_path('styles/ng-dialog.css'),           array( $this->prefix ), $bower->get_version('ng-dialog'), 'all' );
-    $styles->add( 'wp-ng_ngScrollbars', wp_ng_get_asset_path('styles/ng-scrollbars.css'), array( $this->prefix ), $bower->get_version('ng-scrollbars'), 'all' );
+    $styles->add( 'wp-ng_ngMagnify',    wp_ng_get_asset_path('styles/ng-magnify.css'),          array( $this->prefix ), $bower->get_version('ng-magnify'), 'all' );
+    $styles->add( 'wp-ng_ngScrollbars', wp_ng_get_asset_path('styles/ng-scrollbars.css'),       array( $this->prefix ), $bower->get_version('ng-scrollbars'), 'all' );
     $styles->add( 'wp-ng_slick',        wp_ng_get_asset_path('styles/slick-carousel.css'),      array( $this->prefix ), $bower->get_version('slick-carousel'), 'all' );
-    $styles->add( 'wp-ng_slickCarousel', wp_ng_get_asset_path('styles/slick-carousel.css'),     array( $this->prefix ), $bower->get_version('slick-carousel'), 'all' );
+    $styles->add( 'wp-ng_slick-theme',  wp_ng_get_asset_path('styles/slick-carousel-theme.css'),array( 'wp-ng_slick' ), $bower->get_version('slick-carousel'), 'all' );
+    $styles->add( 'wp-ng_slickCarousel',wp_ng_get_asset_path('styles/slick-carousel.css'),      array( $this->prefix ), $bower->get_version('slick-carousel'), 'all' );
+    $styles->add( 'wp-ng_slickCarouselTheme', wp_ng_get_asset_path('styles/slick-carousel-theme.css'), array( 'wp-ng_slickCarousel' ), $bower->get_version('slick-carousel'), 'all' );
     $styles->add( 'wp-ng_ui-leaflet',   wp_ng_get_asset_path('styles/leaflet.css'),             array( $this->prefix ), $bower->get_version('leaflet'), 'all' );
-    $styles->add( 'wp-ng_pageslide-directive',   wp_ng_get_asset_path('styles/angular-pageslide-directive.css'),             array( $this->prefix ), $bower->get_version('angular-pageslide-directive'), 'all' );
+    $styles->add( 'wp-ng_pageslide-directive', wp_ng_get_asset_path('styles/angular-pageslide-directive.css'), array( $this->prefix ), $bower->get_version('angular-pageslide-directive'), 'all' );
+    $styles->add( 'wp-ng_ui.grid',      wp_ng_get_asset_path('styles/angular-ui-grid.css'),     array( $this->prefix ), $bower->get_version('angular-ui-grid'), 'all' );
+    $styles->add( 'wp-ng_ui.select',    wp_ng_get_asset_path('styles/angular-ui-select.css'),   array( $this->prefix ), $bower->get_version('angular-ui-select'), 'all' );
 
   }
 
@@ -202,9 +217,9 @@ class Wp_Ng_Module {
   public function get_ng_module_from_handles_script() {
     global $wp_scripts;
 
-    $wp_ng_handles = $this->get_ng_module_from_handles( $this->scripts_src, $wp_scripts );
+    $ng_modules = $this->get_ng_modules_from_handles( $this->scripts_src, $wp_scripts );
 
-    return apply_filters('wp_ng_register_handles_module', $wp_ng_handles);
+    return $ng_modules;
   }
 
   /**
@@ -215,9 +230,9 @@ class Wp_Ng_Module {
   public function get_ng_module_from_handles_style() {
     global $wp_styles;
 
-    $wp_ng_modules = $this->get_ng_module_from_handles( $this->styles_src, $wp_styles );
+    $ng_modules = $this->get_ng_modules_from_handles( $this->styles_src, $wp_styles );
 
-    return $wp_ng_modules;
+    return $ng_modules;
   }
 
   /**
@@ -227,9 +242,9 @@ class Wp_Ng_Module {
    *
    * @return array
    */
-  private function get_ng_module_from_handles( &$script_src, &$script ) {
+  private function get_ng_modules_from_handles( &$script_src, &$script ) {
 
-    $ng_handles = array();
+    $ng_modules = array();
     $script_src = array();
 
     //Create an array with all handles
@@ -242,18 +257,18 @@ class Wp_Ng_Module {
         }
 
         $module_name = $this->get_ng_module_name($wp_ng_handle);
-        if ( !in_array( $module_name, $ng_handles) && $type === self::HANDLE_NG_MODULE ) {
-          $ng_modules = explode('+', $wp_ng_handle);
+        if ( !in_array( $module_name, $ng_modules) && $type === self::HANDLE_NG_MODULE ) {
+          $_ng_modules = explode('+', $wp_ng_handle);
 
-          foreach ( $ng_modules as $key => $ng_module ) {
+          foreach ( $_ng_modules as $key => $_ng_module ) {
             //Remove prefix handle for angular module name
-            $ng_handles[] = $this->get_ng_module_name($ng_module );
+            $ng_modules[] = $this->get_ng_module_name($_ng_module );
           }
         }
       }
     }
 
-    return $ng_handles;
+    return $ng_modules;
   }
 
 
@@ -274,11 +289,15 @@ class Wp_Ng_Module {
 
     $handles_ng_module = array();
 
-    //Check deps
-    foreach ($registered[ $handle ]->deps as $handle_dep) {
-      if ( $this->is_handle_ng_module( $handle_dep, $script ) ) {
-        $handles_ng_module = array_merge($handles_ng_module, $this->get_ng_module_from_handle( $handle_dep, $registered, $script) );
+    if ( isset( $registered[ $handle ] ) ) {
+
+      //Check deps recursive call function
+      foreach ($registered[ $handle ]->deps as $handle_dep) {
+        if ( $this->is_handle_ng_module( $handle_dep, $script ) ) {
+          $handles_ng_module = array_merge($handles_ng_module, $this->get_ng_module_from_handle( $handle_dep, $registered, $script) );
+        }
       }
+
     }
 
     $handles_ng_module[$handle] = $this->is_handle_ng_module( $handle, $script );
@@ -298,8 +317,8 @@ class Wp_Ng_Module {
   public function is_handle_ng_module ( $handle, &$script ) {
 
     //Check if style handle is registered
-    if ( !isset($script->registered[$handle]) || (isset($this->exclude_modules[$handle]) && $this->exclude_modules[$handle] === true) ) {
-      return 0;
+    if ( !isset($script->registered[$handle]) || (isset($this->exclude_handles_module[$handle]) && $this->exclude_handles_module[$handle] === true) ) {
+      return self::HANDLE_NOT_REGISTERED;
     }
 
     if ( substr($handle, 0, strlen( $this->prefix )) === $this->prefix ) {

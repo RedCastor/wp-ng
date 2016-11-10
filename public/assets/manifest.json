@@ -33,9 +33,11 @@
       "bower": ["ng-magnify"]
     },
     "slick-carousel.css": {
-      "files": "styles/slick-carousel-theme.scss",
-      "main": true,
       "bower": ["slick-carousel"]
+    },
+    "slick-carousel-theme.css": {
+      "files": "styles/slick-carousel-theme.scss",
+      "main": true
     },
     "ng-scrollbars.css": {
       "files": "styles/ng-scrollbars.scss",
@@ -53,6 +55,9 @@
     "angular-ui-grid.css": {
       "bower": ["angular-ui-grid"]
     },
+    "angular-ui-select.css": {
+      "bower": ["angular-ui-select"]
+    },
     "angular-pageslide-directive.css": {
       "files": "styles/angular-pageslide-directive.scss",
       "main": true,
@@ -61,7 +66,8 @@
     "wp-ng.js": {
       "files": [
         "scripts/angular-deferred-bootstrap.js",
-        "scripts/wp-ng.js"
+        "scripts/wp-ng.js",
+        "scripts/wp-ng-filters.js"
       ],
       "main": true
     },
@@ -108,6 +114,9 @@
     "angular-ui-router.js": {
       "bower": ["angular-ui-router"]
     },
+    "angular-ui-select.js": {
+      "bower": ["angular-ui-select"]
+    },
     "angular-bootstrap.js": {
       "bower": ["angular-bootstrap"]
     },
@@ -117,8 +126,14 @@
     "angular-translate.js": {
       "bower": ["angular-translate"]
     },
+    "angular-translate-loader-static-files.js": {
+      "bower": ["angular-translate-loader-static-files"]
+    },
     "angular-off-click.js": {
       "bower": ["angular-off-click"]
+    },
+    "angular-social-links.js": {
+      "bower": ["angular-social-links"]
     },
     "nya-bootstrap-select.js": {
       "bower": ["nya-bootstrap-select"]
@@ -140,17 +155,13 @@
       ]
     },
     "angular-slick.js": {
-      "bower": [
-        "angular-slick",
-        "slick-carousel"
-      ]
+      "bower": ["angular-slick"]
     },
     "angular-slick-carousel.js": {
-      "bower": [
-        "angular-slick-carousel"]
+      "bower": ["angular-slick-carousel"]
     },
-    "ng-infinite-scroll.js": {
-      "bower": ["ng-infinite-scroll"]
+    "ngInfiniteScroll.js": {
+      "bower": ["ngInfiniteScroll"]
     },
     "ui-leaflet.js": {
       "bower": [
@@ -179,6 +190,9 @@
     },
     "ng-antimoderate.js" : {
       "bower": ["ng-antimoderate"]
+    },
+    "slick-carousel.js": {
+      "bower": ["slick-carousel"]
     },
     "jquery.js": {
       "bower": ["jquery"]

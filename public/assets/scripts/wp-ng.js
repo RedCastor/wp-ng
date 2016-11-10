@@ -55,10 +55,10 @@
           path: WP_NG_CONFIG.modules.wpNgRest.restPath
         });
       }
-      if ( angular.isDefined(WP_NG_CONFIG.modules.wpNgRest.restLangKey) && angular.isDefined(WP_NG_CONFIG.modules.wpNgRest.currentLang) ) {
+      if ( angular.isDefined(WP_NG_CONFIG.modules.wpNgRest.restLangKey) && angular.isDefined(WP_NG_CONFIG.modules.wpNgRest.restLangVal) ) {
         wpNgRestProvider.setLang({
           key: WP_NG_CONFIG.modules.wpNgRest.restLangKey,
-          val: WP_NG_CONFIG.modules.wpNgRest.currentLang
+          val: WP_NG_CONFIG.modules.wpNgRest.restLangVal
         });
       }
 

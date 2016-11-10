@@ -48,7 +48,7 @@ class Wp_Ng_Public_Rest_Api {
       return $result;
     }
 
-    global $wp_rest_auth_cookie;
+    global $wp_rest_auth_cookie, $wp_rest_server;
 
     /*
 		 * Is cookie authentication being used? (If we get an auth
@@ -66,10 +66,8 @@ class Wp_Ng_Public_Rest_Api {
       $nonce = $_SERVER['HTTP_X_WP_NG_NONCE'];
     }
 
-    if ( null === $nonce || is_user_logged_in() === false ) {
-      // No nonce at all, so act as if it's an unauthenticated request.
-      wp_set_current_user( 0 );
-      return true;
+    if ( null === $nonce ) {
+      return $result;
     }
 
     // Check the nonce.
@@ -77,6 +75,9 @@ class Wp_Ng_Public_Rest_Api {
     if ( ! $result ) {
       return new WP_Error( 'rest_cookie_invalid_nonce', __( 'Cookie nonce is invalid', 'wp-ng' ), array( 'status' => 403 ) );
     }
+
+    // Send a refreshed nonce in header.
+    $wp_rest_server->send_header( 'X-WP-NG-Nonce', wp_create_nonce( 'wp_ng_rest' ) );
 
     return true;
   }

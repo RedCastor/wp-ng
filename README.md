@@ -1,14 +1,12 @@
-# [WP NG](http://redcastor.io)
-[![build status](https://git.staglabel.be/wp-plugins/wp-ng/badges/master/build.svg)](https://git.staglabel.be/wp-plugins/wp-ng/commits/master)
+# [wp-ng](http://redcastor.io)
 
-
-WP NG is a plugin to automatic bootstrap your app and inject module in app.
+wp-ng is a plugin to automatic bootstrap your app and inject module in app.
 
 ## Features
 
-* Automatic bootstrapper application.
-* Register your module with standard function "wp_enqueue_script" and add dependencie of 'wp-ng'.
-* Register your module with filter "wp_ng_register_handles_module".
+* Automatic bootstrapper angular application.
+* Register your module with standard function "wp_enqueue_script". Add prefix 'wp-ng_' to handle and add dependencie of 'wp-ng'.
+* Register your module with filter "wp_ng_register_ng_modules".
 * Combine script in queue for "wp-ng_" handle prefix.
 * Combine style in queue for "wp-ng_" handle prefix.
 * Collection of default modules registered (example: ngRessource, ngRoute, ngAnimate, ui.bootstrap, mm.foundation,  ...).
@@ -16,11 +14,11 @@ WP NG is a plugin to automatic bootstrap your app and inject module in app.
 
 ## Brief Doc API
 
-For exclude handle to automatic inject module in the angular app, you can use the script or style handle name 'wp-ng_app' or 
-the app name to register in settings.
-
-The combine js and css include only the handle with prefix 'wp-ng_'.
-The ng modules include only the handle with dependencie of 'wp-ng'. 
+Automatic bootstrapper angular application with combine script and style in cache.
+The cache file is create in /uploads/wp-ng/cache/. 
+The angular modules is include only if the handle start with prefix 'wp-ng_' and the dependencie egal 'wp-ng'. 
+The combine js and css include all script and style started with prefix 'wp-ng_'.
+The process to combine all style change all relative url to absolute url.
 
 ## Default Registered modules script
 
@@ -36,7 +34,7 @@ The ng modules include only the handle with dependencie of 'wp-ng'.
 | wp-ng_ui.bootstrap           | wp-ng   | ui.bootstrap            | 2.1.4       |
 | wp-ng_mm.foundation          | wp-ng   | mm.foundation           | 0.10.12     |
 | wp-ng_ui.router              | wp-ng   | ui.router               | 0.3.1       |
-| wp-ng_pascalprecht.translate | wp-ng   | pascalprecht.translate  | 1.0.0       |
+| wp-ng_pascalprecht.translate | wp-ng, wp-ng_angular-translate-loader-static-files   | pascalprecht.translate  | 1.0.0       |
 | wp-ng_offClick               | wp-ng   | offClick                | 1.0.8       |
 | wp-ng_nya.bootstrap.select   | wp-ng   | nya.bootstrap.select    | 2.1.9       |
 | wp-ng_ngDialog               | wp-ng   | ngDialog                | 0.6.4       |
@@ -44,7 +42,8 @@ The ng modules include only the handle with dependencie of 'wp-ng'.
 | wp-ng_ngScrollbars           | wp-ng   | ngScrollbars            | 0.0.11      |
 | wp-ng_slick                  | wp-ng   | slick                   | 0.2.1       |
 | wp-ng_slickCarousel          | wp-ng   | slickCarousel           | 3.1.7       |
-| wp-ng_ngInfiniteScroll       | wp-ng   | ngInfiniteScroll        | 0.0.1       |
+| wp-ng_ngMagnify              | wp-ng   | ngMagnify               | *           |
+| wp-ng_infinite-scroll        | wp-ng   | infinite-scroll         | 1.3.4       |
 | wp-ng_ui-leaflet             | wp-ng   | ui-leaflet              | master      |
 | wp-ng_wpNgRest               | wp-ng   | wpNgRest                | 1.0.0       |
 | wp-ng_nemLogging             | wp-ng   | nemLogging              | 0.1.7       |
@@ -52,10 +51,14 @@ The ng modules include only the handle with dependencie of 'wp-ng'.
 | wp-ng_pageslide-directive    | wp-ng   | pageslide-directive     | 2.1.1       |
 | wp-ng_ui.validate            | wp-ng   | ui.validate             | 1.2.2       |
 | wp-ng_ui.grid                | wp-ng   | ui.grid                 | 3.2.9       |
-| wp-ng_ngAntimoderate         | wp-ng   |                         | 1.0.0       |
-| wp-ng_ngGeonames             | wp-ng   |                         | 1.0.5       |
+| wp-ng_ui.select              | wp-ng   | ui.select               | 0.19.6      |
+| wp-ng_ngAntimoderate         | wp-ng   | ngAntimoderate          | 1.0.0       |
+| wp-ng_ngGeonames             | wp-ng   | ngGeonames              | 1.0.8       |
+| wp-ng_socialLinks            | wp-ng   | socialLinks             | 0.0.23      |
+| wp-ng_angular-translate-loader-static-files |                    | 2.13.0      |
 | wp-ng_bootstrap              | jquery  |                         | 3.3.7       |
 | wp-ng_foundation             | jquery  |                         | 6.2.3       |
+
 
 ## Default Registered modules styles
 
@@ -70,14 +73,44 @@ The ng modules include only the handle with dependencie of 'wp-ng'.
 | wp-ng_ngDialog             | wp-ng       | 0.6.4          |
 | wp-ng_ngScrollbars         | wp-ng       | 0.0.11         |
 | wp-ng_slick                | wp-ng       | 0.2.1          |
+| wp-ng_slick-theme          | wp-ng_slick | 0.2.1          |
 | wp-ng_slickCarousel        | wp-ng       | 3.1.7          |
+| wp-ng_slickCarouselTheme   | wp-ng_slickCarousel | 3.1.7  |
+| wp-ng_ngMagnify            | wp-ng       | *              |
 | wp-ng_ui-leaflet           | wp-ng       | master         |
 | wp-ng_ui.grid              | wp-ng       | 3.2.9          |
+| wp-ng_ui.select            | wp-ng       | 0.19.6         |
 
+## Hook Filters
+
+| **hook**                     | **Description**                                       | **Param**                     |
+| -----------------------------| ------------------------------------------------------| ------------------------------|
+| wp_ng_exclude_handles_module | Exclude a handle for script and style                 | array of handles              |
+| wp_ng_register_ng_modules    | Register a angular module (Name of the module)        | array of modules              |
+| wp_ng_%module-name%_config   | Filter to pass configuration                          | array of config               |
+| wp_ng_app_env                | Filter to pass environment param                      | array of env                  | 
+| wp_ng_app_config             | Filter to pass config param                           | array of config               |
+| wp_ng_app_element            | Bootstrap your the app on the body element by default.| string of angular element     |
+| wp_ng_settings_fields        | Page Settings fields (descriptor array)               | array of fields               |
+| wp_ng_get_option             | Get the option value                                  | string name, section, default |
+
+## Theme Support
+
+Add in your functions.php this snippet to force the angular app name. In the Settings page the setting App Name is set to readonly.
+```php
+<?php
+/**
+ * Theme setup
+ */
+function setup() {
+  add_theme_support('wp-ng_app_name', 'your_app.name');
+}
+add_action('after_setup_theme', 'setup');
+```
 
 ## Example
 
-Load Module include in wp-ng with default wordpress function
+Load Module included in wp-ng with default wordpress function
 ```php
 <?php
 wp_enqueue_script('wp-ng_slick');
@@ -87,7 +120,7 @@ wp_enqueue_script('wp-ng_ui-leaflet');
 wp_enqueue_style('wp-ng_ui-leaflet');
 ```
 
-Add Module in wp-ng
+Add Module your in wp-ng
 ```php
 <?php
 wp_enqueue_script( 'wp-ng_myModule', '/my-module.js', array('wp-ng'), null, true );
@@ -96,27 +129,28 @@ wp_enqueue_style( 'wp-ng_myModule', '/my-module.css', array('wp-ng'), null, 'all
 wp_enqueue_script( 'wp-ng_app', '/your_app.js', array('wp-ng'), null, true );
 ```
 
-or with wordpress filter 'wp_ng_register_handles_module':
+or with filter 'wp_ng_register_ng_modules':
 ```php
 <?php
 /**
- * Register Angular Module
+ * Register only a Angular Module and not include the script in combine 
+ * (to combine the script add prefix 'wp-ng_' in the handle name).
  */
-function register_handles_module ( $ng_handles ) {
+function register_ng_modules ( $ng_modules ) {
   
-  $ng_handles[] = 'wp-ng_myModule';
+  $ng_modules[] = 'myModule';
 
-  return $ng_handles;
+  return $ng_modules;
 }
-add_filter('wp_ng_register_handles_module', 'register_handles_module');
+add_filter('wp_ng_register_ng_modules', 'register_ng_modules');
 
-wp_enqueue_script( 'wp-ng_myModule', 'my-module.js', array(), null, true );
+wp_enqueue_script( 'myModule', 'my-module.js', array(), null, true );
 ```
 
-Multiple module in one js. This is possible with concat module name with '+' : "wp-ng_moduleService1+moduleService2"
+Multiple module in one js. This is possible with concat angular module name with '+' : "wp-ng_moduleService1+moduleService2"
 ```php
 <?php
-wp_enqueue_script( 'wp-ng_moduleService1+moduleService2', asset_path('scripts/module.js'), array('wp-ng'), null, true );
+wp_enqueue_script( 'wp-ng_moduleService1+moduleService2', '/module.js', array('wp-ng'), null, true );
 ```
 
 Add Config to module
@@ -125,15 +159,16 @@ Add Config to module
 add_filter('wp_ng_myModule_config', function ( $config ) {
 
   $config['l10n'] = array(
-    'title' => __( 'My Title', 'my-domain');
-  ),
-  $config['restNamespace'] = 'v1/my-route';
-  $config['partialUrl'] = 'http://domain.com/partials';
+    'title' => __( 'My Title', 'my-domain'),            // Translation
+  );
+  $config['restNamespace'] = 'v1/my-route';             // Rest Api route
+  $config['partialUrl'] = 'http://domain.com/partials'; //Template html url
 
   return $config;
 });
 ```
 
+## Example Script
 Get Config and create module constant
 ```javascript
 (function(angular, wpNg){
@@ -170,7 +205,7 @@ Example your_app.js
   //Run Application.
   app.run(['$rootScope', 'WP_NG_CONFIG', function ($log, WP_NG_CONFIG) {
 
-	function init() {
+	  function init() {
 
         $log.info('Environment:     ' + WP_NG_CONFIG.env);
         $log.info('Version Theme:  V' + WP_NG_CONFIG.themeVersion);
@@ -185,4 +220,16 @@ Example your_app.js
 }]);
 
 })(angular, wpNg);
+```
+
+## Internal Angular Filters
+
+wp-ng include generic angular filter
+
+  * html
+  * isEmpty
+
+```html
+<div data-ng-bing-html="content | html"></div>
+<div data-ng-hide="data | isEmpty"></div>
 ```

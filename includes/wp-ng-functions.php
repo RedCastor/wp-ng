@@ -62,6 +62,36 @@ function wp_ng_get_option( $option, $section , $default = '' ) {
 add_filter('wp_ng_get_option', 'wp_ng_get_option',10, 3);
 
 
+/**
+ * Get Default and current Language. Compatibility with WPML
+ * @param $lang
+ *
+ * @return array
+ */
+function wp_ng_get_language ( $lang ) {
+
+  //WPML Exist
+  if (function_exists('icl_object_id' )) {
+    global $sitepress;
+
+    $_default_lang = $sitepress->get_default_language();
+    $_current_lang = ICL_LANGUAGE_CODE;
+  }
+  else {
+    $_default_lang = explode("_", get_locale())[0];
+    $_current_lang = explode("_", get_locale())[0];
+  }
+
+  $_lang = array( 'default' => $_default_lang, 'current' => $_current_lang );
+
+  if ( is_array($lang) ) {
+    return array_merge( $lang, $_lang );
+  }
+
+  return $_lang;
+}
+add_filter('wp_ng_get_langguage', 'wp_ng_get_language',10, 3);
+
 
 /**
  * Get Angular App Name

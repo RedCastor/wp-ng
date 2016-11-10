@@ -176,19 +176,19 @@ class Wp_Ng_Public {
     global $wp_scripts;
 
     $ng_module = Wp_Ng_Module::getInstance();
-    $wp_ng_modules = $ng_module->get_ng_module_from_handles_script();
+    $ng_modules = $ng_module->get_ng_module_from_handles_script();
     $wp_ng_handles_src = $ng_module->get_scripts_src();
 
     //Add to ng handle source on top of array the script wp-ng
     $wp_ng_handles_src = array_merge(array($this->plugin_name => wp_ng_get_asset_path('scripts/' . $this->plugin_name . '.js')), $wp_ng_handles_src);
 
     //Filter unique array value and apply filter
-    $wp_ng_modules = apply_filters('wp_ng_register_modules', $wp_ng_modules);
-    $wp_ng_modules = array_unique($wp_ng_modules);
+    $ng_modules = apply_filters('wp_ng_register_ng_modules', $ng_modules);
+    $ng_modules = array_unique($ng_modules);
     $wp_ng_handles_src = array_unique($wp_ng_handles_src);
 
     //Add Environement variable json
-    $this->add_wp_ng_env( $this->plugin_name, $wp_ng_modules );
+    $this->add_wp_ng_env( $ng_modules );
 
     //Combine Script
     if ( wp_ng_is_combine_modules() ) {
@@ -248,7 +248,7 @@ class Wp_Ng_Public {
     global $wp_styles;
 
     $ng_module = Wp_Ng_Module::getInstance();
-    $wp_ng_modules = $ng_module->get_ng_module_from_handles_style();
+    $ng_modules = $ng_module->get_ng_module_from_handles_style();
     $wp_ng_handles_src = $ng_module->get_styles_src();
 
     //Add to ng handle source on top of array the style wp-ng
@@ -302,23 +302,9 @@ class Wp_Ng_Public {
    * Add script inline Config
    *
    */
-  private function add_wp_ng_env( $handle, $ng_modules = array() ) {
+  private function add_wp_ng_env( $ng_modules = array() ) {
 
-    if (!$handle) {
-      $handle = $this->plugin_name;
-    }
-
-    //Language
-    $_default_lang = explode("_", get_locale())[0];
-    $_current_lang = explode("_", get_locale())[0];
-
-    //WPML Exist
-    if (function_exists('icl_object_id' )) {
-      global $sitepress;
-
-      $_default_lang = $sitepress->get_default_language();
-      $_current_lang = ICL_LANGUAGE_CODE;
-    }
+    $_lang = apply_filters('wp_ng_get_langguage', null);
 
     //Theme
     $_theme = wp_get_theme();
@@ -339,8 +325,8 @@ class Wp_Ng_Public {
       'baseUrl'     => trailingslashit( get_home_url() ),
       'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
       'local'       => get_locale(),
-      'defaultLang' => $_default_lang,
-      'currentLang' => $_current_lang,
+      'defaultLang' => $_lang['default'],
+      'currentLang' => $_lang['current'],
       'themeName'   => $_theme->get('Name'),
       'themeVersion'=> $_theme->get('Version'),
       'wpVersion'   => get_bloginfo('version'),
@@ -355,7 +341,7 @@ class Wp_Ng_Public {
         'app'         => null,
         'appName'     => wp_ng_get_app_name(),
         'appElement'  => apply_filters('wp_ng_app_element', 'body'),
-        'ngModules'   => array_values($ng_modules),
+        'ngModules'   => array_values(apply_filters( 'wp_ng_ng_modules', $ng_modules)),
         'config'      => $config,
       )
     );
@@ -364,14 +350,5 @@ class Wp_Ng_Public {
     $script = sprintf( 'window.wpNg = %s', json_encode( $env ) );
     wp_add_inline_script($this->plugin_name, $script, 'before');
   }
-
-  private function exclude_modules() {
-
-    return apply_filters( 'wp_ng_exclude_module', array(
-      $this->plugin_name . '_app' => true,
-      wp_ng_get_app_name() => true,
-    ));
-  }
-
 
 }

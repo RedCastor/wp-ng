@@ -33,11 +33,11 @@
       var rest = this.rest;
       var lang = this.lang;
 
-      if(angular.isDefined(nonce.key) && angular.isDefined(nonce.val) && nonce.key.length > 0 && nonce.val.length > 0) {
+      if(angular.isDefined(nonce.key) && angular.isString(nonce.key) && angular.isDefined(nonce.val) && angular.isString(nonce.val) && nonce.key.length > 0 && nonce.val.length > 0) {
         $http.defaults.headers.common[nonce.key] = nonce.val;
       }
 
-      if(angular.isDefined(lang.key) && angular.isDefined(lang.val) && lang.key.length > 0 && lang.val.length > 0 ) {
+      if(angular.isDefined(lang.key) && angular.isString(lang.key) && angular.isDefined(lang.val) && angular.isString(lang.val) && lang.key.length > 0 && lang.val.length > 0 ) {
         $http.defaults.headers.common[lang.key] = lang.val;
       }
 
