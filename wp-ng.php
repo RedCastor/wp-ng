@@ -5,7 +5,7 @@
  *
  *
  * @link              http://redcastor.io
- * @since             1.0.0
+ * @since             1.0.1
  * @package           Wp_Ng
  *
  * @wordpress-plugin
@@ -29,7 +29,7 @@ if ( ! defined( 'WPINC' ) ) {
 
 
 define('WP_NG_PLUGIN_NAME',         'wp-ng');
-define('WP_NG_PLUGIN_VERSION',      '1.0.0');
+define('WP_NG_PLUGIN_VERSION',      '1.0.1');
 // because of wp_add_inline_script position after support
 define('WP_NG_REQUIRED_WP_VERSION',	'4.5');
 
