@@ -2,8 +2,8 @@
 Contributors: redcastor
 Tags: wp-ng, WP-NG, WPNG, wp ng, wp-angular, wp angular, angular, angular js, bootstrapper, bootstrap, module, ng, script, enqueue, rest, wp-rest, wp-api, ngResource
 Requires at least: 4.5
-Tested up to: 4.6
-Stable tag: 1.1.1
+Tested up to: 4.7
+Stable tag: trunk
 License: MIT License
 License URI: http://opensource.org/licenses/MIT
 
