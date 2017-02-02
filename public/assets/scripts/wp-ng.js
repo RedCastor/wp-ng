@@ -4,15 +4,46 @@
 
   var wpNg = window.wpNg;
 
-  //Set the application element
-  wpNg.appElement = angular.isDefined(wpNg.appElement) && angular.isString(wpNg.appElement) && wpNg.appElement ? angular.element(wpNg.appElement) : angular.element(document.body);
+
+  //Asign document ready to wpNg
+  wpNg.ready = angular.element(document).ready;
+
+  //Set the default application element
+  if ( angular.isDefined(wpNg.appElement) && angular.isString(wpNg.appElement) && wpNg.appElement ) {
+    wpNg.appElement = angular.element(wpNg.appElement);
+  }
+  else {
+    wpNg.appElement = angular.element(document.body);
+  }
+
+
+  //Function Check module dependencie.
+  wpNg.isModuleDepLoaded = function( module_name, modules_dep ) {
+
+    var modules_dep_error = [];
+
+    modules_dep.forEach(function (dep_name, index) {
+      try {
+        angular.module(dep_name);
+
+      }
+      catch (err) {
+        modules_dep_error.push(dep_name);
+        console.error('Angular module "' + module_name + '" can not load dependency module "' + dep_name + '".');
+      }
+    });
+
+    return modules_dep_error;
+  };
+
 
   //Function to check if module is defined
-  wpNg.isDefinedModule = function( module_name ) {
+  wpNg.isModuleLoaded = function( module_name ) {
     try {
-      return angular.module(module_name);
+      angular.module(module_name);
+      return true;
     } catch (error) {
-      return undefined;
+      return false;
     }
   };
 
@@ -29,12 +60,13 @@
     }
   });
 
+
   //Create Root Application with all dependencie modules
   wpNg.app = angular.module(wpNg.appName, wpNg.ngModules);
 
   //Filter config disable animation on element
   if ( angular.isDefined(wpNg.ngModules.ngAnimate) ) {
-    appRoot.config(['$animateProvider', function ($animateProvider) {
+    wpNg.app.config(['$animateProvider', function ($animateProvider) {
       $animateProvider.classNameFilter(/^(?:(?!ng-animate-disabled).)*$/);
     }]);
   }
@@ -81,17 +113,42 @@
       $compileProvider.debugInfoEnabled(WP_NG_CONFIG.enableDebug);
     }]);
 
+
   //Run Application
   wpNg.app.run(['$rootScope', '$timeout', '$log', 'WP_NG_CONFIG', function ( $rootScope, $timeout, $log, WP_NG_CONFIG ) {
 
     $timeout(function() {
       //Cloak Animation Remove Preload Delay class
-      angular.element('body').find(".ng-cloak-animation").removeClass('ng-cloak-animation');
-      angular.element('body').find(".x-ng-cloak-animation").removeClass('x-ng-cloak-animation');
-      angular.element('body').find("[ng-cloak-animation='']").removeAttr('ng-cloak-animation');
-      angular.element('body').find("[x-ng-cloak-animation='']").removeAttr('x-ng-cloak-animation');
-      angular.element('body').find("[data-ng-cloak-animation='']").removeAttr('data-ng-cloak-animation');
-    }, 2);
+      angular.element('html').find(".ng-cloak-animation").removeClass('ng-cloak-animation');
+      angular.element('html').find(".x-ng-cloak-animation").removeClass('x-ng-cloak-animation');
+      angular.element('html').find("[ng-cloak-animation='']").removeAttr('ng-cloak-animation');
+      angular.element('html').find("[x-ng-cloak-animation='']").removeAttr('x-ng-cloak-animation');
+      angular.element('html').find("[data-ng-cloak-animation='']").removeAttr('data-ng-cloak-animation');
+
+      //Preload Remove Preload Delay class
+      angular.element('html').find(".ng-preload").removeClass('ng-preload');
+      angular.element('html').find(".x-ng-preload").removeClass('x-ng-preload');
+      angular.element('html').find("[ng-preload='']").removeAttr('ng-preload');
+      angular.element('html').find("[x-ng-preload='']").removeAttr('x-ng-preload');
+      angular.element('html').find("[data-ng-preload='']").removeAttr('data-ng-preload');
+
+
+
+      //Foundation initialize
+      if ( angular.isDefined(WP_NG_CONFIG.modules['mm.foundation'].init) && WP_NG_CONFIG.modules['mm.foundation'].init === true ) {
+        var element = angular.isDefined(WP_NG_CONFIG.modules['mm.foundation'].element) ? WP_NG_CONFIG.modules['mm.foundation'].element : 'body';
+
+        if (typeof angular.element( element ).foundation === "function") {
+          angular.element( element ).foundation();
+          $log.info('Foundation initialized on element "' + element + '".');
+        }
+        else {
+          $log.error('Function foundation not exist.');
+        }
+      }
+
+    }, 0);
+
 
     $log.info('WP NG Angular Run app: ' + wpNg.appName);
     $log.info('Environment:          ' + WP_NG_CONFIG.env);
@@ -104,6 +161,13 @@
     $log.debug('Url Base:            ' + WP_NG_CONFIG.baseUrl);
 
   }]);
+
+
+  //wpNg Ready
+  wpNg.ready( function() {
+    console.info('WP NG Ready');
+
+  });
 
 }(angular, window));
 

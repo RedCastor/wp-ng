@@ -30,6 +30,7 @@ body {
 
 .ng-pageslide-body-open {
   overflow: hidden !important;
+  touch-action: none !important;
 }
 
 .ng-pageslide-body-open:before {

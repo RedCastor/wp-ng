@@ -1,0 +1,27 @@
+//
+// Leaflet Awesome Markers
+// --------------------------------------------------
+
+//@import "../../bower_components/Leaflet.awesome-markers/dist/leaflet.awesome-markers.css";
+
+$images-path:               "../images/" !default;
+
+/* Awesome Marker setup */
+.awesome-marker {
+  background-image: url( $images-path + 'markers-soft.png') !important;
+}
+
+.awesome-marker-shadow {
+  background-image: url( $images-path + 'markers-shadow.png') !important;
+}
+
+/* Awesome Retina displays */
+@media (min--moz-device-pixel-ratio: 1.5),(-o-min-device-pixel-ratio: 3/2),
+(-webkit-min-device-pixel-ratio: 1.5),(min-device-pixel-ratio: 1.5),(min-resolution: 1.5dppx) {
+  .awesome-marker {
+    background-image: url( $images-path + 'markers-soft@2x.png') !important;
+  }
+  .awesome-marker-shadow {
+    background-image: url( $images-path + 'markers-shadow@2x.png') !important;
+  }
+}

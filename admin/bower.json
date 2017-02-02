@@ -1,0 +1,16 @@
+{
+  "name": "wp-ng-admin",
+  "homepage": "http://redcastor.io/",
+  "authors": [
+    "RedCastor <team@redcastor.io>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "multiselect": "0.9.12"
+  },
+  "resolutions": {
+    "jquery": "~2.2.0"
+  },
+  "overrides": {}
+}

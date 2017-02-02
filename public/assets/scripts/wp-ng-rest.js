@@ -2,15 +2,18 @@
   'use strict';
 
 
-  var wpNgRest = angular.module('wpNgRest', [
-    'ngResource'
-  ]);
+  var module_name = 'wpNgRest';
+  var modules_dep = ['ngResource'];
+
+  // Create module wp-ng rest module
+  var wpNgRest = angular.module(module_name, modules_dep);
+
 
   wpNgRest.config(['$resourceProvider',  function($resourceProvider) {
     $resourceProvider.defaults.cancellable = true;
   }]);
 
-  wpNgRest.provider('wpNgRest', [ function wpNgRestProvider() {
+  wpNgRest.provider(module_name, [ function wpNgRestProvider() {
 
     this.nonce = {
       key: 'X-WP-NG-Nonce',
@@ -127,7 +130,7 @@
 
         if (response.data === null || response.data === undefined) {
           status.code = response.status;
-          status.message = 'An error occured on request';
+          status.message = 'An error occured on the request.';
         }
         else {
           status.code = response.data.code;

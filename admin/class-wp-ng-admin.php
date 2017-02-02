@@ -54,6 +54,9 @@ class Wp_Ng_Admin {
 
     add_action( 'admin_menu', array( $this, 'settings'), 100 );
     add_action( 'admin_init', array( $this, 'settings_init') );
+
+    add_filter( 'tiny_mce_before_init', array($this, 'tiny_mce_before_init'), 100 );
+
 	}
 
 
@@ -69,7 +72,9 @@ class Wp_Ng_Admin {
 	 */
 	public function enqueue_styles() {
 
-		//wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-ng-admin.css', array(), $this->version, 'all' );
+    //Register style wp-ng-admin
+    wp_register_style($this->plugin_name . '-admin', wp_ng_get_admin_asset_path('styles/' . $this->plugin_name . '-admin.css'), array(), $this->version, 'all');
+    wp_enqueue_style($this->plugin_name . '-admin');
 
 	}
 
@@ -80,7 +85,9 @@ class Wp_Ng_Admin {
 	 */
 	public function enqueue_scripts() {
 
-		//wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-ng-admin.js', array( 'jquery' ), $this->version, false );
+    //Register script wp-ng-admin
+    wp_register_script($this->plugin_name . '-admin', wp_ng_get_admin_asset_path('scripts/' . $this->plugin_name . '-admin.js'), array(), $this->version, false);
+    wp_enqueue_script($this->plugin_name . '-admin');
 
 	}
 
@@ -115,6 +122,26 @@ class Wp_Ng_Admin {
     $menu_slug  = 'settings_' . $this->plugin_name;
 
     add_options_page( $page_title, $menu_title, 'manage_options', $menu_slug, array( Wp_Ng_Settings::getInstance( $this->plugin_name ), 'render_settings_page') );
+  }
+
+
+  /**
+   * Tiny MCE Init
+   * @param $init
+   *
+   * @return mixed
+   */
+  public function tiny_mce_before_init( $init ) {
+
+    if( wp_ng_disable_tinymce_verify_html() === true) {
+      $init['verify_html  '] = FALSE;
+    }
+
+    if( wp_ng_disable_wpautop() === true) {
+      $init['wpautop'] = FALSE;
+    }
+
+    return $init;
   }
 
 }

@@ -20,6 +20,11 @@
       "main": true,
       "bower": ["foundation-sites"]
     },
+    "motion-ui.css": {
+      "files": "styles/motion-ui.scss",
+      "main": true,
+      "bower": ["motion-ui"]
+    },
     "font-awesome.css": {
       "bower": ["font-awesome"]
     },
@@ -46,11 +51,17 @@
     "leaflet.css": {
       "files": "styles/leaflet.scss",
       "main": true,
-      "bower": [
-        "leaflet",
-        "Leaflet.awesome-markers",
-        "Leaflet.vector-markers"
-      ]
+      "bower": ["leaflet"]
+    },
+    "leaflet-awesome-markers.css": {
+      "files": "styles/leaflet-awesome-markers.scss",
+      "main": true,
+      "bower": ["Leaflet.awesome-markers"]
+    },
+    "leaflet-vector-markers.css": {
+      "files": "styles/leaflet-vector-markers.scss",
+      "main": true,
+      "bower": ["Leaflet.vector-markers"]
     },
     "angular-ui-grid.css": {
       "bower": ["angular-ui-grid"]
@@ -63,11 +74,33 @@
       "main": true,
       "bower": ["angular-pageslide-directive"]
     },
+    "angular-sticky-plugin.css": {
+      "files": "styles/angular-sticky-plugin.scss",
+      "main": true,
+      "bower": ["angular-sticky"]
+    },
+    "angular-loading-bar.css": {
+      "bower": ["angular-loading-bar"]
+    },
+    "ngstorage.css": {
+      "bower": ["ngstorage"]
+    },
+    "angular-xeditable.css": {
+      "bower": ["angular-xeditable"]
+    },
+    "ng-tags-input.js": {
+      "bower": ["ng-tags-input"]
+    },
+    "angular-sticky-plugin.js": {
+      "bower": ["angular-sticky"]
+    },
     "wp-ng.js": {
       "files": [
         "scripts/angular-deferred-bootstrap.js",
         "scripts/wp-ng.js",
-        "scripts/wp-ng-filters.js"
+        "scripts/wp-ng-filters.js",
+        "scripts/wp-ng-directives.js",
+        "scripts/wp-ng-services.js"
       ],
       "main": true
     },
@@ -81,8 +114,12 @@
     "foundation.js": {
       "bower": [
         "what-input",
-        "foundation-sites"
+        "foundation-sites",
+        "motion-ui"
       ]
+    },
+    "motion-ui.js": {
+      "bower": ["motion-ui"]
     },
 	  "angular.js": {
       "bower": ["angular"]
@@ -129,6 +166,9 @@
     "angular-translate-loader-static-files.js": {
       "bower": ["angular-translate-loader-static-files"]
     },
+    "angular-translate-storage-cookie.js": {
+      "bower": ["angular-translate-storage-cookie"]
+    },
     "angular-off-click.js": {
       "bower": ["angular-off-click"]
     },
@@ -166,12 +206,20 @@
     "ui-leaflet.js": {
       "bower": [
         "leaflet",
-        "leaflet-plugins",
-        "Leaflet.awesome-markers",
-        "Leaflet.vector-markers",
-        "ui-leaflet-layers",
         "ui-leaflet"
       ]
+    },
+    "ui-leaflet-layers.js": {
+      "bower": [
+        "leaflet-plugins",
+        "ui-leaflet-layers"
+      ]
+    },
+    "leaflet-awesome-markers.js": {
+      "bower": ["Leaflet.awesome-markers"]
+    },
+    "leaflet-vector-markers.js": {
+      "bower": ["Leaflet.vector-markers"]
     },
     "angular-scroll.js": {
       "bower": ["angular-scroll"]
@@ -191,8 +239,44 @@
     "ng-antimoderate.js" : {
       "bower": ["ng-antimoderate"]
     },
+    "ng-color-utils.js" : {
+      "bower": ["ng-color-utils"]
+    },
     "slick-carousel.js": {
       "bower": ["slick-carousel"]
+    },
+    "ng-file-upload.js": {
+      "bower": ["ng-file-upload"]
+    },
+    "angular-loading-bar.js": {
+      "bower": ["angular-loading-bar"]
+    },
+    "angular-xeditable.js": {
+      "bower": ["angular-xeditable"]
+    },
+    "ng-tags-input.js": {
+      "bower": ["ng-tags-input"]
+    },
+    "oclazyload.js": {
+      "bower": ["oclazyload"]
+    },
+    "angular-lazy-img.js": {
+      "bower": ["angular-lazy-img"]
+    },
+    "angular-svg-round-progressbar.js": {
+      "bower": ["angular-svg-round-progressbar"]
+    },
+    "angularjs-breakpoint.js": {
+      "bower": ["angularjs-breakpoint"]
+    },
+    "angular-progressbar.js": {
+      "bower": [
+        "progressbar.js",
+        "angular-progressbar"
+      ]
+    },
+    "ng-focus-if.js": {
+      "bower": ["ng-focus-if"]
     },
     "jquery.js": {
       "bower": ["jquery"]

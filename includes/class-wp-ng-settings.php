@@ -157,14 +157,16 @@ class Wp_Ng_Settings {
 
       $tabs_descriptor[] = array(
         'id' => $tab_key,
-        'title' => $tabs['title']
+        'title' => $tabs['title'],
       );
 
       foreach ($tabs['sections'] as $section_key => $sections) {
 
         $sections_descriptor[$tab_key][] = array(
-          'id' => $section_key,
-          'title' => $sections['title']
+          'id'      => $section_key,
+          'title'   => isset ($sections['title']) ? $sections['title'] : '',
+          'desc'    => isset ($sections['desc']) ? $sections['desc'] : '',
+          'display' => isset ($sections['display']) ? $sections['display'] : '',
         );
 
         foreach ($sections['fields'] as $field ) {
@@ -305,40 +307,279 @@ class Wp_Ng_Settings {
     return $this;
   }
 
+  /**
+   * Get the option with the prefix
+   *
+   * @param $option
+   *
+   * @return string
+   */
   public function get_option_prefix ( $option ) {
+
     return $this->settings_prefix . '_' . $option;
   }
 
+  /**
+   * Define a option by replace dash to underscore and set upper case
+   *
+   * @param $option
+   *
+   * @return string
+   */
   public function get_define_name ( $option ) {
     return strtoupper( str_replace('-', '_', $this->get_option_prefix($option) ) );
   }
 
-  public function get_option_theme_support ( $option ) {
+  /**
+   * Get option from theme support
+   * @param $option
+   *
+   * @return mixed|string
+   */
+  public function get_option_support ( $option ) {
+
+    $option_value = $this->get_option_defined( $option );
+    if ( !empty($option_value) ) {
+      return $option_value;
+    }
+
+    //Option plugin support
+    $option_plugins = $this->get_option_plugin_supports( $option );
+
+    //Option theme support
+    $option_theme = $this->get_option_theme_supports( $option );
+
+    // If is empty option theme return option plugins
+    if ( empty($option_theme) ) {
+      return $option_plugins;
+    }
+
+    //If 2 array merge.
+    if (is_array($option_plugins) && is_array($option_theme)) {
+      return  array_merge($option_plugins, $option_theme);
+    }
+
+    if ( !empty($option_plugins) ) {
+      return $option_plugins;
+    }
+
+    if ( !empty($option_theme) ) {
+      return $option_theme;
+    }
+
+    return '';
+  }
+
+
+  /**
+   * Get option from theme support
+   * @param $option
+   *
+   * @return mixed|string
+   */
+  public function get_option_plugin_supports ( $option ) {
+    global $_wp_ng_plugin_features;
+
+    $option_name = $this->get_option_prefix($option);
+
+    if (isset($_wp_ng_plugin_features[ $option_name ][0])) {
+      return $_wp_ng_plugin_features[ $option_name ][0];
+    }
+
+    return '';
+  }
+
+  /**
+   * Get option from theme support
+   * @param $option
+   *
+   * @return mixed|string
+   */
+  public function get_option_theme_supports ( $option ) {
     global $_wp_theme_features;
+
+    $option_name = $this->get_option_prefix($option);
+
+    if (isset($_wp_theme_features[ $option_name ][0])) {
+      return $_wp_theme_features[ $option_name ][0];
+    }
+
+    return '';
+  }
+
+  /**
+   * Get option from theme support
+   * @param $option
+   *
+   * @return mixed|string
+   */
+  public function get_option_defined ( $option ) {
 
     if( defined( $this->get_define_name($option) ) ) {
       return constant($this->get_define_name($option));
     }
 
-    $option_name = $this->get_option_prefix($option);
-
-    return ( isset($_wp_theme_features[ $option_name ][0]) && is_string($_wp_theme_features[ $option_name ][0]) ) ? $_wp_theme_features[ $option_name ][0] : '';
-
+    return '';
   }
 
-  public function is_disabled ( $option ) {
-    $option_name = $this->get_option_prefix($option);
+  /**
+   * Is option disable
+   *
+   * @param $option
+   *
+   * @return bool
+   */
+  public function is_disabled ( $option, $global = true, $section_key = '' ) {
 
-    if( defined($this->get_define_name($option)) ) {
-      return true;
-    }
-    else if ( current_theme_supports( $option_name ) ) {
-      if ( !empty( $this->get_option_theme_support($option)) ) {
+    if ($global === true) {
+      $option_name = $this->get_option_prefix($option);
+
+      if( defined($this->get_define_name($option)) ) {
         return true;
+      }
+      else if ( current_theme_supports( $option_name ) ) {
+        if ( !empty( $this->get_option_support($option)) ) {
+          return true;
+        }
+      }
+    }
+    else {
+      $option_name = $this->get_option_prefix( $section_key );
+
+      if ( current_theme_supports( $option_name ) ) {
+        $options = $this->get_option_support($section_key);
+
+        if ( !empty($options) && (in_array($option, $options) || array_key_exists($option, $options) ) ) {
+          return true;
+        }
       }
     }
 
+
+
     return false;
+  }
+
+  /**
+   * Get Conditions
+   *
+   * @return array
+   */
+  public function get_conditions () {
+
+    $conditions = array(
+      'is_home'               => __('Is Home',                $this->settings_prefix),
+      'is_front_page'         => __('Is Front page',          $this->settings_prefix),
+      'is_home&is_front_page' => __('Is Home and Front page', $this->settings_prefix),
+      'is_single'             => __('Is Single',              $this->settings_prefix),
+      'is_sticky'             => __('Is Sticky',              $this->settings_prefix),
+      'is_page'               => __('Is Page',                $this->settings_prefix),
+      'is_page_template'      => __('Is Page Template',       $this->settings_prefix),
+      'is_category'           => __('Is Category',            $this->settings_prefix),
+      'is_tag'                => __('Is Tag',                 $this->settings_prefix),
+      'is_tax'                => __('Is Taxonomy',            $this->settings_prefix),
+      'is_author'             => __('Is Author ',             $this->settings_prefix),
+      'is_archive'            => __('Is Archive',             $this->settings_prefix),
+      'is_search'             => __('Is Search',              $this->settings_prefix),
+      'is_404'                => __('Is 404',                 $this->settings_prefix),
+      'is_singular'           => __('Is Singular',            $this->settings_prefix),
+      'is_user_logged_in'     => __('Is User Logged In',      $this->settings_prefix),
+    );
+
+    //Get Page list with page id in string value
+    foreach ( wp_list_pluck(get_pages(), 'post_title', 'ID') as $page_id => $page_title) {
+      $conditions['page&' . strval($page_id)] = sprintf( '%s %s', __('Page', $this->settings_prefix), $page_title);
+    }
+
+    //Get all page templates list
+    $templates = get_page_templates();
+    foreach ( $templates as $template_name => $template_filename ) {
+      $conditions[ $template_filename] = sprintf( '%s %s', __('Page Template ', $this->settings_prefix), $template_name);
+    }
+
+    //Get all post type list
+    $post_types = get_post_types(
+      array(
+        'show_ui' => true,
+      ),
+      'objects'
+    );
+
+    foreach ( $post_types as $post_type ) {
+      $conditions[$post_type->name] = sprintf( '%s %s', __('Post Type ', $this->settings_prefix), $post_type->name);
+    }
+
+    //Woocommerce conditions
+    if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+
+      $conditions['is_woocommerce']       = __('Is Woocommerce',  $this->settings_prefix);
+      $conditions['is_shop']              = __('Is Shop',         $this->settings_prefix);
+      $conditions['is_product_category']  = __('Is Product Category', $this->settings_prefix);
+      $conditions['is_product_tag']       = __('Is Product Tag',  $this->settings_prefix);
+      $conditions['is_product']           = __('Is Product',      $this->settings_prefix);
+      $conditions['is_cart']              = __('Is Cart',         $this->settings_prefix);
+      $conditions['is_checkout']          = __('Is Checkout',     $this->settings_prefix);
+      $conditions['is_account_page']      = __('Is Account Page', $this->settings_prefix);
+      $conditions['is_wc_endpoint_url']   = __('Is Endpoint Url', $this->settings_prefix);
+      $conditions['is_ajax']              = __('Is Ajax',         $this->settings_prefix);
+    }
+
+    return $conditions;
+  }
+
+
+  /**
+   * Set defaulut field args
+   *
+   * @param $field_args
+   * @param $tab_key
+   * @param $section_key
+   *
+   * @return array
+   */
+  public function set_default_field_args( $field_args, $tab_key, $section_key ) {
+
+    $type = isset($field_args['type']) ? $field_args['type'] : 'text';
+    $conditions = isset($field_args['conditions']) ? $field_args['conditions'] : false;
+
+    $disable = isset($field_args['disable']) ? boolval($field_args['disable']) : false;
+
+    if ( isset($field_args['global']) && $field_args['global'] === true) {
+      $disable = $this->is_disabled( $field_args['name'] ) ? true : $disable;
+      $name_id = $this->get_option_prefix( $field_args['name'] );
+    }
+    else if ( isset($field_args['parent']) ) {
+      $disable = $this->is_disabled( $field_args['name'], false, $section_key ) ? true : $disable;
+      $name_id = $field_args['parent']['name_id'] . '[' . $field_args['name'] . ']';
+    }
+    else {
+      $disable = $this->is_disabled( $field_args['name'], false, $section_key ) ? true : $disable;
+      $name_id = $this->get_option_prefix($section_key . '[' . $field_args['name'] . ']');
+    }
+
+    $args = array(
+      'id'          => $field_args['name'],
+      'name_id'     => $name_id,
+      'label_for'   => $args['label_for'] = "{$section_key}[{$field_args['name']}]",
+      'desc'        => isset($field_args['desc']) ? $field_args['desc'] : '',
+      'placeholder' => isset($field_args['placeholder']) ? $field_args['placeholder'] : '',
+      'global'      => isset($field_args['global']) ? boolval($field_args['global']) : false,
+      'name'        => isset($field_args['label']) ? $field_args['label'] : '',
+      'tab'         => $tab_key,
+      'section'     => $section_key,
+      'parent'      => isset($field_args['parent']) ? $field_args['parent'] : false,
+      'size'        => isset($field_args['size']) ? $field_args['size'] : null,
+      'options'     => isset($field_args['options']) ? $field_args['options'] : '',
+      'std'         => isset($field_args['default']) ? $field_args['default'] : '',
+      'disable'     => $disable,
+      'sanitize_callback' => isset($field_args['sanitize_callback']) ? $field_args['sanitize_callback'] : '',
+      'type'        => $type,
+      'sub_fields'  => ( $type === 'sub_fields' && isset($field_args['sub_fields']) ) ? $field_args['sub_fields'] : false,
+      'display'     => (isset($field_args['display'])) ? $field_args['display'] : '',
+      'conditions'  => $conditions
+    );
+
+    return $args;
   }
 
   /**
@@ -373,37 +614,26 @@ class Wp_Ng_Settings {
     //register settings fields
     foreach ( $this->settings_fields as $tab_key => $sections ) {
       foreach ($sections  as $section_key => $field ) {
-        foreach ($field as $option) {
+        foreach ($field as $field_args) {
 
-          $type = isset($option['type']) ? $option['type'] : 'text';
-
-          $disable = isset($option['disable']) ? boolval($option['disable']) : false;
-          $disable = (isset( $option['global']) && $option['global'] === true && $this->is_disabled( $option['name'] ) ) ? true : $disable;
-
-          $args = array(
-            'id'          => $option['name'],
-            'label_for'   => $args['label_for'] = "{$section_key}[{$option['name']}]",
-            'desc'        => isset($option['desc']) ? $option['desc'] : '',
-            'placeholder' => isset($option['placeholder']) ? $option['placeholder'] : '',
-            'global'      => isset($option['global']) ? boolval($option['global']) : false,
-            'name'        => $option['label'],
-            'section'     => $section_key,
-            'size'        => isset($option['size']) ? $option['size'] : null,
-            'options'     => isset($option['options']) ? $option['options'] : '',
-            'std'         => isset($option['default']) ? $option['default'] : '',
-            'disable'     => $disable,
-            'sanitize_callback' => isset($option['sanitize_callback']) ? $option['sanitize_callback'] : '',
-            'type'        => $type,
-          );
+          $args = $this->set_default_field_args( $field_args, $tab_key, $section_key );
 
           if ($args['global'] === true) {
-            $setting_id = $this->get_option_prefix( $option['name'] );
-            register_setting($tab_key, $setting_id, (isset($option['sanitize_callback']) && is_callable($option['sanitize_callback'])) ? $option['sanitize_callback'] : false);
-          } else {
-            $setting_id = $this->get_option_prefix( $section_key . '[' . $option['name'] . ']' );
+            register_setting($tab_key, $args['name_id'], (is_callable($args['sanitize_callback'])) ? $args['sanitize_callback'] : false);
           }
 
-          add_settings_field($setting_id, $option['label'], array($this, 'callback_' . $type), $tab_key, $section_key, $args);
+          add_settings_field($args['name_id'], $args['name'], array($this, 'callback_' . $args['type']), $tab_key, $section_key, $args);
+
+          if ($args['sub_fields']) {
+
+            foreach ( $args['sub_fields'] as $sub_field_args ) {
+              $sub_field_args['parent'] = $args;
+              $sub_args = $this->set_default_field_args( $sub_field_args, $tab_key, $section_key );
+
+              add_settings_field($sub_args['name_id'], $sub_args['name'], array($this, 'callback_' . $sub_args['type']), $tab_key, $section_key, $sub_args);
+            }
+
+          }
         }
       }
     }
@@ -415,6 +645,51 @@ class Wp_Ng_Settings {
       }
     }
 
+  }
+
+
+  /**
+   * Get field condition modal for display
+   *
+   * @param $args
+   *
+   * @return string
+   */
+  public function get_field_conditions_modal( $args ) {
+
+    $name_id = $args['name_id'];
+    $elment_id = str_replace( '.', '--', $name_id );
+    $elment_id = str_replace( '[', '_', $elment_id );
+    $elment_id = str_replace( ']', '', $elment_id );
+    if ($args['parent']) {
+      $value = $this->get_option( $args['parent']['id'], $args['section'], $args['std'], $args['global'] );
+      $value = isset($value[$args['id']]) ? $value[$args['id']] : $args['std'];
+      $args['disable'] = (isset( $args['parent']['disable'])) ? $args['parent']['disable'] : false;
+    }else {
+      $value = $this->get_option( $args['id'], $args['section'], $args['std'], $args['global'] );
+    }
+
+    $value = (isset($value['options']) && is_array($value['options'])) ? $value['options'] : array();
+    $disable = (isset( $args['disable'] ) && $args['disable'] === true) ? 'disabled' : '';
+
+
+    $options = $this->get_conditions();
+
+    $multiselect_html = sprintf( '<select multiple="multiple" class="%1$s-multi-select-field" name="%2$s[]" id="%3$s_conditions" %4$s>', $this->settings_prefix, $name_id, $elment_id, $disable );
+
+    foreach ( $options as $key => $label ) {
+      $selected = (is_array($value) && in_array( $key, $value )) ? $key : '0';
+      $multiselect_html .= sprintf( '<option value="%s" %s>%s</option>', $key, selected( $selected, $key, false ), $label );
+    }
+
+    $multiselect_html .= sprintf( '</select>' );
+
+    add_thickbox();
+
+    $html = sprintf( '<a href="#TB_inline?&height=270&width=370&inlineId=wp_ng_modal_%1$s" title="%2$s" class="button button-conditions thickbox">%3$s</a>', $elment_id, __('Select your conditions', $this->settings_prefix), __('Conditions', $this->settings_prefix) );
+    $html .= sprintf( '<div id="wp_ng_modal_%1$s" style="display:none;"><p>%2$s</p></div>', $elment_id, $multiselect_html );
+
+    return $html;
   }
 
   /**
@@ -432,6 +707,20 @@ class Wp_Ng_Settings {
     return $desc;
   }
 
+
+  /**
+   * Displays a text field for a settings field
+   *
+   * @param array   $args settings field args
+   */
+  public function callback_sub_fields( $args ) {
+
+    if ( $args['desc'] ) {
+      echo $args['desc'];
+    }
+
+  }
+
   /**
    * Displays a text field for a settings field
    *
@@ -439,13 +728,19 @@ class Wp_Ng_Settings {
    */
   public function callback_text( $args ) {
 
+    $name_id = $args['name_id'];
+    if ($args['parent']) {
+      $value = $this->get_option( $args['parent']['id'], $args['section'], $args['std'], $args['global'] );
+      $value = isset($value[$args['id']]) ? $value[$args['id']] : $args['std'];
+      $args['disable'] = (isset( $args['parent']['disable'])) ? $args['parent']['disable'] : false;
+    }
+    else {
+      $value = $this->get_option( $args['id'], $args['section'], $args['std'], $args['global'] );
+    }
 
-    $name_id =  ( isset($args['global']) && $args['global'] === true ) ? $this->get_option_prefix( '%2$s' ) : $this->get_option_prefix( '%1$s[%2$s]' );
-    $name_id = sprintf( $name_id, $args['section'], $args['id'] );
-    $value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'], $args['global'] ) );
+    $disable = (isset( $args['disable'] ) && $args['disable'] === true) ? 'disabled' : '';
     $size  = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
     $type  = isset( $args['type'] ) ? $args['type'] : 'text';
-    $disable = (isset( $args['disable'] ) && $args['disable'] === true) ? 'disabled' : '';
     $placeholder = isset( $args['placeholder'] ) ? $args['placeholder'] : '';
 
     $html  = sprintf( '<input type="%1$s" class="%2$s-text" id="%3$s" name="%3$s" value="%4$s" placeholder="%5$s" %6$s/>', $type, $size, $name_id, $value, $placeholder, $disable);
@@ -473,23 +768,49 @@ class Wp_Ng_Settings {
   }
 
   /**
+   * Displays a hidden field for a settings field
+   *
+   * @param array   $args settings field args
+   */
+  public function callback_hidden( $args ) {
+    $args['desc'] = '';
+    $this->callback_text( $args );
+  }
+
+  /**
    * Displays a checkbox for a settings field
    *
    * @param array   $args settings field args
    */
   public function callback_checkbox( $args ) {
 
-    $name_id =  ( isset($args['global']) && $args['global'] === true ) ? $this->get_option_prefix( '%2$s' ) : $this->get_option_prefix( '%1$s[%2$s]' );
-    $name_id = sprintf( $name_id, $args['section'], $args['id'] );
-    $value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'], $args['global'] ) );
+    $name_id = $args['name_id'];
+    if ($args['parent']) {
+      $value = $this->get_option( $args['parent']['id'], $args['section'], $args['std'], $args['global'] );
+      $value = isset($value[$args['id']]) ? $value[$args['id']] : $args['std'];
+      $args['disable'] = (isset( $args['parent']['disable'])) ? $args['parent']['disable'] : false;
+    }else {
+      $value = $this->get_option( $args['id'], $args['section'], $args['std'], $args['global'] );
+    }
+
     $disable = (isset( $args['disable'] ) && $args['disable'] === true) ? 'disabled' : '';
 
-    $html  = '<fieldset>';
-    $html  .= sprintf( '<label for="wpuf-%1$s">', $name_id );
-    $html  .= sprintf( '<input type="hidden" name="%1$s" value="off" />', $name_id );
-    $html  .= sprintf( '<input type="checkbox" class="checkbox" id="wpuf-%1$s" name="%1$s" value="on" %2$s %3$s/>', $name_id, checked( $value, 'on', false ), $disable );
-    $html  .= sprintf( '%1$s</label>', $args['desc'] );
-    $html  .= '</fieldset>';
+    $html_condtions = '';
+
+    if ( isset($args['conditions']) && $args['conditions'] === true ) {
+      $name_id .= '[value]';
+      $value = isset($value['value']) ? $value['value'] : 'off';
+      $args['name_id'] .= '[options]';
+      $html_condtions = $this->get_field_conditions_modal( $args );
+    }
+
+    $html = '<fieldset>';
+    $html .= sprintf( '<label for="wpuf-%1$s">', $name_id );
+    $html .= sprintf( '<input type="hidden" name="%1$s" value="off" />', $name_id );
+    $html .= sprintf( '<input type="checkbox" class="checkbox" id="wpuf-%1$s" name="%1$s" value="on" %2$s %3$s/>', $name_id, checked( $value, 'on', false ), $disable );
+    $html .= sprintf( '%1$s</label>', $args['desc'] );
+    $html .= $html_condtions;
+    $html .= '</fieldset>';
 
     echo $html;
   }
@@ -501,9 +822,15 @@ class Wp_Ng_Settings {
    */
   public function callback_multicheck( $args ) {
 
-    $name_id =  ( isset($args['global']) && $args['global'] === true ) ? $this->get_option_prefix( '%2$s' ) : $this->get_option_prefix( '%1$s[%2$s]' );
-    $name_id = sprintf( $name_id, $args['section'], $args['id'] );
-    $value = $this->get_option( $args['id'], $args['section'], $args['std'], $args['global'] );
+    $name_id = $args['name_id'];
+    if ($args['parent']) {
+      $value = $this->get_option( $args['parent']['id'], $args['section'], $args['std'], $args['global'] );
+      $value = isset($value[$args['id']]) ? $value[$args['id']] : $args['std'];
+      $args['disable'] = (isset( $args['parent']['disable'])) ? $args['parent']['disable'] : false;
+    }else {
+      $value = $this->get_option( $args['id'], $args['section'], $args['std'], $args['global'] );
+    }
+
     $disable = (isset( $args['disable'] ) && $args['disable'] === true) ? 'disabled' : '';
     $html  = '<fieldset>';
 
@@ -527,9 +854,15 @@ class Wp_Ng_Settings {
    */
   public function callback_radio( $args ) {
 
-    $name_id =  ( isset($args['global']) && $args['global'] === true ) ? $this->get_option_prefix( '%2$s' ) : $this->get_option_prefix( '%1$s[%2$s]' );
-    $name_id = sprintf( $name_id, $args['section'], $args['id'] );
-    $value = $this->get_option( $args['id'], $args['section'], $args['std'], $args['global'] );
+    $name_id = $args['name_id'];
+    if ($args['parent']) {
+      $value = $this->get_option( $args['parent']['id'], $args['section'], $args['std'], $args['global'] );
+      $value = isset($value[$args['id']]) ? $value[$args['id']] : $args['std'];
+      $args['disable'] = (isset( $args['parent']['disable'])) ? $args['parent']['disable'] : false;
+    }else {
+      $value = $this->get_option( $args['id'], $args['section'], $args['std'], $args['global'] );
+    }
+
     $disable = (isset( $args['disable'] ) && $args['disable'] === true) ? 'disabled' : '';
     $html  = '<fieldset>';
 
@@ -552,15 +885,54 @@ class Wp_Ng_Settings {
    */
   public function callback_select( $args ) {
 
-    $name_id =  ( isset($args['global']) && $args['global'] === true ) ? $this->get_option_prefix( '%2$s' ) : $this->get_option_prefix( '%1$s[%2$s]' );
-    $name_id = sprintf( $name_id, $args['section'], $args['id'] );
-    $value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'], $args['global'] ) );
+    $name_id = $args['name_id'];
+    if ($args['parent']) {
+      $value = $this->get_option( $args['parent']['id'], $args['section'], $args['std'], $args['global'] );
+      $value = isset($value[$args['id']]) ? $value[$args['id']] : $args['std'];
+      $args['disable'] = (isset( $args['parent']['disable'])) ? $args['parent']['disable'] : false;
+    }else {
+      $value = $this->get_option( $args['id'], $args['section'], $args['std'], $args['global'] );
+    }
+
     $disable = (isset( $args['disable'] ) && $args['disable'] === true) ? 'disabled' : '';
     $size  = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
     $html  = sprintf( '<select class="%1$s" name="%2$s" id="%2$s" %3$s>', $size, $name_id, $disable );
 
     foreach ( $args['options'] as $key => $label ) {
-      $html .= sprintf( '<option value="%s"%s>%s</option>', $key, selected( $value, $key, false ), $label );
+      $html .= sprintf( '<option value="%s" %s>%s</option>', $key, selected( $value, $key, false ), $label );
+    }
+
+    $html .= sprintf( '</select>' );
+    $html .= $this->get_field_description( $args );
+
+    echo $html;
+  }
+
+  /**
+   * Displays a multi selectbox for a settings field
+   *
+   * @param array   $args settings field args
+   */
+  public function callback_multiselect( $args ) {
+
+    $name_id = $args['name_id'];
+    $elment_id = str_replace( '.', '--', $name_id );
+    $elment_id = str_replace( '[', '_', $elment_id );
+    $elment_id = str_replace( ']', '', $elment_id );
+    if ($args['parent']) {
+      $value = $this->get_option( $args['parent']['id'], $args['section'], $args['std'], $args['global'] );
+      $value = isset($value[$args['id']]) ? $value[$args['id']] : $args['std'];
+      $args['disable'] = (isset( $args['parent']['disable'])) ? $args['parent']['disable'] : false;
+    }else {
+      $value = $this->get_option( $args['id'], $args['section'], $args['std'], $args['global'] );
+    }
+
+    $disable = (isset( $args['disable'] ) && $args['disable'] === true) ? 'disabled' : '';
+    $size  = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
+    $html  = sprintf( '<select multiple="multiple" class="%1$s %2$s-multi-select-field" name="%3$s[]" id="%4$s" %5$s>', $size, $this->settings_prefix, $name_id, $elment_id, $disable );
+
+    foreach ( $args['options'] as $key => $label ) {
+      $html .= sprintf( '<option value="%s" %s>%s</option>', $key, selected( $value, $key, false ), $label );
     }
 
     $html .= sprintf( '</select>' );
@@ -576,9 +948,15 @@ class Wp_Ng_Settings {
    */
   public function callback_textarea( $args ) {
 
-    $name_id =  ( isset($args['global']) && $args['global'] === true ) ? $this->get_option_prefix( '%2$s' ) : $this->get_option_prefix( '%1$s[%2$s]' );
-    $name_id = sprintf( $name_id, $args['section'], $args['id'] );
-    $value = esc_textarea( $this->get_option( $args['id'], $args['section'], $args['std'], $args['global'] ) );
+    $name_id = $args['name_id'];
+    if ($args['parent']) {
+      $value = $this->get_option( $args['parent']['id'], $args['section'], $args['std'], $args['global'] );
+      $value = isset($value[$args['id']]) ? $value[$args['id']] : $args['std'];
+      $args['disable'] = (isset( $args['parent']['disable'])) ? $args['parent']['disable'] : false;
+    }else {
+      $value = $this->get_option( $args['id'], $args['section'], $args['std'], $args['global'] );
+    }
+
     $disable = (isset( $args['disable'] ) && $args['disable'] === true) ? 'disabled' : '';
     $size  = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
 
@@ -605,9 +983,13 @@ class Wp_Ng_Settings {
    */
   public function callback_wysiwyg( $args ) {
 
-    $name_id =  ( isset($args['global']) && $args['global'] === true ) ? $this->get_option_prefix( '%2$s' ) : $this->get_option_prefix( '%1$s[%2$s]' );
-    $name_id = sprintf( $name_id, $args['section'], $args['id'] );
-    $value = $this->get_option( $args['id'], $args['section'], $args['std'], $args['global'] );
+    $name_id = $args['name_id'];
+    if ($args['parent']) {
+      $value = $this->get_option( $args['parent']['id'], $args['section'], $args['std'], $args['global'] );
+      $value = isset($value[$args['id']]) ? $value[$args['id']] : $args['std'];
+    }else {
+      $value = $this->get_option( $args['id'], $args['section'], $args['std'], $args['global'] );
+    }
     $size  = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : '500px';
 
     echo '<div style="max-width: ' . $size . ';">';
@@ -636,9 +1018,13 @@ class Wp_Ng_Settings {
    */
   public function callback_file( $args ) {
 
-    $name_id =  ( isset($args['global']) && $args['global'] === true ) ? $this->get_option_prefix( '%2$s' ) : $this->get_option_prefix( '%1$s[%2$s]' );
-    $name_id = sprintf( $name_id, $args['section'], $args['id'] );
-    $value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'], $args['global'] ) );
+    $name_id = $args['name_id'];
+    if ($args['parent']) {
+      $value = $this->get_option( $args['parent']['id'], $args['section'], $args['std'], $args['global'] );
+      $value = isset($value[$args['id']]) ? $value[$args['id']] : $args['std'];
+    }else {
+      $value = $this->get_option( $args['id'], $args['section'], $args['std'], $args['global'] );
+    }
     $size  = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
     $id    = $args['section']  . '[' . $args['id'] . ']';
     $label = isset( $args['options']['button_label'] ) ? $args['options']['button_label'] : __( 'Choose File' );
@@ -657,9 +1043,13 @@ class Wp_Ng_Settings {
    */
   public function callback_password( $args ) {
 
-    $name_id =  ( isset($args['global']) && $args['global'] === true ) ? $this->get_option_prefix( '%2$s' ) : $this->get_option_prefix( '%1$s[%2$s]' );
-    $name_id = sprintf( $name_id, $args['section'], $args['id'] );
-    $value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'], $args['global'] ) );
+    $name_id = $args['name_id'];
+    if ($args['parent']) {
+      $value = $this->get_option( $args['parent']['id'], $args['section'], $args['std'], $args['global'] );
+      $value = isset($value[$args['id']]) ? $value[$args['id']] : $args['std'];
+    }else {
+      $value = $this->get_option( $args['id'], $args['section'], $args['std'], $args['global'] );
+    }
     $size  = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
 
     $html  = sprintf( '<input type="password" class="%1$s-text" id="%2$s" name="%2$s" value="%3$s"/>', $size, $name_id, $value );
@@ -675,9 +1065,13 @@ class Wp_Ng_Settings {
    */
   public function callback_color( $args ) {
 
-    $name_id =  ( isset($args['global']) && $args['global'] === true ) ? $this->get_option_prefix( '%2$s' ) : $this->get_option_prefix( '%1$s[%2$s]' );
-    $name_id = sprintf( $name_id, $args['section'], $args['id'] );
-    $value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'], $args['global'] ) );
+    $name_id = $args['name_id'];
+    if ($args['parent']) {
+      $value = $this->get_option( $args['parent']['id'], $args['section'], $args['std'], $args['global'] );
+      $value = isset($value[$args['id']]) ? $value[$args['id']] : $args['std'];
+    }else {
+      $value = $this->get_option( $args['id'], $args['section'], $args['std'], $args['global'] );
+    }
     $size  = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
 
     $html  = sprintf( '<input type="text" class="%1$s-text wp-color-picker-field" id="%2$s" name="%2$s" value="%3$s" data-default-color="%4$s" />', $size, $name_id, $value, $args['std'] );
@@ -713,6 +1107,8 @@ class Wp_Ng_Settings {
 
     return $options_to_sanitize;
   }
+
+
 
   /**
    * Get sanitization callback for given option slug
@@ -759,13 +1155,24 @@ class Wp_Ng_Settings {
 
       //Return if $option is disabled
       if ( $this->is_disabled( $option ) ) {
-        return $this->get_option_theme_support( $option );
+        return $this->get_option_support( $option );
       }
       $options[$option] = get_option( $option_name );
     }
     else {
 
       $option_name = $this->get_option_prefix( $section );
+
+      //Return if $option is disabled
+      if ( $this->is_disabled( $option, false,  $section) ) {
+        $options = $this->get_option_support( $section );
+
+        if ( isset($options[$option]) ) {
+          return $options[$option];
+        }
+
+        return array('active' => 'on');
+      }
 
       $options = get_option( $option_name );
     }
@@ -787,14 +1194,39 @@ class Wp_Ng_Settings {
     ?>
     <script>
       jQuery(document).ready(function($) {
+
+        //Add Class active or inactive and disabled on display table section with checkbox active column
+        $( '.wp-list-table .check-column .checkbox' ).parents('tr').addClass('inactive');
+        $( '.wp-list-table .check-column .checkbox:checked' ).parents('tr').removeClass('inactive');
+        $( '.wp-list-table .check-column .checkbox:checked' ).parents('tr').addClass('active');
+        $( '.wp-list-table .check-column .checkbox:disabled' ).parents('tr').addClass('disabled');
+
+
+
+        //Initiate Multi Select
+        $('.<?php echo $this->settings_prefix; ?>-multi-select-field').multiSelect({
+          selectableHeader: "<div class='custom-header'><?php _e( 'Conditions', $this->settings_prefix); ?></div>",
+          selectionHeader: "<div class='custom-header'><?php _e( 'Selected Conditions', $this->settings_prefix); ?></div>"
+        });
+
+        //Display button condition
+        $('fieldset .checkbox').parents('fieldset').find('a.button-conditions').css('display', 'none');
+        $('fieldset .checkbox:checked').parents('fieldset').find('a.button-conditions').css('display', '');
+
+        $('fieldset .checkbox').on('click', function (event) {
+          $('fieldset .checkbox').parents('fieldset').find('a.button-conditions').css('display', 'none');
+          $('fieldset .checkbox:checked').parents('fieldset').find('a.button-conditions').css('display', '');
+        });
+
         //Initiate Color Picker
         $('.wp-color-picker-field').wpColorPicker();
 
         // Switches option sections
         $('.group').hide();
         var activetab = '';
+        var activetab_id = "wp_ng_activetab";
         if (typeof(localStorage) != 'undefined' ) {
-          activetab = localStorage.getItem("activetab");
+          activetab = localStorage.getItem(activetab_id);
         }
         if (activetab != '' && $(activetab).length ) {
           $(activetab).fadeIn();
@@ -823,7 +1255,7 @@ class Wp_Ng_Settings {
           $(this).addClass('nav-tab-active').blur();
           var clicked_group = $(this).attr('href');
           if (typeof(localStorage) != 'undefined' ) {
-            localStorage.setItem("activetab", $(this).attr('href'));
+            localStorage.setItem(activetab_id, $(this).attr('href'));
           }
           $('.group').hide();
           $(clicked_group).fadeIn();
@@ -839,7 +1271,7 @@ class Wp_Ng_Settings {
           var file_frame = wp.media.frames.file_frame = wp.media({
             title: self.data('uploader_title'),
             button: {
-              text: self.data('uploader_button_text'),
+              text: self.data('uploader_button_text')
             },
             multiple: false
           });
@@ -882,6 +1314,131 @@ class Wp_Ng_Settings {
 
   }
 
+
+  public function do_settings_fields_table( $page, $section ) {
+    global $wp_settings_fields;
+
+    if ( ! isset( $wp_settings_fields[ $page ][ $section ] ) ) {
+      return;
+    }
+
+
+    foreach ( (array) $wp_settings_fields[ $page ][ $section ] as $field ) {
+      if ( $field['args']['type'] === 'sub_fields' ) {
+        $class = '';
+
+        if ( ! empty( $tr_field['args']['class'] ) ) {
+          $class = ' class="' . esc_attr( $tr_field['args']['class'] ) . '"';
+        }
+
+        echo "<tr{$class}>";
+
+
+        //Active subfield for the group
+        foreach ( (array) $wp_settings_fields[ $page ][ $section ] as $sub_field ) {
+          if ( $sub_field['args']['parent']['name_id'] === $field['args']['name_id'] && $sub_field['args']['id'] === 'active' ) {
+            echo '<th scope="row" class="check-column">';
+            if ( ! empty( $sub_field['args']['label_for'] ) ) {
+              echo '<label class="screen-reader-text" for="' . esc_attr( $sub_field['args']['label_for'] ) . '">' . $sub_field['title'] . '</label>';
+              call_user_func( $sub_field['callback'], $sub_field['args'] );
+            } else {
+              echo $sub_field['title'];
+              call_user_func( $sub_field['callback'], $sub_field['args'] );
+            }
+            echo '</th>';
+          }
+        }
+
+
+        //Title
+        echo '<td class="plugin-title column-primary">';
+
+        if ( $field['title'] ) {
+          echo '<strong>' . $field['title'] . '</strong>';
+        }
+
+        echo '</td>';
+
+        //Description callback field
+        echo '<td class="column-description desc">';
+        call_user_func($field['callback'], $field['args']);
+        echo '</td>';
+
+
+        //Options sub_fields
+        echo '<td class="column-options">';
+        foreach ( (array) $wp_settings_fields[$page][$section] as $sub_field ) {
+          if ( $sub_field['args']['parent']['name_id'] === $field['args']['name_id'] && $sub_field['args']['id'] !== 'active' ) {
+            call_user_func($sub_field['callback'], $sub_field['args']);
+          }
+        }
+        echo '</td>';
+
+        echo '</tr>';
+      }
+    }
+
+  }
+
+
+  function do_settings_sections( $page ) {
+    global $wp_settings_sections, $wp_settings_fields;
+
+    if ( ! isset( $wp_settings_sections[$page] ) )
+      return;
+
+    foreach ( (array) $wp_settings_sections[$page] as $section ) {
+      if ( $section['title'] ) {
+        echo "<h2>{$section['title']}</h2>\n";
+      }
+
+
+      if ( $section['callback'] ) {
+        call_user_func( $section['callback'], $section );
+      }
+
+      if ( ! isset( $wp_settings_fields ) || !isset( $wp_settings_fields[$page] ) || !isset( $wp_settings_fields[$page][$section['id']] ) ) {
+        continue;
+      }
+
+      $settings_section_key = array_search($section['id'], array_column($this->settings_sections[$page], 'id'));
+      $display = '';
+
+      if ($settings_section_key !== false && isset($this->settings_sections[$page][$settings_section_key]['display']) ) {
+        $display = $this->settings_sections[$page][$settings_section_key]['display'];
+      }
+
+      switch ( $display ) {
+        case 'table':
+          echo '<table class="wp-list-table widefat plugins">';
+          echo '<thead>';
+          echo '<tr>';
+          echo '<td id="cb" class="manage-column column-cb check-column">';
+          echo __( 'Select', $this->settings_prefix);
+          echo '</td>';
+          echo '<th scope="col" id="name" class="manage-column column-name column-primary">' . __('Module', $this->settings_prefix) . '</th>';
+          echo '<th scope="col" id="description" class="manage-column column-description">' . __('Description', $this->settings_prefix) . '</th>';
+          echo '<th scope="col" id="options" class="manage-column column-options">' . __('Options', $this->settings_prefix) . '</th>';
+          echo '</tr>';
+          echo '</thead>';
+          echo '<tbody id="the-list">';
+
+          $this->do_settings_fields_table( $page, $section['id'] );
+
+          echo '</tbody>';
+          echo '</table>';
+          break;
+        default:
+          echo '<table class="form-table">';
+
+          do_settings_fields( $page, $section['id'] );
+
+          echo '</table>';
+      }
+    }
+  }
+
+
   /**
    * Show the section settings forms
    *
@@ -896,10 +1453,12 @@ class Wp_Ng_Settings {
             <?php
             do_action( 'wp_ng_settings_form_top_' . $tab['id'], $tab );
             settings_fields( $tab['id'] );
-            do_settings_sections( $tab['id'] );
+
+            $this->do_settings_sections( $tab['id'] );
+
             do_action( 'wp_ng_settings_form_bottom_' . $tab['id'], $tab );
             ?>
-            <div style="padding-left: 10px">
+            <div>
               <?php submit_button(); ?>
             </div>
           </form>

@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "wp-ng-admin.css": {
+      "files": "styles/wp-ng-admin.scss",
+      "main": true
+    },
+    "wp-ng-admin.js": {
+      "files": [
+        "scripts/wp-ng-admin.js"
+      ],
+      "main": true
+    },
+    "jquery.js": {
+      "bower": ["jquery"]
+    }
+  }
+}

@@ -1,27 +1,28 @@
-=== wp-ng ===
+=== Angular for WordPress ===
 Contributors: redcastor
-Tags: angular, bootstrapper, bootstrap, module, ng, script, enqueue
+Tags: wp-ng, WP-NG, WPNG, wp ng, wp-angular, wp angular, angular, angular js, bootstrapper, bootstrap, module, ng, script, enqueue, rest, wp-rest, wp-api, ngResource
 Requires at least: 4.5
 Tested up to: 4.6
-Stable tag: 1.0.2
+Stable tag: 1.1.1
 License: MIT License
 License URI: http://opensource.org/licenses/MIT
 
 
-WP-NG is a plugin to automatic bootstrap angular application and inject module in your application.
+WP-NG is a plugin to automatic bootstrap angular application. Activate module by admin page and use directly directive.
 
 == Description ==
 
-WP-NG is a plugin to automatic bootstrap angular application and inject module in your application.
+WP-NG is a plugin to automatic bootstrap angular application. Activate module by admin page and use directly directive.
 
 = Features =
 
 * Automatic bootstrapper angular application.
+* Activate modules by settings page like wordpress plugins page.
+* Collection of default modules registered (example: ngRessource, ngRoute, ngAnimate, ui.bootstrap, mm.foundation,  ...).
 * Register your module with standard function "wp_enqueue_script". Add prefix 'wp-ng_' to handle and add dependencie of 'wp-ng'.
 * Register your module with filter "wp_ng_register_ng_modules".
 * Combine script in queue for "wp-ng_" handle prefix.
 * Combine style in queue for "wp-ng_" handle prefix.
-* Collection of default modules registered (example: ngRessource, ngRoute, ngAnimate, ui.bootstrap, mm.foundation,  ...).
 * Compatibility module ngResource with wp rest api. For this feature there is a angular module "wpNgRest".
 
 = Brief Doc API =
@@ -72,6 +73,17 @@ List of handle available
 * wp-ng_angular-translate-loader-static-files
 * wp-ng_bootstrap
 * wp-ng_foundation
+* wp-ng_angular-loading-bar
+* wp-ng_angular-svg-round-progressbar
+* wp-ng_ngStorage
+* wp-ng_xeditable
+* wp-ng_ngTagsInput
+* wp-ng_oc.lazyLoad
+* wp-ng_angularLazyImg
+* wp-ng_breakpointApp
+* wp-ng_angularProgressbar
+* wp-ng_hl.sticky
+* wp-ng_focus-if
 
 
 = Default Registered modules styles =
@@ -94,6 +106,11 @@ List of handle available
 * wp-ng_ui-leaflet
 * wp-ng_ui.grid
 * wp-ng_ui.select
+* wp-ng_angular-loading-bar
+* wp-ng_xeditable
+* wp-ng_ngTagsInput
+* wp-ng_pageslide-directive
+* wp-ng_hl.sticky
 
 = Hook Filters =
 
@@ -107,6 +124,7 @@ List of hook available
 * wp_ng_app_element
 * wp_ng_settings_fields
 * wp_ng_get_option
+* wp_ng_get_options
 
 = Theme Support =
 
@@ -253,10 +271,14 @@ Example your_app.js
 
 = Internal Angular Filters =
 
-wp-ng include generic angular filter
+wp-ng include generic angular filters
 
   * html
   * isEmpty
+
+wp-ng include generic angular directives
+
+  * ng-bind-html-compile
 
 `
 <div data-ng-bing-html="content | html"></div>
@@ -272,13 +294,18 @@ wp-ng include generic angular filter
 
 == Screenshots ==
 
-1. Settings Page
+1. Angular Modules.
+2. Settings Page.
 
 == Frequently Asked Questions ==
 
 == Upgrade Notice ==
 
 == Changelog ==
+
+= 1.2.10 =
+* Add Modules list
+* Activate or desactivate module on the admin.
 
 = 1.0.2 =
 * Update version readme

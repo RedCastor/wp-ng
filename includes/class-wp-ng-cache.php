@@ -75,7 +75,7 @@ class Wp_Ng_Cache {
           $_local_path_src = $this->get_local_path($src);
 
           if( $_local_path_src ) {
-            $_content = file_get_contents( $this->get_local_path($src) ) . PHP_EOL . PHP_EOL;
+            $_content = '/*! ' . $handle . ' */' . PHP_EOL . file_get_contents( $this->get_local_path($src) ) . PHP_EOL . PHP_EOL;
 
             //Replace relative url in css file to abs url (for resolve relative url in css url with combine cache in different directory).
             $_filename = pathinfo( $_local_path_src );

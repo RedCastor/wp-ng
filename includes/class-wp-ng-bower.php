@@ -20,6 +20,7 @@
 class Wp_Ng_Bower {
 
   private $bower = null;
+  private $bower_admin = null;
 
   /**
    * Wp_Ng_Bower constructor.
@@ -32,6 +33,11 @@ class Wp_Ng_Bower {
     if (empty($this->bower)) {
       $bower_path = plugin_dir_path( dirname( $path ) ) . $filename;
       $this->bower = new Wp_Ng_JsonManifest($bower_path);
+    }
+
+    if (empty($this->bower_admin)) {
+      $bower_path = plugin_dir_path( dirname( $path ) ) . 'admin/bower.json';
+      $this->bower_admin = new Wp_Ng_JsonManifest($bower_path);
     }
 
   }
@@ -49,8 +55,18 @@ class Wp_Ng_Bower {
    *
    * @return array|mixed|null
    */
-  public function get_version( $name ) {
-    return $this->bower->get_path('dependencies.' . $name);
+  public function get_version( $name, $admin = false ) {
+
+    if ( $admin === true ) {
+      $bower = $this->bower_admin;
+    }
+    else {
+      $bower = $this->bower;
+    }
+
+    $version = explode( '#', $bower->get_path('dependencies.' . $name) );
+
+    return ( isset($version[1]) ) ? $version[1] : $version[0];
   }
 
   /**

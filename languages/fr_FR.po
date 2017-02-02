@@ -5,8 +5,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: wp-ng V1.0-beta6\n"
-"POT-Creation-Date: 2016-11-10 14:59+0100\n"
+"Project-Id-Version: wp-ng V1.1.0\n"
+"POT-Creation-Date: 2016-12-12 14:34+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: RedCastor <team@redcastor.io>\n"
@@ -22,28 +22,440 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: public/bower_components\n"
+"X-Poedit-SearchPathExcluded-1: public/node_modules\n"
+"X-Poedit-SearchPathExcluded-2: public/dist\n"
+"X-Poedit-SearchPathExcluded-3: public/assets\n"
+"X-Poedit-SearchPathExcluded-4: admin/bower_components\n"
+"X-Poedit-SearchPathExcluded-5: admin/node_modules\n"
+"X-Poedit-SearchPathExcluded-6: admin/dist\n"
+"X-Poedit-SearchPathExcluded-7: admin/assets\n"
 
-#: includes/class-wp-ng-settings.php:644
+#: includes/class-wp-ng-settings.php:403
+msgid "Is Home"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:404
+msgid "Is Front page"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:405
+msgid "Is Home and Front page"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:406
+msgid "Is Single"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:407
+msgid "Is Sticky"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:408
+msgid "Is Page"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:409
+msgid "Is Page Template"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:410
+msgid "Is Category"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:411
+msgid "Is Tag"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:412
+msgid "Is Taxonomy"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:413
+msgid "Is Author "
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:414
+msgid "Is Archive"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:415
+msgid "Is Search"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:416
+msgid "Is 404"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:417
+msgid "Is Singular"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:418
+msgid "Is User Logged In"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:423
+msgid "Page"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:429
+msgid "Page Template "
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:441
+msgid "Post Type "
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:447
+msgid "Is Woocommerce"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:448
+msgid "Is Shop"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:449
+msgid "Is Product Category"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:450
+msgid "Is Product Tag"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:451
+msgid "Is Product"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:452
+msgid "Is Cart"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:453
+msgid "Is Checkout"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:454
+msgid "Is Account Page"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:455
+msgid "Is Endpoint Url"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:456
+msgid "Is Ajax"
+msgstr ""
+
+#: includes/class-wp-ng-settings.php:621
+msgid "Select your conditions"
+msgstr "Sélectionnez vos conditions"
+
+#: includes/class-wp-ng-settings.php:621 includes/class-wp-ng-settings.php:1140
+msgid "Conditions"
+msgstr "Conditions"
+
+#: includes/class-wp-ng-settings.php:962
 msgid "Choose File"
 msgstr "Sélectionnez un fichier"
 
-#: includes/wp-ng-settings-descriptor.php:23
+#: includes/class-wp-ng-settings.php:1141
+msgid "Selected Conditions"
+msgstr "Conditions choisis"
+
+#: includes/class-wp-ng-settings.php:1348
+msgid "Select"
+msgstr "Choisir"
+
+#: includes/class-wp-ng-settings.php:1350
+msgid "Module"
+msgstr "Module"
+
+#: includes/class-wp-ng-settings.php:1351
+msgid "Description"
+msgstr "Description"
+
+#: includes/class-wp-ng-settings.php:1352
+msgid "Options"
+msgstr "Оptions"
+
+#: includes/wp-ng-settings-descriptor.php:22
+msgid "Modules"
+msgstr "Modules"
+
+#: includes/wp-ng-settings-descriptor.php:31
+msgid ""
+"The ngRoute module provides routing and deeplinking services and directives "
+"for angular apps."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:43
+#: includes/wp-ng-settings-descriptor.php:65
+#: includes/wp-ng-settings-descriptor.php:94
+#: includes/wp-ng-settings-descriptor.php:116
+#: includes/wp-ng-settings-descriptor.php:138
+#: includes/wp-ng-settings-descriptor.php:160
+#: includes/wp-ng-settings-descriptor.php:182
+#: includes/wp-ng-settings-descriptor.php:215
+#: includes/wp-ng-settings-descriptor.php:249
+#: includes/wp-ng-settings-descriptor.php:271
+#: includes/wp-ng-settings-descriptor.php:293
+#: includes/wp-ng-settings-descriptor.php:315
+#: includes/wp-ng-settings-descriptor.php:337
+#: includes/wp-ng-settings-descriptor.php:366
+#: includes/wp-ng-settings-descriptor.php:395
+#: includes/wp-ng-settings-descriptor.php:417
+#: includes/wp-ng-settings-descriptor.php:439
+#: includes/wp-ng-settings-descriptor.php:475
+#: includes/wp-ng-settings-descriptor.php:511
+#: includes/wp-ng-settings-descriptor.php:540
+#: includes/wp-ng-settings-descriptor.php:562
+#: includes/wp-ng-settings-descriptor.php:591
+#: includes/wp-ng-settings-descriptor.php:613
+#: includes/wp-ng-settings-descriptor.php:635
+#: includes/wp-ng-settings-descriptor.php:664
+#: includes/wp-ng-settings-descriptor.php:686
+#: includes/wp-ng-settings-descriptor.php:715
+#: includes/wp-ng-settings-descriptor.php:744
+#: includes/wp-ng-settings-descriptor.php:766
+#: includes/wp-ng-settings-descriptor.php:788
+#: includes/wp-ng-settings-descriptor.php:810
+#: includes/wp-ng-settings-descriptor.php:832
+#: includes/wp-ng-settings-descriptor.php:861
+#: includes/wp-ng-settings-descriptor.php:883
+#: includes/wp-ng-settings-descriptor.php:912
+#: includes/wp-ng-settings-descriptor.php:941 public/class-wp-ng-public.php:120
+msgid "Load on conditions."
+msgstr "Charger sur conditions"
+
+#: includes/wp-ng-settings-descriptor.php:53
+msgid "The ngSanitize module provides functionality to sanitize HTML."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:75
+msgid ""
+"The ngAnimate module provides support for CSS-based animations (keyframes "
+"and transitions) as well as JavaScript-based animations via callback hooks."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:87
+msgid "Load ngAnimate.css style."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:104
+msgid ""
+"The ngResource module provides interaction support with RESTful services via "
+"the $resource service."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:126
+msgid ""
+"The ngCookies module provides a convenient wrapper for reading and writing "
+"browser cookies."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:148
+msgid ""
+"The ngMessages module provides enhanced support for displaying messages "
+"within templates."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:170
+msgid ""
+"The ngTouch module provides touch events and other helpers for touch-enabled "
+"devices."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:192
+msgid " AngularJS directives specific to Bootstrap."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:204
+#: includes/wp-ng-settings-descriptor.php:237
+#: includes/wp-ng-settings-descriptor.php:359
+#: includes/wp-ng-settings-descriptor.php:388
+#: includes/wp-ng-settings-descriptor.php:461
+#: includes/wp-ng-settings-descriptor.php:497
+#: includes/wp-ng-settings-descriptor.php:533
+#: includes/wp-ng-settings-descriptor.php:584
+#: includes/wp-ng-settings-descriptor.php:657
+#: includes/wp-ng-settings-descriptor.php:708
+#: includes/wp-ng-settings-descriptor.php:737
+#: includes/wp-ng-settings-descriptor.php:854
+#: includes/wp-ng-settings-descriptor.php:905
+#: includes/wp-ng-settings-descriptor.php:934
+msgid "Load style."
+msgstr "Chargement style"
+
+#: includes/wp-ng-settings-descriptor.php:208
+#: includes/wp-ng-settings-descriptor.php:241
+msgid "No Style"
+msgstr "Pas de style"
+
+#: includes/wp-ng-settings-descriptor.php:225
+msgid ""
+"This project is a port of the AngularUI team's excellent angular-bootstrap "
+"project for use in the Foundation framework."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:259
+msgid ""
+"Routing frameworks for SPAs update the browser's URL as the user navigates "
+"through the app."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:281
+msgid "i18n for your Angular app, made easy!"
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:303
+msgid ""
+"Creates a loading function for a typical static file url pattern: \"lang-"
+"en_US.json\", \"lang-de_DE.json\", etc. Using this builder, the response of "
+"these urls must be an object of key-value pairs."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:325
+msgid "It's like click, but when you don't click on your element."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:347
+msgid ""
+"nya-bootstrap-select v2 is an AngularJS directive set inspired by "
+"@silviomoreto 's bootstrap-select ."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:376
+msgid ""
+"ngDialog is ~10KB (minified), has minimalistic API, is highly customizable "
+"through themes and has only AngularJS as dependency."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:405
+msgid ""
+"A pure-javascript library and set of directives to scroll smoothly to an "
+"element with easing. Easing support contributed by Willem Liu with code from "
+"Gaëtan Renaudeau."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:427
+msgid "Angular is only dependency (no jQuery). 8K minified or 2K gzipped."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:449
+msgid "Angular directive for slick jquery carousel."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:468
+#: includes/wp-ng-settings-descriptor.php:504
+msgid "Load Theme style."
+msgstr "Chargement style thème"
+
+#: includes/wp-ng-settings-descriptor.php:485
+msgid "Angular directive for slick-carousel."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:521
+msgid "AngularJS directive for simple image magnification."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:550
+msgid ""
+"ngInfiniteScroll is a directive for AngularJS to evaluate an expression when "
+"the bottom of the directive's element approaches the bottom of the browser "
+"window, which can be used to implement infinite scrolling."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:572
+msgid ""
+"AngularJS directive for the Leaflet Javascript Library. This software aims "
+"to easily embed maps managed by Leaflet on your project."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:601
+msgid "AngularJS provider to work with RESTful wordpress."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:623
+msgid ""
+"To have simplified log levels where a supporting angular module's log levels "
+"are independent of the application."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:645
+msgid ""
+"An AngularJS directive which slides another panel over your browser to "
+"reveal an additional interaction pane."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:674
+msgid "General-purpose validator for ngModel."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:696
+msgid "An AngularJS data grid."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:725
+msgid "AngularJS select,search,... input."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:754
+msgid "Angular Antimoderate CSS3 filter."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:776
+#: includes/wp-ng-settings-descriptor.php:798
+msgid ""
+"Geonames ( http://www.geonames.org ) Bsed on ui-leaflet directive structure "
+"( https://github.com/angular-ui/ui-leaflet )."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:820
+msgid "Lightweight Angular directive to upload files."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:842
+msgid ""
+"The idea is simple: Add a loading bar / progress bar whenever an XHR request "
+"goes out in angular."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:871
+msgid ""
+"An AngularJS module that makes Web Storage working in the Angular Way. "
+"Contains two services: $localStorage and $sessionStorage."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:893
+msgid ""
+"Angular-xeditable is a bundle of AngularJS directives that allows you to "
+"create editable elements in your projects."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:922
+msgid ""
+"Tags input directive for AngularJS. Check out the ngTagsInput website for "
+"more information."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:953
 msgid "General"
 msgstr "Générale"
 
-#: includes/wp-ng-settings-descriptor.php:26
+#: includes/wp-ng-settings-descriptor.php:956
 msgid "General Settings"
 msgstr "Réglages généraux"
 
-#: includes/wp-ng-settings-descriptor.php:30
+#: includes/wp-ng-settings-descriptor.php:960
 msgid "Application name"
 msgstr "Nom de l'application"
 
-#: includes/wp-ng-settings-descriptor.php:39
+#: includes/wp-ng-settings-descriptor.php:969
 msgid "Combine modules"
 msgstr "Combiner des modules"
 
-#: includes/wp-ng-settings-descriptor.php:40
+#: includes/wp-ng-settings-descriptor.php:970
 msgid ""
 "Combine the modules script and style. Combine create file in cache based on "
 "modification timestamp and module loaded in current context."
@@ -52,28 +464,38 @@ msgstr ""
 "sur la date et heure du fichier source et sur le nombre de module chargé "
 "pour le contexte courant."
 
-#: includes/wp-ng-settings-descriptor.php:48
-msgid "Body Cloak"
-msgstr "Body Cloak"
+#: includes/wp-ng-settings-descriptor.php:978
+msgid "Document Cloak"
+msgstr "Document Cloak"
 
-#: includes/wp-ng-settings-descriptor.php:49
-msgid "Cloak the body. More info see"
-msgstr "Cloak le body. Plus d'information voir "
+#: includes/wp-ng-settings-descriptor.php:979
+msgid "Cloak the document. More info see"
+msgstr "Masque le document. Plus d’informations, consultez"
 
-#: includes/wp-ng-settings-descriptor.php:57
+#: includes/wp-ng-settings-descriptor.php:987
+msgid "Document Preload"
+msgstr "Précharge du document"
+
+#: includes/wp-ng-settings-descriptor.php:988
+msgid ""
+"Preload the document. Class ng-preload is add to document tag html for "
+"disable transition and set visibility to hidden on all document."
+msgstr ""
+
+#: includes/wp-ng-settings-descriptor.php:996
 msgid "Cache File Hours"
 msgstr "Heures de fichier cache"
 
-#: includes/wp-ng-settings-descriptor.php:58
+#: includes/wp-ng-settings-descriptor.php:997
 msgid "Remove file in cache base on timestamp and your hours value."
 msgstr ""
 "Supprime le fichier en cache basé sur la date heure et votre valeur d'heure."
 
-#: includes/wp-ng-settings-descriptor.php:67
+#: includes/wp-ng-settings-descriptor.php:1006
 msgid "Purge Cache"
 msgstr "Supprimer le cache"
 
-#: includes/wp-ng-settings-descriptor.php:68
+#: includes/wp-ng-settings-descriptor.php:1007
 #, php-format
 msgid "Purge the cache directory. Number of file in cache: %s script, %s style"
 msgstr ""
@@ -87,3 +509,40 @@ msgstr "Le nonce du cookie n’est pas valide"
 #: wp-ng.php:63
 msgid "WP NG require minimum wp version: "
 msgstr "WP NG nécessitent la version minimale de wp :"
+
+#~ msgid ""
+#~ "Preload the document. Add a class ng-preload to document tag html for "
+#~ "disable transition and set visibility to hidden."
+#~ msgstr ""
+#~ "Préchargement du document. Ajoute la classe ng-peload au niveau du tag "
+#~ "html afin de désactiver les transistions et met la visibilité à cachée."
+
+#~ msgid ""
+#~ "Preload the document. Add a class to body ng-preload for disable "
+#~ "transition and set visibility to hidden."
+#~ msgstr ""
+#~ "Préchargement du document. Ajoute la classe ng-peload au niveau du tag "
+#~ "html afin de désactiver les transistions et met la visibilité à cachée."
+
+#~ msgid "Body Cloak"
+#~ msgstr "Body Cloak"
+
+#~ msgid "Cloak the body. More info see"
+#~ msgstr "Cloak le body. Plus d'information voir "
+
+#~ msgid "Body Preload"
+#~ msgstr "Body préchargement"
+
+#~ msgid ""
+#~ "Preload the body. Add a class to body ng-preload for disable transition "
+#~ "and set visibility to hidden."
+#~ msgstr ""
+#~ "Préchargement du body. Ajoute une classe au body ng-peload afin de "
+#~ "désactiver les transistions et met la visibilité à cachée."
+
+#~ msgid ""
+#~ "Preload the body. Add a class to body ng-preload for disable transition "
+#~ "and set visibility to hidden"
+#~ msgstr ""
+#~ "Préchargement du body. Ajoute une classe au body ng-peload afin de "
+#~ "désactiver les transistions et met la visibilité à cachée."

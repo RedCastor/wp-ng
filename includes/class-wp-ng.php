@@ -105,7 +105,7 @@ class Wp_Ng {
     /**
      * Global Functions of the plugin.
      */
-    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/wp-ng-functions.php';
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/wp-ng-core-functions.php';
 
 
     /**
@@ -121,10 +121,14 @@ class Wp_Ng {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-ng-i18n.php';
 
     /**
-     * The class responsible for orchestrating the actions and filters of the
-     * core plugin.
+     * The class responsible for orchestrating the cache.
      */
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-ng-cache.php';
+
+    /**
+     * The class responsible for orchestrating the conditional settings
+     */
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-ng-conditional.php';
 
     /**
      * The class responsible for orchestrating the settings fields page.
@@ -221,8 +225,9 @@ class Wp_Ng {
 		//Default Scripts and styles
 		$this->loader->add_action( 'wp_default_scripts',  $plugin_public, 'default_scripts' );
 		$this->loader->add_action( 'wp_default_styles',   $plugin_public, 'default_styles' );
+    $this->loader->add_action( 'wp_enqueue_scripts',  $plugin_public, 'external_modules' );
+    $this->loader->add_action( 'wp_enqueue_scripts',  $plugin_public, 'enqueue_scripts' );
 		$this->loader->add_action( 'wp_enqueue_scripts',  $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts',  $plugin_public, 'enqueue_scripts' );
 		$this->loader->add_action( 'after_setup_theme',   $plugin_public, 'after_setup_theme');
 
 	}

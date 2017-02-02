@@ -1,5 +1,68 @@
 ### HEAD
 
+### 1.2.10: February 2th, 2017
+* Bug fix bower get version with '#'
+* Add accordion animation.
+
+### 1.2.9: February 1th, 2017
+* Add module ng-focus-if
+
+### 1.2.8: January 31th, 2017
+* Add angular module hl.sticky
+* Bug fix module name in descriptor. All __dot__ not __DOT__
+
+### 1.2.7: January 31th, 2017
+* Reverse foundation load on run angular. Bug init drill menu in pageslide.
+
+### 1.2.6: January 31th, 2017
+* Bug fix load foundation. move load foundation on document ready.
+* Workaround sticky on initialize.
+
+### 1.2.5: January 30th, 2017
+* Add options adavanced 
+* Add option disable wpautop
+* Add option disable tinymce verify html
+
+### 1.2.4: January 23th, 2017
+* Bug fix "register_external_modules" with style src not empty add subfield style to default on.
+
+### 1.2.3: January 23th, 2017
+* Update ng-antimoderate
+
+### 1.2.2: January 5th, 2017
+* Add on uninstall plugin delete options wp-ng
+
+### 1.2.1: December 20th, 2016
+* Add log and check foundation initialized
+* Add settings app element
+
+### 1.2.0: December 19th, 2016
+* Update foundation 6.3.0
+
+### 1.1.2: December 19th, 2016
+* Add module angular-progressbar, angularjs-breakpoint
+
+### 1.1.1: December 19th, 2016
+* Add Angular module angular-svg-round-progressbar
+* various fix
+
+### 1.1.0: December 12th, 2016
+* Settings page tab to auto load angular module
+
+### 1.0.4: December 1th, 2016
+* Add wp-ng generic directives
+* Remove module angular html compile directive
+
+### 1.0.3: November 29th, 2016
+* Add some angular modules
+* Update Readme
+
+### 1.0.2: November 10th, 2016
+* Update Readme
+
+### 1.0.1: November 10th, 2016
+* Update Readme
+
 ### 1.0.0: November 8th, 2016
 * First Release
 

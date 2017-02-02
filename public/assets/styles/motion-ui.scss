@@ -1,0 +1,79 @@
+//
+// Motion UI
+// --------------------------------------------------
+$motion-ui-classes: (
+  chain: true,
+  prefix: 'ng-',
+  active: '-active',
+);
+
+@import "../../bower_components/motion-ui/src/motion-ui.scss";
+
+.tooltip {
+  @include mui-fade(
+    $state: in,
+    $duration: 0.25s,
+    $delay: 0s
+  );
+}
+
+.tooltip {
+  @include mui-fade(
+    $state: out,
+    $from: 1,
+    $to: 0,
+    $duration: 0.25s,
+    $delay: 0s
+  );
+}
+
+.reveal-overlay {
+  @include mui-fade($state: in);
+}
+
+.reveal-overlay {
+  @include mui-fade(
+    $state: out,
+    $from: 1,
+    $to: 0
+  );
+}
+
+.reveal {
+  @include mui-slide(
+    $state: in, // Specify in or out
+    $direction: down, // Can be top, right, bottom, or left
+    $fade: true, // If true, the element fades simultaneously
+    $duration: 0.25s,
+    $timing: cubic-bezier,
+    $delay: 0s
+  );
+}
+
+.reveal {
+  @include mui-zoom(
+    $state: out,
+    $from: 1,
+    $to: 0,
+    $duration: 0.25s
+  );
+}
+
+
+// class="accordion-item ng-scope ng-isolate-scope ng-animate is-active-add is-active is-active-add-active"
+.accordion-content {
+
+  max-height: 800px;
+  overflow: hidden;
+  transition: 0.3s all ease-in-out;
+
+  &.ng-hide {
+    max-height: 0;
+  }
+
+  &.ng-hide-add,
+  &.ng-hide-remove {
+    display: block !important;
+  }
+}
+

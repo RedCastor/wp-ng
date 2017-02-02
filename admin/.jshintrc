@@ -1,0 +1,23 @@
+{
+  "bitwise": true,
+  "browser": true,
+  "curly": true,
+  "eqeqeq": true,
+  "eqnull": true,
+  "esnext": true,
+  "immed": true,
+  "jquery": true,
+  "latedef": false,
+  "newcap": true,
+  "noarg": true,
+  "node": true,
+  "strict": false,
+
+  // global variables
+  "globals": {
+    "angular": true,
+    "wpNg": true,
+    "WP_NG_CONFIG": true,
+    "define": true
+  }
+}

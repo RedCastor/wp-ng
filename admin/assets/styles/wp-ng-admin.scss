@@ -1,0 +1,42 @@
+//
+// WP-NG Admin
+// --------------------------------------------------
+
+
+//Multi Select wp style
+.ms-container {
+  background: transparent url('../images/switch.png') no-repeat 50% 50%;
+
+  .ms-selectable, .ms-selection {
+    color:      #23282d;
+    background-color: transparent;
+  }
+
+  .ms-list {
+    background-color: #fff;
+  }
+}
+
+
+//Table module list
+#wp_ng_load_modules .wp-list-table {
+
+  &.widefat thead td.check-column {
+    padding: 8px 10px;
+  }
+
+  b, strong {
+    font-weight: 600;
+  }
+
+  fieldset a.button-conditions {
+    height: inherit;
+    line-height: inherit;
+    margin-left: 5px;
+    margin-righ: 5px;
+  }
+
+  .disabled {
+    opacity: 0.65;
+  }
+}

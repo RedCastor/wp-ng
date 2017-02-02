@@ -5,6 +5,7 @@ wp-ng is a plugin to automatic bootstrap your app and inject module in app.
 ## Features
 
 * Automatic bootstrapper angular application.
+* Activate modules by settings page like wordpress plugins page
 * Register your module with standard function "wp_enqueue_script". Add prefix 'wp-ng_' to handle and add dependencie of 'wp-ng'.
 * Register your module with filter "wp_ng_register_ng_modules".
 * Combine script in queue for "wp-ng_" handle prefix.
@@ -32,7 +33,7 @@ The process to combine all style change all relative url to absolute url.
 | wp-ng_ngMessages             | wp-ng   | ngMessages              | 1.5.8       |
 | wp-ng_ngTouch                | wp-ng   | ngTouch                 | 1.5.8       |
 | wp-ng_ui.bootstrap           | wp-ng   | ui.bootstrap            | 2.1.4       |
-| wp-ng_mm.foundation          | wp-ng   | mm.foundation           | 0.10.12     |
+| wp-ng_mm.foundation          | wp-ng   | mm.foundation           | 0.10.25     |
 | wp-ng_ui.router              | wp-ng   | ui.router               | 0.3.1       |
 | wp-ng_pascalprecht.translate | wp-ng, wp-ng_angular-translate-loader-static-files   | pascalprecht.translate  | 1.0.0       |
 | wp-ng_offClick               | wp-ng   | offClick                | 1.0.8       |
@@ -55,9 +56,22 @@ The process to combine all style change all relative url to absolute url.
 | wp-ng_ngAntimoderate         | wp-ng   | ngAntimoderate          | 1.0.0       |
 | wp-ng_ngGeonames             | wp-ng   | ngGeonames              | 1.0.8       |
 | wp-ng_socialLinks            | wp-ng   | socialLinks             | 0.0.23      |
-| wp-ng_angular-translate-loader-static-files |                    | 2.13.0      |
+| wp-ng_ngFileUpload           | wp-ng   | ng-file-upload          | 12.2.13     |
+| wp-ng_angular-loading-bar    | wp-ng   | angular-loading-bar     | 0.9.0       |
+| wp-ng_angular-svg-round-progressbar| wp-ng | angular-svg-round-progressbar | 0.4.8 |
+| wp-ng_ngStorage              | wp-ng   | ngstorage               | 0.3.11      |
+| wp-ng_xeditable              | wp-ng   | angular-xeditable       | 0.5.0       |
+| wp-ng_ngTagsInput            | wp-ng   | ng-tags-input           | 3.1.1       |
+| wp-ng_oc.lazyLoad            | wp-ng   | oc.lazyLoad             | 1.0.9       |
+| wp-ng_angularLazyImg         | wp-ng   | angularLazyImg          | 1.2.2       |
+| wp-ng_breakpointApp          | wp-ng   | breakpointApp           | master      |
+| wp-ng_angularProgressbar     | wp-ng   | angularProgressbar      | 0.1.0       |
+| wp-ng_hl.sticky              | wp-ng   | hl.sticky               | 0.3.0       |
+| wp-ng_focus-if               | wp-ng   | focus-if                | 1.0.7       |
+| wp-ng_angular-translate-loader-static-files | wp-ng_pascalprecht.translate | angular-translate-loader-static-files | 2.13.0 |
 | wp-ng_bootstrap              | jquery  |                         | 3.3.7       |
-| wp-ng_foundation             | jquery  |                         | 6.2.3       |
+| wp-ng_foundation             | jquery  |                         | 6.3.0       |
+| wp-ng_mm.foundation-motion-ui | jquery  |                        | 1.2.2       |
 
 
 ## Default Registered modules styles
@@ -66,8 +80,8 @@ The process to combine all style change all relative url to absolute url.
 | ---------------------------| ------------|----------------|
 | wp-ng_ngAnimate            | wp-ng       | 0.0.4          |
 | wp-ng_bootstrap            |             | 3.3.7          |
-| wp-ng_foundation           |             | 6.2.3          |
-| wp-ng_foundation-flex      |             | 6.2.3          |
+| wp-ng_foundation           |             | 6.3.0          |
+| wp-ng_foundation-flex      |             | 6.3.0          |
 | wp-ng_font-awesome         |             | 4.6.3          |
 | wp-ng_nya.bootstrap.select | wp-ng       | 2.1.9          |
 | wp-ng_ngDialog             | wp-ng       | 0.6.4          |
@@ -80,19 +94,25 @@ The process to combine all style change all relative url to absolute url.
 | wp-ng_ui-leaflet           | wp-ng       | master         |
 | wp-ng_ui.grid              | wp-ng       | 3.2.9          |
 | wp-ng_ui.select            | wp-ng       | 0.19.6         |
+| wp-ng_angular-loading-bar  | wp-ng       | 0.9.0          |
+| wp-ng_xeditable            | wp-ng       | 0.5.0          |
+| wp-ng_ngTagsInput          | wp-ng       | 3.1.1          |
+| wp-ng_pageslide-directive  | wp-ng       | 2.1.1          |
+| wp-ng_hl.sticky            | wp-ng       | 0.3.0          |
 
 ## Hook Filters
 
 | **hook**                     | **Description**                                       | **Param**                     |
 | -----------------------------| ------------------------------------------------------| ------------------------------|
 | wp_ng_exclude_handles_module | Exclude a handle for script and style                 | array of handles              |
-| wp_ng_register_ng_modules    | Register a angular module (Name of the module)        | array of modules              |
+| wp_ng_register_ng_modules    | Register a angular module (Name of the angular module)| array of modules              |
 | wp_ng_%module-name%_config   | Filter to pass configuration                          | array of config               |
 | wp_ng_app_env                | Filter to pass environment param                      | array of env                  | 
 | wp_ng_app_config             | Filter to pass config param                           | array of config               |
 | wp_ng_app_element            | Bootstrap your the app on the body element by default.| string of angular element     |
 | wp_ng_settings_fields        | Page Settings fields (descriptor array)               | array of fields               |
 | wp_ng_get_option             | Get the option value                                  | string name, section, default |
+| wp_ng_get_options            | Get the options values                                | section                       |
 
 ## Theme Support
 
@@ -224,11 +244,15 @@ Example your_app.js
 
 ## Internal Angular Filters
 
-wp-ng include generic angular filter
+wp-ng include generic angular filters
 
   * html
   * isEmpty
 
+wp-ng include generic angular directives
+
+  * ng-bind-html-compile
+  
 ```html
 <div data-ng-bing-html="content | html"></div>
 <div data-ng-hide="data | isEmpty"></div>

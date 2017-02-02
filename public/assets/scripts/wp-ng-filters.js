@@ -1,5 +1,5 @@
 (function(angular, wpNg){
-'use strict';
+  'use strict';
 
   wpNg.app.filter('isEmpty', ['$filter', function( $filter ) {
     return function(object) {
