@@ -292,6 +292,9 @@ wp-ng include generic angular directives
 2. Activate the plugin through the 'Plugins' screen in WordPress
 3. Use the Settings->Plugin Name screen to configure the plugin
 
+== Frequently Asked Questions ==
+
+
 == Screenshots ==
 
 1. Angular Modules.
