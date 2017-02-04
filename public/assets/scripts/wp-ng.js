@@ -135,16 +135,20 @@
 
 
       //Foundation initialize
-      if ( angular.isDefined(WP_NG_CONFIG.modules['mm.foundation'].init) && WP_NG_CONFIG.modules['mm.foundation'].init === true ) {
-        var element = angular.isDefined(WP_NG_CONFIG.modules['mm.foundation'].element) ? WP_NG_CONFIG.modules['mm.foundation'].element : 'body';
+      if ( angular.isDefined(WP_NG_CONFIG.modules['mm.foundation']) ) {
 
-        if (typeof angular.element( element ).foundation === "function") {
-          angular.element( element ).foundation();
-          $log.info('Foundation initialized on element "' + element + '".');
+        if ( angular.isDefined(WP_NG_CONFIG.modules['mm.foundation'].init) && WP_NG_CONFIG.modules['mm.foundation'].init === true ) {
+          var element = angular.isDefined(WP_NG_CONFIG.modules['mm.foundation'].element) ? WP_NG_CONFIG.modules['mm.foundation'].element : 'body';
+
+          if (typeof angular.element( element ).foundation === "function") {
+            angular.element( element ).foundation();
+            $log.info('Foundation initialized on element "' + element + '".');
+          }
+          else {
+            $log.error('Function foundation not exist.');
+          }
         }
-        else {
-          $log.error('Function foundation not exist.');
-        }
+
       }
 
     }, 0);

@@ -1,5 +1,8 @@
 ### HEAD
 
+### 1.2.11: February 4th, 2017
+* Bug fix foundation init if not defined.
+
 ### 1.2.10: February 2th, 2017
 * Bug fix bower get version with '#'
 * Add accordion animation.

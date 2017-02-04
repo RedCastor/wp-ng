@@ -306,6 +306,9 @@ wp-ng include generic angular directives
 
 == Changelog ==
 
+= 1.2.11 =
+* Bug fix foundation init if not defined.
+
 = 1.2.10 =
 * Add Modules list
 * Activate or desactivate module on the admin.
