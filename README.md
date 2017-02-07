@@ -68,6 +68,7 @@ The process to combine all style change all relative url to absolute url.
 | wp-ng_angularProgressbar     | wp-ng   | angularProgressbar      | 0.1.0       |
 | wp-ng_hl.sticky              | wp-ng   | hl.sticky               | 0.3.0       |
 | wp-ng_focus-if               | wp-ng   | focus-if                | 1.0.7       |
+| wp-ng_LiveSearch             | wp-ng   | LiveSearch              | 0.2.0       |
 | wp-ng_angular-translate-loader-static-files | wp-ng_pascalprecht.translate | angular-translate-loader-static-files | 2.13.0 |
 | wp-ng_bootstrap              | jquery  |                         | 3.3.7       |
 | wp-ng_foundation             | jquery  |                         | 6.3.0       |
@@ -99,6 +100,7 @@ The process to combine all style change all relative url to absolute url.
 | wp-ng_ngTagsInput          | wp-ng       | 3.1.1          |
 | wp-ng_pageslide-directive  | wp-ng       | 2.1.1          |
 | wp-ng_hl.sticky            | wp-ng       | 0.3.0          |
+| wp-ng_LiveSearch           | wp-ng       | 0.2.0          |
 
 ## Hook Filters
 

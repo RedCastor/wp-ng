@@ -88,6 +88,9 @@
     "angular-xeditable.css": {
       "bower": ["angular-xeditable"]
     },
+    "angular-livesearch.css": {
+      "bower": ["angular-livesearch"]
+    },
     "ng-tags-input.js": {
       "bower": ["ng-tags-input"]
     },
@@ -277,6 +280,9 @@
     },
     "ng-focus-if.js": {
       "bower": ["ng-focus-if"]
+    },
+    "angular-livesearch.js": {
+      "bower": ["angular-livesearch"]
     },
     "jquery.js": {
       "bower": ["jquery"]

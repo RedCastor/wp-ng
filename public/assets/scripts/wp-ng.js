@@ -154,6 +154,12 @@
     }, 0);
 
 
+    //Workaround form not send if action not defined or action egual to base url. Force action to base url (woocommerce add to cart).
+    if ( angular.element("form").attr('action') === WP_NG_CONFIG.baseUrl) {
+      angular.element("form").attr("action", WP_NG_CONFIG.baseUrl);
+    }
+
+
     $log.info('WP NG Angular Run app: ' + wpNg.appName);
     $log.info('Environment:          ' + WP_NG_CONFIG.env);
     $log.info('Version Theme:        V' + WP_NG_CONFIG.themeVersion);

@@ -1444,6 +1444,40 @@ function wp_ng_settings_fields( $fields )
                 ),
               ),
             ),
+            array(
+              'name'  => 'LiveSearch',
+              'label' => 'LiveSearch',
+              'desc'  => wp_ng_settings_sections_desc_html(
+                'angular-livesearch',
+                __( 'Angular Live Search.', 'wp-ng'),
+                '',
+                'https://github.com/mauriciogentile/angular-livesearch',
+                'http://plnkr.co/edit/ad3Sq9?p=info'
+              ),
+              'type'        => 'sub_fields',
+              'sub_fields' => array(
+                array(
+                  'name'        => 'active',
+                  'label'       => 'Active',
+                  'default'     => 'off',
+                  'type'        => 'checkbox',
+                ),
+                array(
+                  'name'        => 'style',
+                  'label'       => 'Style',
+                  'desc'        => __( 'Load style.', 'wp-ng'),
+                  'type'        => 'checkbox',
+                ),
+                array(
+                  'name'        => 'conditions',
+                  'label'       => 'Conditions',
+                  'desc'        => __( 'Load on conditions.', 'wp-ng'),
+                  'default'     => 'off',
+                  'type'        => 'checkbox',
+                  'conditions'  => true,
+                ),
+              ),
+            ),
           ),
         ),
       ),

@@ -249,6 +249,7 @@ class Wp_Ng_Module {
 
     $scripts->add( 'wp-ng_angularLazyImg', wp_ng_get_asset_path('scripts/angular-lazy-img.js'), array( $this->prefix ), $bower->get_version('angular-lazy-img'), 1 );
 
+    $scripts->add( 'wp-ng_LiveSearch', wp_ng_get_asset_path('scripts/angular-livesearch.js'), array( $this->prefix ), $bower->get_version('angular-livesearch'), 1 );
 
   }
 
@@ -306,6 +307,8 @@ class Wp_Ng_Module {
     $styles->add( 'wp-ng_ui.select',    wp_ng_get_asset_path('styles/angular-ui-select.css'), array( $this->prefix ), $bower->get_version('angular-ui-select'), 'all' );
 
     $styles->add( 'wp-ng_hl.sticky',    wp_ng_get_asset_path('styles/angular-sticky-plugin.css'), array( $this->prefix ), $bower->get_version('angular-sticky-plgin'), 'all' );
+
+    $styles->add( 'wp-ng_LiveSearch',    wp_ng_get_asset_path('styles/angular-livesearch.css'), array( $this->prefix ), $bower->get_version('angular-livesearch'), 'all' );
 
   }
 

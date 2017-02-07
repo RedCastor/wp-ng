@@ -84,6 +84,7 @@ List of handle available
 * wp-ng_angularProgressbar
 * wp-ng_hl.sticky
 * wp-ng_focus-if
+* wp-ng_LiveSearch
 
 
 = Default Registered modules styles =
@@ -111,6 +112,7 @@ List of handle available
 * wp-ng_ngTagsInput
 * wp-ng_pageslide-directive
 * wp-ng_hl.sticky
+* wp-ng_LiveSearch
 
 = Hook Filters =
 
@@ -305,6 +307,10 @@ wp-ng include generic angular directives
 == Upgrade Notice ==
 
 == Changelog ==
+
+= 1.2.12 =
+* Workaround form not send if action not defined or action egual to base url. Force action to base url (woocommerce add to cart).
+* Add module wp-ng_LiveSearch
 
 = 1.2.11 =
 * Bug fix foundation init if not defined.

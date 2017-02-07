@@ -5,6 +5,8 @@
   "angular-cookies.js": "angular-cookies-8bd56267de.js",
   "angular-foundation-6.js": "angular-foundation-6-b35096869f.js",
   "angular-lazy-img.js": "angular-lazy-img-99b58fef9c.js",
+  "angular-livesearch.css": "angular-livesearch-98b0159f95.css",
+  "angular-livesearch.js": "angular-livesearch-7659c53d93.js",
   "angular-loading-bar.css": "angular-loading-bar-93075033f5.css",
   "angular-loading-bar.js": "angular-loading-bar-6c9fff5370.js",
   "angular-messages.js": "angular-messages-df9ebd1fb8.js",
@@ -75,5 +77,5 @@
   "ui-leaflet.js": "ui-leaflet-011bca895e.js",
   "wp-ng-rest.js": "wp-ng-rest-6169db4140.js",
   "wp-ng.css": "wp-ng-5a82221050.css",
-  "wp-ng.js": "wp-ng-5ece7f4777.js"
+  "wp-ng.js": "wp-ng-8ef83fd857.js"
 }

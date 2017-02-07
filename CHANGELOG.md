@@ -1,5 +1,10 @@
 ### HEAD
 
+
+### 1.2.12: February 4th, 2017
+* Workaround form not send if action not defined or action egual to base url. Force action to base url (woocommerce add to cart).
+* Add module wp-ng_LiveSearch
+
 ### 1.2.11: February 4th, 2017
 * Bug fix foundation init if not defined.
 
