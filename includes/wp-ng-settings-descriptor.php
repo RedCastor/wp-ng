@@ -1580,6 +1580,24 @@ function wp_ng_settings_fields( $fields )
               'type'        => 'checkbox',
               'sanitize_callback' => ''
             ),
+            array(
+              'name'        => 'cdn_angular',
+              'label'       => __('Enable CDN Angular', 'wp-ng'),
+              'desc'        => __('Enable the angular cdn with fallback.', 'wp-ng'),
+              'global'      => true,
+              'default'     => 'on',
+              'type'        => 'checkbox',
+              'sanitize_callback' => ''
+            ),
+            array(
+              'name'        => 'cdn_jquery',
+              'label'       => __('Enable CDN Jquery', 'wp-ng'),
+              'desc'        => __('Enable the jquery and jquery-migrate cdn with fallback.', 'wp-ng'),
+              'global'      => true,
+              'default'     => 'on',
+              'type'        => 'checkbox',
+              'sanitize_callback' => ''
+            ),
           ),
         ),
       ),

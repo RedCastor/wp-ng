@@ -315,8 +315,8 @@ class Wp_Ng_Public {
    */
   public function enqueue_script_jquery() {
 
-    //Register script jquery Todo add option fallback or not fallback
-    Wp_Ng_Public_Fallback::register_jquery_fallback();
+      //Register script jquery
+      Wp_Ng_Public_Fallback::register_jquery_fallback();
   }
 
   /**
@@ -326,8 +326,8 @@ class Wp_Ng_Public {
    */
   public function enqueue_script_angular() {
 
-    //Register script angular Todo add option fallback or not fallback
-    Wp_Ng_Public_Fallback::register_angular_fallback( array('jquery') );
+      //Register script angular
+      Wp_Ng_Public_Fallback::register_angular_fallback( array('jquery') );
   }
 
 

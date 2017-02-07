@@ -1,7 +1,13 @@
 ### HEAD
 
 
-### 1.2.12: February 4th, 2017
+### 1.2.13: February 7th, 2017
+* Bug fix jquery load jquery-core and jquery-migrate.
+* Add cdn jquery-migrate with fallback
+* Add options to disbale cdn angular and jquery
+
+
+### 1.2.12: February 6th, 2017
 * Workaround form not send if action not defined or action egual to base url. Force action to base url (woocommerce add to cart).
 * Add module wp-ng_LiveSearch
 

@@ -250,6 +250,22 @@ function wp_ng_disable_tinymce_verify_html() {
   return (apply_filters( 'wp_ng_get_option', 'disable_tinymce_verify_html', 'advanced' ) === 'on') ? true : false;
 }
 
+/**
+ * Get is cdn angular enable
+ */
+function wp_ng_is_cdn_angular() {
+
+  return (apply_filters( 'wp_ng_get_option', 'cdn_angular', 'advanced' ) === 'on') ? true : false;
+}
+
+/**
+ * Get is cdn jquery enable
+ */
+function wp_ng_is_cdn_jquery() {
+
+  return (apply_filters( 'wp_ng_get_option', 'cdn_jquery', 'advanced' ) === 'on') ? true : false;
+}
+
 
 
 /*

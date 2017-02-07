@@ -75,7 +75,7 @@ class Wp_Ng_Bower {
    *
    * @return mixed
    */
-  public function map_to_cdn($dependency, $fallback) {
+  public function map_to_cdn($dependency, $fallback, $version = '') {
 
     if( !isset($dependency['name']) || !isset($dependency['file']) || !isset($dependency['cdn']) ) {
       return $fallback;
@@ -83,12 +83,16 @@ class Wp_Ng_Bower {
 
     $templates = [
       'jquery'        => '//code.jquery.com/%file%',
+      'jquery-migrate'=> '//code.jquery.com/%file%',
       'google-angular'=> '//ajax.googleapis.com/ajax/libs/%name%js/%version%/%file%',
       'google'        => '//ajax.googleapis.com/ajax/libs/%name%/%version%/%file%',
       'cloudflare'    => '//cdnjs.cloudflare.com/ajax/libs/%name%/%version%/%file%',
     ];
 
-    $version = $this->get_version($dependency['name']);
+    if (!$version) {
+      $version = $this->get_version($dependency['name']);
+    }
+
     if (isset($version) && preg_match('/^(\d+\.){2}\d+$/', $version)) {
       $search = ['%name%', '%version%', '%file%'];
       $replace = [$dependency['name'], $version, $dependency['file']];
