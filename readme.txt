@@ -308,6 +308,13 @@ wp-ng include generic angular directives
 
 == Changelog ==
 
+= 1.2.15 =
+* Add wp_ng_current_plugin_supports for force active module in plugin
+
+= 1.2.14 =
+* Move preload in wp-ng.js to add class on app element.
+* Bug fix action if ng-submit is defined
+
 = 1.2.13 =
 * Bug fix jquery load jquery-core and jquery-migrate.
 * Add cdn jquery-migrate with fallback.

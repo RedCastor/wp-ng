@@ -267,6 +267,48 @@ function wp_ng_is_cdn_jquery() {
 }
 
 
+/**
+ * Checks plugin wp-ng support for a given feature
+ *
+ * @since 1.2.15
+ *
+ * @global array $_wp_ng_plugin_features
+ *
+ * @param string $feature the feature being checked
+ * @return bool
+ */
+function wp_ng_plugin_supports( $feature ) {
+  global $_wp_ng_plugin_features;
+
+  if ( !isset( $_wp_ng_plugin_features[$feature] ) ) {
+    return false;
+  }
+
+  // If no args passed then no extra checks need be performed
+  if ( func_num_args() <= 1 ) {
+    return true;
+  }
+
+  $args = array_slice( func_get_args(), 1 );
+
+  switch ( $feature ) {
+    case 'wp-ng_modules':
+      $type = $args[0];
+      return in_array( $type, $_wp_ng_plugin_features[$feature][0] );
+  }
+
+  /**
+   * Filters whether the wp-ng plugin supports a specific feature.
+   *
+   * @since 1.2.15
+   *
+   * @param bool   true     Whether the wp-ng plugin supports the given feature. Default true.
+   * @param array  $args    Array of arguments for the feature.
+   * @param string $feature The wp-ng plugin feature.
+   */
+  return apply_filters( "wp_ng_current_plugin_supports-{$feature}", true, $args, $_wp_ng_plugin_features[$feature] );
+}
+
 
 /*
  * Registers plugin support for a given feature.

@@ -471,11 +471,11 @@ class Wp_Ng_Public {
    */
   public function body_class( $classes ) {
 
-    if ( wp_ng_is_ng_cloak() && !in_array( 'ng-cloak', $classes ) ) {
+    if ( wp_ng_is_ng_cloak() && wp_ng_get_app_element() === 'body' && !in_array( 'ng-cloak', $classes ) ) {
       $classes[] = 'ng-cloak';
     }
 
-    if ( wp_ng_is_ng_preload() && !in_array( 'ng-preload', $classes ) ) {
+    if ( wp_ng_is_ng_preload() && wp_ng_get_app_element() === 'body' && !in_array( 'ng-preload', $classes ) ) {
       $classes[] = 'ng-preload';
     }
 
@@ -525,6 +525,8 @@ class Wp_Ng_Public {
       'wpVersion'   => get_bloginfo('version'),
       'enableDebug' => (WP_DEBUG !== false) ? true : false,
       'env'         => defined('WP_ENV') ? WP_ENV : 'production',
+      'cloak'       => wp_ng_is_ng_cloak(),
+      'preload'     => wp_ng_is_ng_preload(),
       'modules'     => $config_modules,
     ));
 

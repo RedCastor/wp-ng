@@ -437,7 +437,7 @@ class Wp_Ng_Settings {
       if( defined($this->get_define_name($option)) ) {
         return true;
       }
-      else if ( current_theme_supports( $option_name ) ) {
+      else if ( current_theme_supports( $option_name ) || wp_ng_plugin_supports( $option_name ) ) {
         if ( !empty( $this->get_option_support($option)) ) {
           return true;
         }
@@ -446,7 +446,7 @@ class Wp_Ng_Settings {
     else {
       $option_name = $this->get_option_prefix( $section_key );
 
-      if ( current_theme_supports( $option_name ) ) {
+      if ( current_theme_supports( $option_name ) || wp_ng_plugin_supports( $option_name ) ) {
         $options = $this->get_option_support($section_key);
 
         if ( !empty($options) && (in_array($option, $options) || array_key_exists($option, $options) ) ) {

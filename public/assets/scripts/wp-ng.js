@@ -4,6 +4,15 @@
 
   var wpNg = window.wpNg;
 
+  //Cloak application element
+  if ( wpNg.config.cloak === true ) {
+    angular.element( wpNg.appElement ).addClass('ng-cloak');
+  }
+
+  //Preload application element
+  if ( wpNg.config.preload === true ) {
+    angular.element( wpNg.appElement ).addClass('ng-preload');
+  }
 
   //Asign document ready to wpNg
   wpNg.ready = angular.element(document).ready;
@@ -157,7 +166,7 @@
     //Workaround form not send if action not defined add action empty. (woocommerce add to cart).
     angular.element( wpNg.appElement ).find('form').each(function( index ) {
 
-      if ( angular.element(this).attr('action') === undefined ) {
+      if ( angular.element(this).attr('action') === undefined && angular.element(this).attr('data-ng-submit') === undefined && angular.element(this).attr('ng-submit') === undefined ) {
         angular.element(this).attr('action', '');
       }
     });
@@ -180,7 +189,6 @@
   //wpNg Ready
   wpNg.ready( function() {
     console.info('WP NG Ready');
-
   });
 
 }(angular, window));

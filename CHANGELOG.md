@@ -1,5 +1,11 @@
 ### HEAD
 
+### 1.2.15: February 13th, 2017
+* Add wp_ng_current_plugin_supports for force active module in plugin
+
+### 1.2.14: February 10th, 2017
+* Move preload in wp-ng.js to add class on app element.
+* bug fix action if ng-submit is defined
 
 ### 1.2.13: February 7th, 2017
 * Bug fix jquery load jquery-core and jquery-migrate.

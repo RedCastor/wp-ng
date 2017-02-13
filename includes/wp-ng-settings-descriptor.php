@@ -1518,7 +1518,7 @@ function wp_ng_settings_fields( $fields )
             array(
               'name'        => 'ng-cloak',
               'label'       => __('Document Cloak', 'wp-ng'),
-              'desc'        => __( 'Cloak the document. More info see' , 'wp-ng') . ' ( directive <a target="blank" href="https://docs.angularjs.org/api/ng/directive/ngCloak">ngCloak</a> )',
+              'desc'        => __( 'Cloak the application. More info see' , 'wp-ng') . ' ( directive <a target="blank" href="https://docs.angularjs.org/api/ng/directive/ngCloak">ngCloak</a> )',
               'global'      => true,
               'default'     => 'off',
               'type'        => 'checkbox',
@@ -1527,7 +1527,7 @@ function wp_ng_settings_fields( $fields )
             array(
               'name'        => 'ng-preload',
               'label'       => __('Document Preload', 'wp-ng'),
-              'desc'        => __( 'Preload the document. Class ng-preload is add to document tag html for disable transition and set visibility to hidden on all document.' , 'wp-ng'),
+              'desc'        => __( 'Preload the application. Class ng-preload is add to application element html for disable transition and set visibility to hidden on all document.' , 'wp-ng'),
               'global'      => true,
               'default'     => 'off',
               'type'        => 'checkbox',
