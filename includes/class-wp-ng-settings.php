@@ -488,13 +488,13 @@ class Wp_Ng_Settings {
 
     //Get Page list with page id in string value
     foreach ( wp_list_pluck(get_pages(), 'post_title', 'ID') as $page_id => $page_title) {
-      $conditions['page&' . strval($page_id)] = sprintf( '%s %s', __('Page', $this->settings_prefix), $page_title);
+      $conditions['is_page$' . strval($page_id)] = sprintf( '%s %s', __('Page', $this->settings_prefix), $page_title);
     }
 
     //Get all page templates list
     $templates = get_page_templates();
     foreach ( $templates as $template_name => $template_filename ) {
-      $conditions[ $template_filename] = sprintf( '%s %s', __('Page Template ', $this->settings_prefix), $template_name);
+      $conditions[ 'is_page_template$' . $template_filename] = sprintf( '%s %s', __('Page Template ', $this->settings_prefix), $template_name);
     }
 
     //Get all post type list

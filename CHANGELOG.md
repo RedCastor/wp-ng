@@ -1,5 +1,8 @@
 ### HEAD
 
+### 1.2.16: February 13th, 2017
+* Bug fix conditional to use function with args separate them with char '$' in the string.
+
 ### 1.2.15: February 13th, 2017
 * Add wp_ng_current_plugin_supports for force active module in plugin
 

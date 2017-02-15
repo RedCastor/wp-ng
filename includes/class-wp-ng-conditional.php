@@ -37,13 +37,15 @@ class Wp_Ng_Conditional {
 
   private function checkCondition( $condition ) {
 
-    $condition_arg = is_array( $condition ) ? $condition[1] : false;
-    $condition = $condition_arg ? $condition[0] : $condition;
-
     $conditions = explode('&', $condition);
     $result = true;
 
     foreach ( $conditions as $condition ) {
+
+      $condition_function = explode('$', $condition);
+      $condition = (isset($condition_function[0])) ? $condition_function[0] : '';
+      $condition_arg = (isset($condition_function[1])) ? $condition_function[1] : null;
+
       if (function_exists($condition) && $result === true) {
 
         $result = $condition_arg ? $condition($condition_arg) : $condition();

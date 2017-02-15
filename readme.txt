@@ -308,6 +308,9 @@ wp-ng include generic angular directives
 
 == Changelog ==
 
+= 1.2.16 =
+* Bug fix conditional to use function with args separate them with char '$' in the string.
+
 = 1.2.15 =
 * Add wp_ng_current_plugin_supports for force active module in plugin
 
