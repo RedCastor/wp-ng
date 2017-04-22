@@ -93,24 +93,20 @@
       },
 
       setSuccess: function(response) {
-        var status = {
-          success: true,
-          statusCode: null,
-          code: null,
-          message: null
-        };
+        var status = service.reset();
 
+        status.success = true;
         status.statusCode = response.status;
 
-        if (response.messages !== undefined && angular.isArray(response.messages)) {
+        if (angular.isDefined(response.messages) && angular.isArray(response.messages)) {
           status.code = response.messages[0].code;
           status.message = response.messages[0].message;
         }
-        else if (response.message !== undefined && angular.isObject(response.message)) {
+        else if (angular.isDefined(response.message) && angular.isObject(response.message)) {
           status.code = response.message.code;
           status.message = response.message.message;
         }
-        else if (response.message !== undefined) {
+        else if (angular.isDefined(response.message) && angular.isString(response.message)) {
           status.message = response.message;
         }
 
@@ -119,20 +115,11 @@
 
       setError: function(response) {
 
-        var status = {
-          success: false,
-          statusCode: null,
-          code: null,
-          message: null
-        };
+        var status = service.reset();
 
         status.statusCode = response.status;
 
-        if (response.data === null || response.data === undefined) {
-          status.code = response.status;
-          status.message = 'An error occured on the request.';
-        }
-        else {
+        if ( angular.isDefined(response.data) && angular.isObject(response.data)) {
           status.code = response.data.code;
           status.message = response.data.message;
 
@@ -140,6 +127,10 @@
           if ( angular.isDefined(response.data.data) && angular.isObject(response.data.data) && angular.isDefined(response.data.data.errors) ) {
             status.errors = response.data.data.errors;
           }
+        }
+        else {
+          status.code = response.status;
+          status.message = 'An error occured on the request.';
         }
 
         return status;

@@ -1,1 +1,0 @@
-!function(r){"use strict";r.module("ngColorUtils",[]).factory("hex2rgba",[function(){return{get:function(r,t){var a=/^#([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})$/,n=a.exec(r),e=parseInt(n[1],16),o=parseInt(n[2],16),u=parseInt(n[3],16),f=parseFloat(t).toFixed(1),i="rgba("+e+","+o+","+u+","+f+")";return i}}}])}(window.angular);

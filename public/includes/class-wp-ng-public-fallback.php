@@ -37,10 +37,12 @@ class Wp_Ng_Public_Fallback {
       $deps = array(strval($deps));
     }
 
+    $bower = new Wp_Ng_Bower();
+    $version = $bower->get_version( 'angular' );
+
     wp_deregister_script('angular');
 
     if ( wp_ng_is_cdn_angular() ) {
-      $bower = new Wp_Ng_Bower();
       $src = $bower->map_to_cdn([
         'name' => 'angular',
         'cdn' => 'google-angular',
@@ -55,7 +57,7 @@ class Wp_Ng_Public_Fallback {
       'angular',
       $src,
       $deps,
-      $bower->get_version('angular'),
+      $version,
       true
     );
 

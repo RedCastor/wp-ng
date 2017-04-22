@@ -1,0 +1,8 @@
+//
+// Foundation Fix
+// --------------------------------------------------
+
+//Workaround Tabs angular-foundation v0.11.5 with foundation v6.3
+.tabs-panel.is-active {
+  display: block;
+}

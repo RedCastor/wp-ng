@@ -138,7 +138,7 @@ class Wp_Ng_Admin {
     }
 
     if( wp_ng_disable_wpautop() === true) {
-      $init['wpautop'] = FALSE;
+      //$init['wpautop'] = FALSE;
     }
 
     return $init;

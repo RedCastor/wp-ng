@@ -122,6 +122,7 @@ class Wp_Ng_Module {
     $scripts->add( 'wp-ng_foundation',    wp_ng_get_asset_path('scripts/foundation.js'), array( 'jquery' ), $bower->get_version('foundation-sites'), 1 );
     $scripts->add( 'wp-ng_mm.foundation-motion-ui',     wp_ng_get_asset_path('scripts/motion-ui.js'), array( 'jquery' ), $bower->get_version('motion-ui'), 1 );
     $scripts->add( 'wp-ng_slick-carousel',wp_ng_get_asset_path('scripts/slick-carousel.js'), array( 'jquery' ), $bower->get_version('slick-carousel'), 1 );
+    $scripts->add( 'wp-ng_es6-shim',      wp_ng_get_asset_path('scripts/es6-shim.js'),  array(), $bower->get_version('es6-shim'), 1 );
 
     $scripts->add( 'wp-ng_pascalprecht.translate-static', wp_ng_get_asset_path('scripts/angular-translate-loader-static-files.js'), array( 'wp-ng_pascalprecht.translate' ), $bower->get_version('angular-translate-loader-static-files'), 1 );
     $scripts->add( 'wp-ng_pascalprecht.translate-cookie', wp_ng_get_asset_path('scripts/angular-translate-storage-cookie.js'),      array( 'wp-ng_pascalprecht.translate' ), $bower->get_version('angular-translate-storage-cookie'), 1 );
@@ -165,8 +166,9 @@ class Wp_Ng_Module {
     $scripts->add( 'wp-ng_ngTouch',       wp_ng_get_asset_path('scripts/angular-touch.js'),     array( $this->prefix ), $bower->get_version('angular-touch'),     1 );
 
     $scripts->add( 'wp-ng_breakpointApp', wp_ng_get_asset_path('scripts/angularjs-breakpoint.js'), array( $this->prefix ), $bower->get_version('angularjs-breakpoint'), 1 );
+    $scripts->add( 'wp-ng_bs.screenSize', wp_ng_get_asset_path('scripts/bootstrap-screensize.js'), array( $this->prefix ), $bower->get_version('bootstrap-screensize'), 1 );
 
-    $scripts->add( 'wp-ng_mm.foundation', wp_ng_get_asset_path('scripts/angular-foundation-6.js'), array( $this->prefix ), $bower->get_version('angular-foundation-6'), 1 );
+    $scripts->add( 'wp-ng_mm.foundation', wp_ng_get_asset_path('scripts/angular-foundation-6.js'), array( $this->prefix, 'wp-ng_es6-shim', 'wp-ng_ngTouch' ), $bower->get_version('angular-foundation-6'), 1 );
     add_filter('wp_ng_mm.foundation_config', function ( $config ) {
       $defaults = array(
         'init'    => true,
@@ -180,6 +182,7 @@ class Wp_Ng_Module {
     $scripts->add( 'wp-ng_ui.router',     wp_ng_get_asset_path('scripts/angular-ui-router.js'), array( $this->prefix ), $bower->get_version('angular-ui-router'), 1 );
     $scripts->add( 'wp-ng_ui.grid',       wp_ng_get_asset_path('scripts/angular-ui-grid.js'),   array( $this->prefix ), $bower->get_version('angular-ui-grid'), 1 );
     $scripts->add( 'wp-ng_ui.validate',   wp_ng_get_asset_path('scripts/angular-ui-validate.js'), array( $this->prefix ), $bower->get_version('angular-ui-validate'), 1 );
+    $scripts->add( 'wp-ng_ui.mask',       wp_ng_get_asset_path('scripts/angular-ui-mask.js'),   array( $this->prefix ), $bower->get_version('angular-ui-mask'), 1 );
     $scripts->add( 'wp-ng_ui.select',     wp_ng_get_asset_path('scripts/angular-ui-select.js'), array( $this->prefix), $bower->get_version('angular-ui-select'), 1 );
 
     $scripts->add( 'wp-ng_pascalprecht.translate', wp_ng_get_asset_path('scripts/angular-translate.js'), array( $this->prefix ), $bower->get_version('angular-translate'), 1 );
@@ -241,6 +244,7 @@ class Wp_Ng_Module {
     $scripts->add( 'wp-ng_ngAntimoderate',wp_ng_get_asset_path('scripts/ng-antimoderate.js'),    array( $this->prefix ), $bower->get_version('ng-antimoderate'), 1 );
     $scripts->add( 'wp-ng_ngColorUtils',  wp_ng_get_asset_path('scripts/ng-color-utils.js'),     array( $this->prefix ), $bower->get_version('ng-color-utils'), 1 );
     $scripts->add( 'wp-ng_socialLinks',   wp_ng_get_asset_path('scripts/angular-social-links.js'), array( $this->prefix ), $bower->get_version('angular-social-links'), 1 );
+    $scripts->add( 'wp-ng_720kb.socialshare', wp_ng_get_asset_path('scripts/angular-socialshare.js'), array( $this->prefix ), $bower->get_version('angular-socialshare'), 1 );
     $scripts->add( 'wp-ng_ngMagnify',     wp_ng_get_asset_path('scripts/ng-magnify.js'),           array( $this->prefix ), $bower->get_version('ng-magnify'), 1 );
 
     $scripts->add( 'wp-ng_hl.sticky', wp_ng_get_asset_path('scripts/angular-sticky-plugin.js'), array( $this->prefix ), $bower->get_version('angular-sticky'), 1 );
@@ -250,6 +254,19 @@ class Wp_Ng_Module {
     $scripts->add( 'wp-ng_angularLazyImg', wp_ng_get_asset_path('scripts/angular-lazy-img.js'), array( $this->prefix ), $bower->get_version('angular-lazy-img'), 1 );
 
     $scripts->add( 'wp-ng_LiveSearch', wp_ng_get_asset_path('scripts/angular-livesearch.js'), array( $this->prefix ), $bower->get_version('angular-livesearch'), 1 );
+
+    //Videogular
+    $scripts->add( 'wp-ng_com.2fdevs.videogular', wp_ng_get_asset_path('scripts/videogular.js'), array( $this->prefix, 'wp-ng_ngSanitize' ), $bower->get_version('videogular'), 1 );
+    $scripts->add( 'wp-ng_com.2fdevs.videogular.plugins.buffering',   wp_ng_get_asset_path('scripts/videogular-buffering.js'),    array( $this->prefix, 'wp-ng_com.2fdevs.videogular' ), $bower->get_version('videogular-buffering'), 1 );
+    $scripts->add( 'wp-ng_com.2fdevs.videogular.plugins.controls',    wp_ng_get_asset_path('scripts/videogular-controls.js'),     array( $this->prefix, 'wp-ng_com.2fdevs.videogular' ), $bower->get_version('videogular-controls'), 1 );
+    $scripts->add( 'wp-ng_com.2fdevs.videogular.plugins.overlayplay', wp_ng_get_asset_path('scripts/videogular-overlay-play.js'), array( $this->prefix, 'wp-ng_com.2fdevs.videogular' ), $bower->get_version('videogular-overlay-play'), 1 );
+    $scripts->add( 'wp-ng_com.2fdevs.videogular.plugins.poster',      wp_ng_get_asset_path('scripts/videogular-poster.js'),       array( $this->prefix, 'wp-ng_com.2fdevs.videogular' ), $bower->get_version('videogular-poster'), 1 );
+    $scripts->add( 'wp-ng_info.vietnamcode.nampnq.videogular.plugins.youtube', wp_ng_get_asset_path('scripts/videogular-youtube.js'), array( $this->prefix, 'wp-ng_com.2fdevs.videogular' ), $bower->get_version('bower-videogular-youtube'), 1 );
+    $scripts->add( 'wp-ng_videogular.plugins.vimeo', wp_ng_get_asset_path('scripts/videogular-vimeo.js'), array( $this->prefix, 'wp-ng_com.2fdevs.videogular' ), $bower->get_version('videogular-vimeo'), 1 );
+
+    //Authentication Satellizer
+    $scripts->add( 'wp-ng_satellizer', wp_ng_get_asset_path('scripts/satellizer.js'), array( $this->prefix ), $bower->get_version('satellizer'), 1 );
+
 
   }
 
@@ -266,9 +283,10 @@ class Wp_Ng_Module {
 
     $styles->add( 'wp-ng_bootstrap', wp_ng_get_asset_path('styles/bootstrap.css'), array(), $bower->get_version('bootstrap'), 'all' );
 
-    $styles->add( 'wp-ng_foundation',       wp_ng_get_asset_path('styles/foundation.css'),      array(), $bower->get_version('foundation-sites'), 'all' );
-    $styles->add( 'wp-ng_foundation-flex',  wp_ng_get_asset_path('styles/foundation-flex.css'), array(), $bower->get_version('foundation-sites'), 'all' );
+    $styles->add( 'wp-ng_foundation',      wp_ng_get_asset_path('styles/foundation.css'),      array(), $bower->get_version('foundation-sites'), 'all' );
+    $styles->add( 'wp-ng_foundation-flex', wp_ng_get_asset_path('styles/foundation-flex.css'), array(), $bower->get_version('foundation-sites'), 'all' );
     $styles->add( 'wp-ng_mm.foundation-motion-ui', wp_ng_get_asset_path('styles/motion-ui.css'),array(), $bower->get_version('motion-ui'), 'all' );
+    $styles->add( 'wp-ng_mm.foundation-fix',  wp_ng_get_asset_path('styles/angular-foundation-fix.css'), array(), $bower->get_version('angular-foundation-6'), 'all' );
 
 
     $styles->add( 'wp-ng_font-awesome', wp_ng_get_asset_path('styles/font-awesome.css'), array(), $bower->get_version('font-awesome'), 'all' );
@@ -309,6 +327,8 @@ class Wp_Ng_Module {
     $styles->add( 'wp-ng_hl.sticky',    wp_ng_get_asset_path('styles/angular-sticky-plugin.css'), array( $this->prefix ), $bower->get_version('angular-sticky-plgin'), 'all' );
 
     $styles->add( 'wp-ng_LiveSearch',    wp_ng_get_asset_path('styles/angular-livesearch.css'), array( $this->prefix ), $bower->get_version('angular-livesearch'), 'all' );
+
+    $styles->add( 'wp-ng_com.2fdevs.videogular', wp_ng_get_asset_path('styles/videogular.css'), array( $this->prefix ), $bower->get_version('videogular-themes-default'), 'all' );
 
   }
 

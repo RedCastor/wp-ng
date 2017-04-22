@@ -19,6 +19,7 @@ var runSequence  = require('run-sequence');
 var sass         = require('gulp-sass');
 var sourcemaps   = require('gulp-sourcemaps');
 var uglify       = require('gulp-uglify');
+var replace      = require('gulp-replace');
 
 var ngAnnotate   = require('gulp-ng-annotate');
 var minifyHTML   = require('gulp-htmlmin');
@@ -89,6 +90,18 @@ var cssTasks = function(filename) {
     })
     .pipe(function() {
       return gulpif(enabled.maps, sourcemaps.init());
+    })
+    .pipe(function() {
+      return gulpif('*.css', replace('url("fonts/', 'url("../fonts/'));
+    })
+    .pipe(function() {
+      return gulpif('*.css', replace("url('fonts/", "url('../fonts/"));
+    })
+    .pipe(function() {
+      return gulpif('*.css', replace('url("./fonts/', 'url("../fonts/'));
+    })
+    .pipe(function() {
+      return gulpif('*.css', replace("url('./fonts/", "url('../fonts/"));
     })
     .pipe(function() {
       return gulpif('*.less', less());

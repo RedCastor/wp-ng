@@ -73,7 +73,7 @@
   //Create Root Application with all dependencie modules
   wpNg.app = angular.module(wpNg.appName, wpNg.ngModules);
 
-  //Filter config disable animation on element
+  //Filter config disable animation on element with class 'ng-animate-disabled'
   if ( angular.isDefined(wpNg.ngModules.ngAnimate) ) {
     wpNg.app.config(['$animateProvider', function ($animateProvider) {
       $animateProvider.classNameFilter(/^(?:(?!ng-animate-disabled).)*$/);
@@ -116,15 +116,45 @@
     }]);
   }
 
-  wpNg.app.config(['$compileProvider', '$logProvider', 'WP_NG_CONFIG', function ($compileProvider, $logProvider, WP_NG_CONFIG) {
+  //Set the Debug Mode
+  wpNg.app.config(['$compileProvider', '$logProvider', '$qProvider', '$locationProvider', 'WP_NG_CONFIG',
+    function ($compileProvider, $logProvider, $qProvider, $locationProvider, WP_NG_CONFIG) {
       //Set debug Enable
       $logProvider.debugEnabled(WP_NG_CONFIG.enableDebug);
       $compileProvider.debugInfoEnabled(WP_NG_CONFIG.enableDebug);
-    }]);
 
+
+      //Disable error Rejections
+      $qProvider.errorOnUnhandledRejections(WP_NG_CONFIG.errorOnUnhandledRejections);
+
+      //Set Html5 false and hash prefix to empty backward compatibility to 1.5
+      $locationProvider.html5Mode(WP_NG_CONFIG.html5Mode).hashPrefix(WP_NG_CONFIG.hashPrefix);
+  }]);
+
+
+  //Location Tool provide a encode and decode URI.
+  wpNg.app.factory('locationTools', [ function() {
+    return {
+      encode: function(data) {
+        return encodeURIComponent(JSON.stringify(data));
+      },
+      decode: function(str) {
+        var uri = null;
+
+        str = decodeURIComponent(str);
+        try {
+          uri =  JSON.parse(str);
+        }catch(e) {
+          uri = str;
+        }
+
+        return uri;
+      }
+    };
+  }]);
 
   //Run Application
-  wpNg.app.run(['$rootScope', '$timeout', '$log', 'WP_NG_CONFIG', function ( $rootScope, $timeout, $log, WP_NG_CONFIG ) {
+  wpNg.app.run(['$rootScope', '$injector', '$location', 'locationTools', '$timeout', '$log', 'WP_NG_CONFIG', function ( $rootScope, $injector, $location, locationTools, $timeout, $log, WP_NG_CONFIG ) {
 
     $timeout(function() {
       //Cloak Animation Remove Preload Delay class
@@ -171,6 +201,56 @@
       }
     });
 
+
+    /**
+     * Generic Query url call a function in service.
+     *
+     * This example inject the service $log and call the function debug with the query params
+     * Example url: http://www.your-domain.com/#/?wpNgQuery={"service":"$log","call":"debug","params":["test"]}
+     * Example encoded: http://www.your-domain.com/#/?wpNgQuery=%7B%22service%22%3A%22%24log%22%2C%22call%22%3A%22debug%22%2C%22params%22%3A%5B%22test%22%5D%7D
+     *
+     */
+    $rootScope.$on('$locationChangeStart', function(event, newUrl, oldUrl, newState, oldState) {
+
+      var search = $location.search();
+
+      if ( angular.isDefined(search.wpNgQuery) ) {
+
+        try {
+          var query = locationTools.decode(search.wpNgQuery);
+
+          $log.debug('WP-NG Query start.');
+          $log.debug('WP-NG Query: ');
+          $log.debug(query);
+
+          var service = query.service;
+          var call = query.call;
+          var params = query.params;
+
+          $log.debug('Service: ' + service);
+          $log.debug('Call:' + call);
+
+
+          if ( $injector.has(service) ) {
+            service = $injector.get(service);
+          }
+          else {
+            throw "Service " + service + " is not a service";
+          }
+
+          if ( angular.isFunction(service[call]) ) {
+            service[call](params);
+          }
+          else {
+            throw "Call " + call + " is not a function";
+          }
+        }
+        catch(err) {
+          $log.error('WP-NG Query Error.');
+          $log.error(err);
+        }
+      }
+    });
 
 
     $log.info('WP NG Angular Run app: ' + wpNg.appName);

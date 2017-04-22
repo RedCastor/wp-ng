@@ -27,7 +27,7 @@ class Wp_Ng_Conditional {
 
     $this->conditions = $conditions;
 
-    $conditions = array_map([$this, 'checkCondition'], $this->conditions);
+    $conditions = array_map([$this, 'checkConditions'], $this->conditions);
 
     if (in_array(true, $conditions)) {
       $this->result = true;
@@ -35,32 +35,59 @@ class Wp_Ng_Conditional {
   }
 
 
-  private function checkCondition( $condition ) {
+  private function checkConditions( $conditions ) {
 
-    $conditions = explode('&', $condition);
-    $result = true;
+    $conditions_or = explode('|', $conditions);
 
-    foreach ( $conditions as $condition ) {
+    $result = false;
 
-      $condition_function = explode('$', $condition);
-      $condition = (isset($condition_function[0])) ? $condition_function[0] : '';
-      $condition_arg = (isset($condition_function[1])) ? $condition_function[1] : null;
+    foreach ( $conditions_or as $condition_or ) {
 
-      if (function_exists($condition) && $result === true) {
+      $conditions_and = explode('&', $condition_or);
+      //And Conditions
+      if ( sizeof($conditions_and) > 1 ) {
 
-        $result = $condition_arg ? $condition($condition_arg) : $condition();
+        foreach ( $conditions_and as $condition_and ) {
 
-        if( $result === false) {
-          break;
+          $result = $this->checkCondition($condition_and);
+
+          if( !$result ) {
+            break;
+          }
         }
       }
       else {
-        $result = false;
+        //Or Conditions
+        $result = $this->checkCondition($condition_or);
+      }
+
+      if( $result ) {
         break;
       }
     }
 
-    return $result;
+    return apply_filters('wp_ng_check_condition', $result, $conditions);
+  }
+
+
+  private function checkCondition( $condition ) {
+
+    $condition_args = explode('$', $condition);
+
+    $condition = (isset($condition_args[0])) ? $condition_args[0] : '';
+
+    unset($condition_args[0]);
+
+    if (function_exists($condition)) {
+
+      $result = call_user_func_array($condition, $condition_args);
+
+      if( $result === true || $result === 'true' ) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
 }

@@ -35,4 +35,28 @@
     };
   }]);
 
+
+  wpNg.app.directive("ifModuleLoaded", [ '$compile', function ($compile) {
+    return {
+      priority: 1000000,
+      terminal: true,
+      compile: function(element, attrs) {
+
+        try {
+          //Check Module exist
+          angular.module(attrs.ifModuleLoaded);
+
+          //remove ngIfModuleLoaded directive and recompile
+          attrs.$set('ifModuleLoaded', null);
+          return function(scope, element) {
+            $compile(element)(scope);
+          };
+        }
+        catch(err) {
+          element.remove();
+        }
+      }
+    };
+  }]);
+
 })(angular, wpNg);

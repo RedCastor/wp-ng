@@ -1,5 +1,72 @@
 ### HEAD
 
+### 1.4.0: April 22th, 2017
+* Update ngAntimoderate v1.0.4
+* Add filter wp_ng_get_active_modules
+* Bug fix bower fallback
+
+### 1.4-beta1: April 18th, 2017
+* Update Angular v1.5.10 to v1.6.4
+* Add module Authentication satellizer
+* Bug fix js angular-social-share
+* Bug fix bootstrap-screensize include dependencie of rt-debounce.
+* Bug fix angular foundation 6 (mm.foundation) reveal on IE not working. To fix bug load dependencie es6-shim.js
+
+### 1.3.10: April 17th, 2017
+* Refactoring label for shortcode
+* Add shortcode for checkbox. label can use content shortcode and html.
+* Bug fix attribute without value.
+
+### 1.3.9: April 14th, 2017
+* Add on shortcode form ng-change.
+
+### 1.3.8: April 14th, 2017
+* Bug fix locale shortcode add en_US
+* Add Shortcode alert
+* Add input value and init attribute value="My default value"
+* Fix no model in input with model="true" attribute in shortcode.
+
+### 1.3.7: April 13th, 2017
+* Add conditional or in the inline string conditions (condition|condition2)
+* Fix conditional inline string (condition|condition2|condition3&condition4|condition5)
+* Fix locationTools.decode
+* Bug fix shortcode param
+* Change name file shortcode
+* Add shrotcode ng-form-select for form select
+* Add shortcode nf-form-locale for create a select with locale available language.
+* Add module angular ui mask
+
+### 1.3.6: Marsh 31th, 2017
+* wpNg add factory locationTools to encode and decode URI
+* Add Generic URI Query on locationStart.
+
+### 1.3.5: Marsh 31th, 2017
+* Bug fix wp_ng_add_plugin_support on add mixed features with param and without param.
+* Bug fix tiny mce editor.
+* Small bug fix
+
+### 1.3.4: Marsh 28th, 2017
+* Add filter condition to load module. and refactoring to accept 2 param condition.
+
+### 1.3.3: Marsh 27th, 2017
+* Refactoring field settings name to label
+* Add module social 720kb.socialshare.
+* Add module videogular
+* Add shortcode ng-directive start implementation.
+* Add shortcode ng-socialshare (use module 720kb.socialshare)
+* Add directive ifModuleLoaded. Example check ui-bootstrap module loaded or and mm.foundation module load.
+
+### 1.3.2: Marsh 13th, 2017
+* Update angular foundation v0.11.15
+* Add workaround CSS for angular foundation tabs not working with foundation v6.3 
+
+### 1.3.1: February 21th, 2017
+* Add module bootstrap-screensize.
+
+### 1.3.0: February 15th, 2017
+* Add Shortcodes for Form (ng-form-input, ng-form-submit).
+* Bug fix not found in queue script and style removed by deregister. Add dequeue before deregister.
+
 ### 1.2.16: February 13th, 2017
 * Bug fix conditional to use function with args separate them with char '$' in the string.
 
@@ -14,7 +81,6 @@
 * Bug fix jquery load jquery-core and jquery-migrate.
 * Add cdn jquery-migrate with fallback
 * Add options to disbale cdn angular and jquery
-
 
 ### 1.2.12: February 6th, 2017
 * Workaround form not send if action not defined or action egual to base url. Force action to base url (woocommerce add to cart).

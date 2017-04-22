@@ -1,16 +1,8 @@
 {
-  "name": "sage",
+  "name": "wp-ng-admin",
   "version": "1.0.0",
-  "author": "Ben Word <ben@benword.com>",
-  "homepage": "https://roots.io/sage/",
+  "author": "Auban le Grelle <auban@viamonkey.com>",
   "private": true,
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/roots/sage.git"
-  },
-  "bugs": {
-    "url": "https://github.com/roots/sage/issues"
-  },
   "licenses": [
     {
       "type": "MIT",

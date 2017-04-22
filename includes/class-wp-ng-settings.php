@@ -564,7 +564,8 @@ class Wp_Ng_Settings {
       'desc'        => isset($field_args['desc']) ? $field_args['desc'] : '',
       'placeholder' => isset($field_args['placeholder']) ? $field_args['placeholder'] : '',
       'global'      => isset($field_args['global']) ? boolval($field_args['global']) : false,
-      'name'        => isset($field_args['label']) ? $field_args['label'] : '',
+      'label'       => isset($field_args['label']) ? $field_args['label'] : '',
+      'title'       => isset($field_args['title']) ? $field_args['title'] : '',
       'tab'         => $tab_key,
       'section'     => $section_key,
       'parent'      => isset($field_args['parent']) ? $field_args['parent'] : false,
@@ -622,7 +623,7 @@ class Wp_Ng_Settings {
             register_setting($tab_key, $args['name_id'], (is_callable($args['sanitize_callback'])) ? $args['sanitize_callback'] : false);
           }
 
-          add_settings_field($args['name_id'], $args['name'], array($this, 'callback_' . $args['type']), $tab_key, $section_key, $args);
+          add_settings_field($args['name_id'], $args['label'], array($this, 'callback_' . $args['type']), $tab_key, $section_key, $args);
 
           if ($args['sub_fields']) {
 
@@ -630,7 +631,7 @@ class Wp_Ng_Settings {
               $sub_field_args['parent'] = $args;
               $sub_args = $this->set_default_field_args( $sub_field_args, $tab_key, $section_key );
 
-              add_settings_field($sub_args['name_id'], $sub_args['name'], array($this, 'callback_' . $sub_args['type']), $tab_key, $section_key, $sub_args);
+              add_settings_field($sub_args['name_id'], $sub_args['label'], array($this, 'callback_' . $sub_args['type']), $tab_key, $section_key, $sub_args);
             }
 
           }
@@ -1224,7 +1225,7 @@ class Wp_Ng_Settings {
         // Switches option sections
         $('.group').hide();
         var activetab = '';
-        var activetab_id = "wp_ng_activetab";
+        var activetab_id = "<?php echo $this->settings_prefix; ?>_activetab";
         if (typeof(localStorage) != 'undefined' ) {
           activetab = localStorage.getItem(activetab_id);
         }
@@ -1354,8 +1355,29 @@ class Wp_Ng_Settings {
         echo '<td class="plugin-title column-primary">';
 
         if ( $field['title'] ) {
-          echo '<strong>' . $field['title'] . '</strong>';
+
+          if($field['title'] !== strip_tags($field['title'])) {
+            echo $field['title'];
+          }
+          else {
+            echo '<strong>' . $field['title'] . '</strong>';
+          }
         }
+
+        //Sub Title
+        if ( $field['args']['title'] ) {
+
+          $sub_title = $field['args']['title'];
+
+          if($sub_title !== strip_tags($sub_title)) {
+            echo $sub_title;
+          }
+          else {
+            echo '<p>' . $sub_title . '</p>';
+          }
+        }
+
+
 
         echo '</td>';
 

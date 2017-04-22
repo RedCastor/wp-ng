@@ -25,6 +25,10 @@
       "main": true,
       "bower": ["motion-ui"]
     },
+    "angular-foundation-fix.css": {
+      "files": "styles/angular-foundation-fix.scss",
+      "main": true
+    },
     "font-awesome.css": {
       "bower": ["font-awesome"]
     },
@@ -90,6 +94,9 @@
     },
     "angular-livesearch.css": {
       "bower": ["angular-livesearch"]
+    },
+    "videogular.css": {
+      "bower": ["videogular-themes-default"]
     },
     "ng-tags-input.js": {
       "bower": ["ng-tags-input"]
@@ -236,6 +243,9 @@
     "angular-ui-validate.js" : {
       "bower": ["angular-ui-validate"]
     },
+    "angular-ui-mask.js" : {
+      "bower": ["angular-ui-mask"]
+    },
     "ng-geonames.js" : {
       "bower": ["ng-geonames"]
     },
@@ -247,6 +257,9 @@
     },
     "slick-carousel.js": {
       "bower": ["slick-carousel"]
+    },
+    "angular-socialshare.js": {
+      "bower": ["angular-socialshare"]
     },
     "ng-file-upload.js": {
       "bower": ["ng-file-upload"]
@@ -283,6 +296,42 @@
     },
     "angular-livesearch.js": {
       "bower": ["angular-livesearch"]
+    },
+    "bootstrap-screensize.js": {
+      "bower": [
+        "bootstrap-screensize",
+        "angular-debounce"
+      ]
+    },
+    "videogular.js": {
+      "bower": ["videogular"]
+    },
+    "videogular-controls.js": {
+      "bower": ["videogular-controls"]
+    },
+    "videogular-buffering.js": {
+      "bower": ["videogular-buffering"]
+    },
+    "videogular-overlay-play.js": {
+      "bower": ["videogular-overlay-play"]
+    },
+    "videogular-poster.js": {
+      "bower": ["videogular-poster"]
+    },
+    "videogular-vimeo.js": {
+      "bower": [
+        "videogular-vimeo",
+        "vimeo-jquery-api"
+      ]
+    },
+    "videogular-youtube.js": {
+      "bower": ["bower-videogular-youtube"]
+    },
+    "satellizer.js": {
+      "bower": ["satellizer"]
+    },
+    "es6-shim.js": {
+      "bower": ["es6-shim"]
     },
     "jquery.js": {
       "bower": ["jquery"]

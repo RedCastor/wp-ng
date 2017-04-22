@@ -61,13 +61,16 @@ class Wp_Ng_Public {
 
     $this->load_dependencies();
 
+    //Init
+    add_action( 'init', array( 'Wp_Ng_Public_Shortcodes', 'init' ) );
+
     /* Support for REST API  */
     add_action( 'init',                       array( 'Wp_Ng_Public_Rest_Api', 'remove_option_rewrite_rules' ), 10 );
     add_action( 'rest_api_init',              array( 'Wp_Ng_Public_Rest_Api', 'set_language'), 1 );
     add_filter( 'rest_authentication_errors', array( 'Wp_Ng_Public_Rest_Api', 'cookie_check_errors'), 90 );
 
-    /* Add WPAUTOP */
-    add_action( 'acf/init', array($this, 'remove_wpautop') );
+    /* Add Remove WPAUTOP */
+    add_action( 'acf/init', array($this, 'remove_wpautop') ); //Acf plugin
     add_action( 'init', array($this, 'remove_wpautop') );
 
 
@@ -99,6 +102,10 @@ class Wp_Ng_Public {
      */
     require_once plugin_dir_path( __FILE__ ) . '/includes/class-wp-ng-public-rest-api.php';
 
+    /**
+     * Include Shortcodes class
+     */
+    require_once plugin_dir_path( __FILE__ ) . '/includes/class-wp-ng-public-shortcodes.php';
   }
 
 
@@ -353,6 +360,7 @@ class Wp_Ng_Public {
     //Deregister duplicate source
     $duplicate_wp_ng_handles_src = array_diff_assoc($wp_ng_handles_src, array_unique($wp_ng_handles_src));
     foreach ( $duplicate_wp_ng_handles_src as $handle => $src) {
+      wp_dequeue_script($handle);
       wp_deregister_script($handle);
     }
 
@@ -387,6 +395,9 @@ class Wp_Ng_Public {
           $src_host = parse_url( $src, PHP_URL_HOST );
           $current_host = parse_url( get_site_url(), PHP_URL_HOST);
           if ( $src_host === $current_host ) {
+            if ($handle !== $this->plugin_name) {
+              wp_dequeue_script($handle);
+            }
             wp_deregister_script($handle);
           }
         }
@@ -433,6 +444,7 @@ class Wp_Ng_Public {
     //Deregister duplicate source
     $duplicate_wp_ng_handles_src = array_diff_assoc($wp_ng_handles_src, array_unique($wp_ng_handles_src));
     foreach ( $duplicate_wp_ng_handles_src as $handle => $src) {
+      wp_dequeue_style($handle);
       wp_deregister_style($handle);
     }
 
@@ -455,6 +467,9 @@ class Wp_Ng_Public {
           $current_host = parse_url( get_site_url(), PHP_URL_HOST);
 
           if ( $src_host === $current_host ) {
+            if ($handle !== $this->plugin_name) {
+              wp_dequeue_style($handle);
+            }
             wp_deregister_style($handle);
           }
         }
@@ -524,6 +539,9 @@ class Wp_Ng_Public {
       'themeVersion'=> $_theme->get('Version'),
       'wpVersion'   => get_bloginfo('version'),
       'enableDebug' => (WP_DEBUG !== false) ? true : false,
+      'html5Mode'   => false,
+      'hashPrefix'  => '',
+      'errorOnUnhandledRejections' => false,
       'env'         => defined('WP_ENV') ? WP_ENV : 'production',
       'cloak'       => wp_ng_is_ng_cloak(),
       'preload'     => wp_ng_is_ng_preload(),

@@ -141,7 +141,8 @@ function wp_ng_get_options( $section ) {
   foreach ($settings_page->get_fields() as $key => $tab ){
     if ( isset($tab[$section]) ) {
       foreach ($tab[$section] as $field_key => $field) {
-        $options[$field['name']] = $settings_page->get_option( $field['name'], $section, '', false );
+        $default = isset($field['default']) ? $field['default'] : '';
+        $options[$field['name']] = $settings_page->get_option( $field['name'], $section, $default, false );
       }
       break;
     }
@@ -149,7 +150,7 @@ function wp_ng_get_options( $section ) {
 
   return $options;
 }
-add_filter('wp_ng_get_options', 'wp_ng_get_options',10, 3);
+add_filter('wp_ng_get_options', 'wp_ng_get_options',10);
 
 
 /**
@@ -340,27 +341,25 @@ function wp_ng_add_plugin_support( $feature ) {
     $_wp_ng_plugin_features[$feature] = $args;
   }
   else {
-    foreach ( $args as $arg_key => $arg_args) {
+    //Add features if not exist and check if feature params is on
+    foreach ( $args[0] as $arg_key => $arg_args) {
 
-      if ( is_array($arg_key) && array_key_exists( $_wp_ng_plugin_features[$feature][$arg_key] ) ) {
-        foreach ( $arg_key as $key => $value ) {
+      if ( is_string($arg_args) && !in_array($arg_args, $_wp_ng_plugin_features[$feature][0]) ) {
+        $_wp_ng_plugin_features[$feature][0][] = $arg_args;
+      }
+      elseif ( is_string($arg_key) && !array_key_exists($arg_key, $_wp_ng_plugin_features[$feature][0]) ) {
+        $_wp_ng_plugin_features[$feature][0][$arg_key] = $arg_args;
+      }
+      elseif ( is_string($arg_key) && array_key_exists($arg_key, $_wp_ng_plugin_features[$feature][0]) && is_array($arg_args) ) {
+        foreach ( $arg_args as $key => $value ) {
           if ( $value === 'on' ) {
-            $_wp_ng_plugin_features[$feature][$arg_key][$key] = $value;
+            $_wp_ng_plugin_features[$feature][0][$arg_key][$key] = $value;
           }
         }
       }
-
-      $_plugin_features = array_merge_recursive($_wp_ng_plugin_features[$feature][$arg_key], $arg_args);
-
-      foreach ( $_plugin_features as $feature_key => $feature_value) {
-        if ( is_string($feature_value) && !in_array($feature_value, $_wp_ng_plugin_features[$feature][$arg_key]) ) {
-          $_wp_ng_plugin_features[$feature][$arg_key][] = $feature_value;
-        }
-      }
     }
+
   }
-
-
 
 }
 
@@ -370,10 +369,9 @@ function wp_ng_add_plugin_support( $feature ) {
  *
  * @return array
  */
-function wp_ng_get_active_modules() {
+function wp_ng_get_active_modules( $modules_handles = array()) {
 
   $modules = wp_ng_get_options( 'modules' );
-  $modules_handles = array();
 
   if (is_array($modules)) {
     $settings = Wp_Ng_Settings::getInstance( WP_NG_PLUGIN_NAME );
@@ -407,8 +405,7 @@ function wp_ng_get_active_modules() {
           foreach ( $module_scripts as $module_script_name => $module_script ) {
 
             $modules_handles[$module_handle][$module_script_name] = null;
-            $handle_suffix = str_replace('script', '', $module_script_name);
-            $handle_suffix = str_replace('_', '-', $handle_suffix);
+            $handle_suffix = str_replace(array('script', '__dot__', '_'), array('', '.', '-'), $module_script_name);
 
             if ( $module_script === 'on' ) {
               $modules_handles[$module_handle][$module_script_name] = $module_handle . $handle_suffix;
@@ -428,8 +425,7 @@ function wp_ng_get_active_modules() {
           foreach ( $module_styles as $module_style_name => $module_style ) {
 
             $modules_handles[$module_handle][$module_style_name] = null;
-            $handle_suffix = str_replace('style', '', $module_style_name);
-            $handle_suffix = str_replace('_', '-', $handle_suffix);
+            $handle_suffix = str_replace(array('style', '__dot__', '_'), array('', '.', '-'), $module_style_name);
 
             if ( $module_style === 'on' ) {
               $modules_handles[$module_handle][$module_style_name] = $module_handle . $handle_suffix;
@@ -446,4 +442,4 @@ function wp_ng_get_active_modules() {
 
   return $modules_handles;
 }
-
+add_filter('wp_ng_get_active_modules', 'wp_ng_get_active_modules');
