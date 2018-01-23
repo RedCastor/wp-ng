@@ -3,9 +3,6 @@
 /**
  * The file that defines the core plugin class
  *
- * A class definition that includes attributes and functions used across both the
- * public-facing side of the site and the admin area.
- *
  * @link       http://redcastor.io
  * @since      1.0.0
  *
@@ -73,7 +70,6 @@ class Wp_Ng {
 
 		$this->load_dependencies();
     $this->set_locale();
-    $this->define_settings_hooks();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
 
@@ -98,9 +94,43 @@ class Wp_Ng {
 	private function load_dependencies() {
 
     /**
-     * Global Functions of the plugin.
+     * Modules Descriptor of the plugin.
+     */
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/wp-ng-modules-descriptor.php';
+
+    /**
+     * Settings Descriptor of the plugin.
      */
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/wp-ng-settings-descriptor.php';
+
+
+    /**
+     * The class shortcode.
+     */
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-ng-shortcode-parser.php';
+
+
+    /**
+     * The class helper.
+     */
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-ng-helper.php';
+
+    /**
+     * The class responsible for load template
+     */
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-ng-template.php';
+
+
+    /**
+     * The class responsible for email options
+     */
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/emails/class-wp-ng-email-options.php';
+
+
+    /**
+     * The class responsible for load emails
+     */
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-ng-emails.php';
 
     /**
      * Global Functions of the plugin.
@@ -119,6 +149,16 @@ class Wp_Ng {
 		 * of the plugin.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-ng-i18n.php';
+
+    /**
+     * The class responsible for defining autoloader functionality
+     */
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-ng-autoloader.php';
+
+    /**
+     * The class responsible for orchestrating the logs file
+     */
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-ng-logger.php';
 
     /**
      * The class responsible for orchestrating the cache.
@@ -148,7 +188,7 @@ class Wp_Ng {
     /**
      * The class responsible for orchestrating the ng modules
      */
-    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-ng-module.php';
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-ng-modules.php';
 
 
     /**
@@ -184,17 +224,6 @@ class Wp_Ng {
 
 	}
 
-   /**
-	* Register all of the hooks related to the settings page
-	* of the plugin.
-	*
-	* @since    1.0.0
-	* @access   private
-	*/
-	private function define_settings_hooks() {
-
-		Wp_Ng_Settings::createInstance( $this->plugin_name, $this->version );
-	}
 
 	/**
 	 * Register all of the hooks related to the admin area functionality
@@ -205,10 +234,17 @@ class Wp_Ng {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Wp_Ng_Admin( $this->get_plugin_name(), $this->get_version() );
+	  if ( is_admin() ) {
+      $plugin_admin = new Wp_Ng_Admin( $this->get_plugin_name(), $this->get_version() );
 
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+      $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles', 100 );
+      $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+
+      $this->loader->add_action( 'admin_menu', $plugin_admin, 'settings', 100 );
+      $this->loader->add_action( 'admin_init', $plugin_admin, 'settings_init' );
+
+      $this->loader->add_filter( 'tiny_mce_before_init', $plugin_admin, 'tiny_mce_before_init', 100 );
+    }
 	}
 
 	/**
@@ -222,13 +258,38 @@ class Wp_Ng {
 
 		$plugin_public = new Wp_Ng_Public( $this->get_plugin_name(), $this->get_version() );
 
+    //Create Instance settings
+    Wp_Ng_Settings::createInstance( $this->plugin_name, $this->version );
+
+
 		//Default Scripts and styles
 		$this->loader->add_action( 'wp_default_scripts',  $plugin_public, 'default_scripts' );
 		$this->loader->add_action( 'wp_default_styles',   $plugin_public, 'default_styles' );
-    $this->loader->add_action( 'wp_enqueue_scripts',  $plugin_public, 'external_modules' );
+
+    //Script and style
+		$this->loader->add_action( 'wp_enqueue_scripts',  $plugin_public, 'external_modules' );
     $this->loader->add_action( 'wp_enqueue_scripts',  $plugin_public, 'enqueue_scripts' );
 		$this->loader->add_action( 'wp_enqueue_scripts',  $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'after_setup_theme',   $plugin_public, 'after_setup_theme');
+    $this->loader->add_action( 'wp_enqueue_scripts',  $plugin_public, 'enqueue_script_jquery', 2 );
+    $this->loader->add_action( 'wp_enqueue_scripts',  $plugin_public, 'enqueue_script_angular', 2 );
+
+    //Process Script and style.
+    $this->loader->add_action( 'wp_enqueue_scripts',  $plugin_public, 'process_style_angular_modules', 1000 );
+    $this->loader->add_action( 'wp_enqueue_scripts',  $plugin_public, 'process_script_angular_modules', 1000 );
+
+    //After Theme Setup
+		$this->loader->add_action( 'after_setup_theme',   $plugin_public, 'init_options', 5);
+    $this->loader->add_action( 'after_setup_theme',   $plugin_public, 'init_emails', 5);
+    $this->loader->add_action( 'after_setup_theme',   $plugin_public, 'init_logging', 7);
+
+    //Body Classes.
+    $this->loader->add_filter( 'body_class',          $plugin_public, 'body_class' );
+
+    //Remove and Add WPAUTOP
+    $this->loader->add_action( 'acf/init',            $plugin_public, 'remove_wpautop' ); //Acf plugin
+    $this->loader->add_action( 'acf/init',            $plugin_public, 'add_wpngautop' );
+    $this->loader->add_action( 'init',                $plugin_public, 'remove_wpautop' );//Acf plugin
+    $this->loader->add_action( 'init',                $plugin_public, 'add_wpngautop' );
 
 	}
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The public-facing includes functionality of the plugin.
+ * The public-facing includes functionality fallback.
  *
  * @link       http://redcastor.io
  * @since      1.0.0
@@ -17,7 +17,6 @@
 
 
 /**
- * The public-facing includes functionality of the plugin.
  *
  * @package    Wp-Ng
  * @subpackage Wp-Ng/public/includes
@@ -137,7 +136,7 @@ class Wp_Ng_Public_Fallback {
       );
 
       if ( wp_ng_is_cdn_jquery() ) {
-        wp_add_inline_script( 'jquery-migrate', '!window.jQuery.migrateWarnings  && document.write("\x3Cscript src=\x22' . get_home_url(null, $src) . '\x22\x3E\x3C/script\x3E");' );
+        wp_add_inline_script( 'jquery-migrate', '!window.jQuery.migrateWarnings  && document.write("\x3Cscript src=\x22' . get_site_url(null, $original_src) . '\x22\x3E\x3C/script\x3E");' );
       }
 
     }

@@ -1,12 +1,26 @@
 {
   "dependencies": {
     "wp-ng-admin.css": {
-      "files": "styles/wp-ng-admin.scss",
-      "main": true
+      "main": true,
+      "files": "styles/wp-ng-admin.scss"
+    },
+    "wp-ng-metabox.css": {
+      "main": true,
+      "files": "styles/wp-ng-metabox.scss"
+    },
+    "wp-ng-gallery.css": {
+      "main": true,
+      "files": "styles/wp-ng-gallery.scss"
     },
     "wp-ng-admin.js": {
       "files": [
         "scripts/wp-ng-admin.js"
+      ],
+      "main": true
+    },
+    "wp-ng-gallery.js": {
+      "files": [
+        "scripts/wp-ng-gallery.js"
       ],
       "main": true
     },

@@ -10,6 +10,9 @@
  * @subpackage Wp_Ng/admin/includes
  */
 
+use \Rollbar\Rollbar;
+use \Rollbar\Payload\Level;
+
 /**
  * The admin-specific includes functionality of the plugin.
  *
@@ -42,4 +45,53 @@ class Wp_Ng_Admin_Fields_Action {
 
     return $old_value;
   }
+
+
+  static public function rollbar_check  ( $new_value = '', $old_value = '' ) {
+
+    if ($new_value['enable'] === 'on') {
+
+      $result = true;
+
+      try {
+        $log_rollbar_env = wp_ng_get_option( 'log_rollbar_env', 'log_rollbar' );
+
+        $config = array(
+          'access_token'        => $new_value['access_token'],
+          'environment'         => $log_rollbar_env,
+          'use_error_reporting' => false,
+        );
+
+        Rollbar::init($config);
+
+        $response = Rollbar::log(Level::INFO, 'Test Connection from wp-ng settings updated');
+        if (!$response->wasSuccessful()) {
+          throw new Exception(__( 'Rollbar API logging failed. Verify the access token.', 'wp-ng' ));
+        }
+
+      } catch (Exception $e) {
+        $result = new WP_Error( 'wp_ng_rollbar_init', $e->getMessage() );
+      }
+
+      if ( is_wp_error( $result ) ) {
+        add_settings_error(
+          'errorWpNgRollbarApi',
+          esc_attr( 'settings_updated' ),
+          $result->get_error_message(),
+          'error'
+        );
+      }
+      else {
+        add_settings_error(
+          'updateWpNgRollbarApi',
+          esc_attr( 'settings_updated' ),
+          __('Rollbar API test connexion OK.', 'wp-ng'),
+          'updated'
+        );
+      }
+    }
+
+    return $new_value;
+  }
+
 }

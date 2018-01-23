@@ -9,11 +9,12 @@
   var wpNgRest = angular.module(module_name, modules_dep);
 
 
-  wpNgRest.config(['$resourceProvider',  function($resourceProvider) {
+  wpNgRest.config(['$resourceProvider', '$httpProvider',  function($resourceProvider, $httpProvider) {
     $resourceProvider.defaults.cancellable = true;
+    $httpProvider.interceptors.push('wpNgRestHttpInterceptor');
   }]);
 
-  wpNgRest.provider(module_name, [ function wpNgRestProvider() {
+  wpNgRest.provider('wpNgRest', [ function wpNgRestProvider() {
 
     this.nonce = {
       key: 'X-WP-NG-Nonce',
@@ -36,21 +37,7 @@
       var rest = this.rest;
       var lang = this.lang;
 
-      if(angular.isDefined(nonce.key) && angular.isString(nonce.key) && angular.isDefined(nonce.val) && angular.isString(nonce.val) && nonce.key.length > 0 && nonce.val.length > 0) {
-        $http.defaults.headers.common[nonce.key] = nonce.val;
-      }
-
-      if(angular.isDefined(lang.key) && angular.isString(lang.key) && angular.isDefined(lang.val) && angular.isString(lang.val) && lang.key.length > 0 && lang.val.length > 0 ) {
-        $http.defaults.headers.common[lang.key] = lang.val;
-      }
-
       $http.defaults.useXDomain = true;
-
-      // Disable IE ajax request caching
-      $http.defaults.headers.common['If-Modified-Since']  = '0';
-      //Disable caching
-      $http.defaults.headers.common['cache-control']      = 'private, max-age=0, no-cache';
-
 
       return {
         getNonce: function() {
@@ -79,7 +66,9 @@
 
   }]);
 
-  wpNgRest.factory( 'wpNgRestStatus', [ '$rootScope', function ($rootScope) {
+  wpNgRest.factory( 'wpNgRestStatus', [ '$rootScope', 'wpNgRest', function ($rootScope, wpNgRest) {
+
+    var nonce = wpNgRest.getNonce();
 
     var service = {
 
@@ -91,7 +80,12 @@
           message: null
         };
       },
-
+      setNonce: function (new_nonce) {
+        nonce = new_nonce;
+      },
+      getNonce: function () {
+        return nonce;
+      },
       setSuccess: function(response) {
         var status = service.reset();
 
@@ -143,6 +137,76 @@
     };
 
     return service;
+
+  }]);
+
+
+  wpNgRest.factory('wpNgRestHttpInterceptor', ['$injector', function($injector){
+
+    return {
+      request: function (request) {
+
+        if (!angular.isString(request.url)) {
+          return request;
+        }
+
+        //Set Headers if is request on rest api
+        var wpNgRest = $injector.get("wpNgRest");
+        var rest_url = wpNgRest.getRest().url + wpNgRest.getRest().path;
+
+        var match_api_url = request.url.indexOf(rest_url) >= 0;
+
+        if (match_api_url) {
+          var wpNgRestStatus = $injector.get("wpNgRestStatus");
+          var nonce = wpNgRestStatus.getNonce();
+          var lang = wpNgRest.getLang();
+
+          if(angular.isDefined(nonce.key) && angular.isString(nonce.key) && angular.isDefined(nonce.val) && angular.isString(nonce.val) && nonce.key.length > 0 && nonce.val.length > 0) {
+            request.headers[nonce.key] = nonce.val;
+          }
+
+          if(angular.isDefined(lang.key) && angular.isString(lang.key) && angular.isDefined(lang.val) && angular.isString(lang.val) && lang.key.length > 0 && lang.val.length > 0 ) {
+            request.headers[lang.key] = lang.val;
+          }
+
+          // Disable IE ajax request caching
+          request.headers['If-Modified-Since']  = '0';
+          //Disable caching
+          request.headers['cache-control']      = 'private, max-age=0, no-cache';
+        }
+
+        return request;
+      },
+      response: function( response ) {
+
+        var wpNgRestStatus = $injector.get("wpNgRestStatus");
+
+        var nonce = wpNgRestStatus.getNonce();
+        var nonce_val = response.headers(nonce.key);
+
+        //Update nonce if is changed
+        if (nonce_val && nonce_val !== nonce.val) {
+          nonce.val = nonce_val;
+          wpNgRestStatus.setNonce(nonce);
+        }
+
+        return response;
+      },
+      responseError: function(response) {
+
+        var $q = $injector.get("$q");
+
+        if (response.status === 406) {
+          var $window = $injector.get("$window");
+
+          //Reload page if error 406 nonce error. Force renew nonce on server
+          $window.location.reload();
+        }
+        else {
+          return $q.reject(response);
+        }
+      }
+    };
 
   }]);
 

@@ -81,13 +81,15 @@ class Wp_Ng_Bower {
       return $fallback;
     }
 
-    $templates = [
+    $templates = array(
       'jquery'        => '//code.jquery.com/%file%',
       'jquery-migrate'=> '//code.jquery.com/%file%',
       'google-angular'=> '//ajax.googleapis.com/ajax/libs/%name%js/%version%/%file%',
       'google'        => '//ajax.googleapis.com/ajax/libs/%name%/%version%/%file%',
       'cloudflare'    => '//cdnjs.cloudflare.com/ajax/libs/%name%/%version%/%file%',
-    ];
+    );
+
+    $templates = apply_filters( 'wp_ng_bower_cdn_templates', $templates, $dependency, $this );
 
     if (!$version) {
       $version = $this->get_version($dependency['name']);

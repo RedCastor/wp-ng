@@ -19,6 +19,7 @@ var runSequence  = require('run-sequence');
 var sass         = require('gulp-sass');
 var sourcemaps   = require('gulp-sourcemaps');
 var uglify       = require('gulp-uglify');
+var urlAdjuster  = require('gulp-css-url-adjuster');
 
 var ngAnnotate   = require('gulp-ng-annotate');
 var minifyHTML   = require('gulp-htmlmin');
@@ -109,6 +110,31 @@ var cssTasks = function(filename) {
         'opera 12'
       ]
     })
+    .pipe(function() {
+      return urlAdjuster({
+        replace: ['img','images'],
+      });
+    })
+    .pipe(function() {
+      return urlAdjuster({
+        replace: ['chosen-sprite','images/chosen-sprite'],
+      });
+    })
+    .pipe(function() {
+      return urlAdjuster({
+        replace: ['../',''],
+      });
+    })
+    .pipe(function() {
+      return urlAdjuster({
+        replace: ['./',''],
+      });
+    })
+    .pipe(function() {
+      return urlAdjuster({
+        prepend: '../',
+      });
+    })
     .pipe(cssNano, {
       safe: true
     })
@@ -119,7 +145,8 @@ var cssTasks = function(filename) {
       return gulpif(enabled.maps, sourcemaps.write('.', {
         sourceRoot: 'assets/styles/'
       }));
-    })();
+    })
+    ();
 };
 
 // ### JS processing pipeline

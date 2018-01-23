@@ -1,0 +1,5 @@
+<wpml-config>
+  <custom-fields>
+    <custom-field action="translate">email_options</custom-field>
+  </custom-fields>
+</wpml-config>

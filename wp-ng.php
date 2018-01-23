@@ -10,9 +10,8 @@
  *
  * @wordpress-plugin
  * Plugin Name:       WP NG
- * Plugin URI:        http://redcastor.io
  * Description:       WP NG is a Angular bootstrapper for wordpress. The plugin do automatic bootstrap your app and add module dependencie in your app.
- * Version:           1.4.0
+ * Version:           1.5.0
  * Author:            RedCastor
  * Author URI:        http://redcastor.io
  * Copyright:         Copyright (c) 2017, RedCastor.
@@ -29,8 +28,7 @@ if ( ! defined( 'WPINC' ) ) {
 
 
 define('WP_NG_PLUGIN_NAME',         'wp-ng');
-define('WP_NG_PLUGIN_VERSION',      '1.4.0');
-// because of wp_add_inline_script position after support
+define('WP_NG_PLUGIN_VERSION',      '1.5.0');
 define('WP_NG_REQUIRED_WP_VERSION',	'4.5');
 
 //Plugin directory

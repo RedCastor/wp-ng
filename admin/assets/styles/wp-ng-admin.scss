@@ -2,41 +2,77 @@
 // WP-NG Admin
 // --------------------------------------------------
 
-
-//Multi Select wp style
-.ms-container {
-  background: transparent url('../images/switch.png') no-repeat 50% 50%;
-
-  .ms-selectable, .ms-selection {
-    color:      #23282d;
-    background-color: transparent;
-  }
-
-  .ms-list {
-    background-color: #fff;
+//Wp Ng Icon Menu
+#toplevel_page_settings_wp-ng div.wp-menu-image {
+  img {
+    opacity: 1;
+    padding: 7px 0;
+    width: 20px;
+    height: 20px;
   }
 }
 
+//Wp Ng Page Settings
+.settings_page_settings_wp-ng {
+  //Multi Select wp style
+  .ms-container {
+    width: 100%;
 
-//Table module list
-#wp_ng_load_modules .wp-list-table {
+    .ms-selectable, .ms-selection {
+      color:      #23282d;
+      background-color: transparent;
+    }
 
-  &.widefat thead td.check-column {
-    padding: 8px 10px;
+    .ms-list {
+      background-color: #fff;
+      height: 305px;
+    }
   }
 
-  b, strong {
-    font-weight: 600;
+  //Multi Select Chosen wp style
+  .chosen-container.regular-text .chosen-choices {
+    margin: 1px;
+    padding: 3px 5px;
+    font-size: 14px;
+    width: 25em !important;
+    border: 1px solid #ddd;
+  }
+  .chosen-container-active.regular-text .chosen-choices {
+    border: 1px solid #5897fb;
   }
 
-  fieldset a.button-conditions {
-    height: inherit;
-    line-height: inherit;
-    margin-left: 5px;
-    margin-righ: 5px;
-  }
 
-  .disabled {
-    opacity: 0.65;
+  //Table module list
+  #wp_ng_load_modules .wp-list-table {
+
+    &.widefat thead td.check-column {
+      padding: 8px 10px;
+    }
+
+    b, strong {
+      font-weight: 600;
+    }
+
+
+    fieldset {
+      .button.wpsa-browse,
+      .button.thickbox {
+        height: inherit;
+        line-height: inherit;
+      }
+
+      .button.thickbox {
+        margin-left: 5px;
+        margin-righ: 5px;
+      }
+
+      input {
+        margin-bottom: 3px;
+      }
+    }
+
+    .disabled {
+      opacity: 0.65;
+    }
   }
 }

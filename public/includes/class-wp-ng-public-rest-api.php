@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The public-facing includes functionality of the plugin.
+ * The public-facing includes functionality rest api.
  *
  * @link       http://redcastor.io
  * @since      1.0.0
@@ -17,7 +17,6 @@
 
 
 /**
- * The public-facing includes functionality of the plugin.
  *
  * @package    Wp-Ng
  * @subpackage Wp-Ng/public/includes
@@ -73,7 +72,7 @@ class Wp_Ng_Public_Rest_Api {
     // Check the nonce.
     $result = wp_verify_nonce( $nonce, 'wp_ng_rest' );
     if ( ! $result ) {
-      return new WP_Error( 'rest_cookie_invalid_nonce', __( 'Cookie nonce is invalid', 'wp-ng' ), array( 'status' => 403 ) );
+      return new WP_Error( 'rest_cookie_invalid_nonce', __( 'Cookie nonce is invalid', 'wp-ng' ), array( 'status' => 406 ) );
     }
 
     // Send a refreshed nonce in header.
@@ -81,6 +80,32 @@ class Wp_Ng_Public_Rest_Api {
 
     return true;
   }
+
+  /**
+   * After rest request callback
+   * @param $response
+   * @param $handler
+   * @param $request
+   *
+   * @return mixed
+   */
+  static public function rest_request_after_callbacks($response, $handler, $request) {
+
+    if ( $response instanceof WP_HTTP_Response ) {
+
+      //Set Cookie Cart Woocommerce
+      if (function_exists('WC')) {
+        WC()->cart->maybe_set_cart_cookies();
+      }
+
+      // Update a refreshed nonce in header.
+      $response->header( 'X-WP-NG-Nonce', wp_create_nonce( 'wp_ng_rest' ), true );
+      $response->header( 'X-WP-Nonce', wp_create_nonce( 'wp_rest' ), true );
+    }
+
+    return $response;
+  }
+
 
   /**
    * Set the wpml language based on header param

@@ -1,6 +1,9 @@
 // ## Globals
+var events       = require('events').EventEmitter.prototype._maxListeners = 100;
+
 var argv         = require('minimist')(process.argv.slice(2));
-var autoprefixer = require('gulp-autoprefixer');
+var postcss      = require('gulp-postcss');
+var autoprefixer = require('autoprefixer');
 var browserSync  = require('browser-sync').create();
 var changed      = require('gulp-changed');
 var concat       = require('gulp-concat');
@@ -12,7 +15,8 @@ var jshint       = require('gulp-jshint');
 var lazypipe     = require('lazypipe');
 var less         = require('gulp-less');
 var merge        = require('merge-stream');
-var cssNano      = require('gulp-cssnano');
+var svgo         = require('postcss-svgo');
+var cssnano      = require('cssnano');
 var plumber      = require('gulp-plumber');
 var rev          = require('gulp-rev');
 var runSequence  = require('run-sequence');
@@ -20,6 +24,9 @@ var sass         = require('gulp-sass');
 var sourcemaps   = require('gulp-sourcemaps');
 var uglify       = require('gulp-uglify');
 var replace      = require('gulp-replace');
+var _            = require('lodash');
+var filter       = require('gulp-filter');
+var urlAdjuster  = require('gulp-css-url-adjuster');
 
 var ngAnnotate   = require('gulp-ng-annotate');
 var minifyHTML   = require('gulp-htmlmin');
@@ -73,6 +80,11 @@ var enabled = {
 // Path to the compiled assets manifest in the dist directory
 var revManifest = path.dist + 'assets.json';
 
+// Check for "<font id" string in given file
+var isSVGFont = function (file) {
+  return file.contents.toString().indexOf('<font id') > -1;
+};
+
 // ## Reusable Pipelines
 // See https://github.com/OverZealous/lazypipe
 
@@ -84,6 +96,25 @@ var revManifest = path.dist + 'assets.json';
 //   .pipe(gulp.dest(path.dist + 'styles'))
 // ```
 var cssTasks = function(filename) {
+
+  var plugins = [
+    svgo(),
+    autoprefixer({
+      browsers: [
+        'defaults',
+        'last 4 versions',
+        'last 6 iOS versions',
+        'last 6 Android versions',
+        'last 6 Safari versions',
+        'last 2 ie versions'
+      ]
+    }),
+    cssnano({
+      safe: true
+    })
+  ];
+
+
   return lazypipe()
     .pipe(function() {
       return gulpif(!enabled.failStyleTask, plumber());
@@ -92,16 +123,10 @@ var cssTasks = function(filename) {
       return gulpif(enabled.maps, sourcemaps.init());
     })
     .pipe(function() {
-      return gulpif('*.css', replace('url("fonts/', 'url("../fonts/'));
+      return gulpif('*.css', replace("url('ui-grid", "url('fonts/ui-grid"));
     })
     .pipe(function() {
-      return gulpif('*.css', replace("url('fonts/", "url('../fonts/"));
-    })
-    .pipe(function() {
-      return gulpif('*.css', replace('url("./fonts/', 'url("../fonts/'));
-    })
-    .pipe(function() {
-      return gulpif('*.css', replace("url('./fonts/", "url('../fonts/"));
+      return gulpif('*.css', replace('url("ui-grid', 'url("fonts/ui-grid'));
     })
     .pipe(function() {
       return gulpif('*.less', less());
@@ -115,15 +140,38 @@ var cssTasks = function(filename) {
       }));
     })
     .pipe(concat, filename)
-    .pipe(autoprefixer, {
-      browsers: [
-        'last 2 versions',
-        'android 4',
-        'opera 12'
-      ]
+    .pipe(function() {
+      return urlAdjuster({
+        replace: ['owl','images/owl'],
+      });
     })
-    .pipe(cssNano, {
-      safe: true
+    .pipe(function() {
+      return urlAdjuster({
+        replace: ['ajax-loader','images/ajax-loader'],
+      });
+    })
+    .pipe(function() {
+      return urlAdjuster({
+        replace: ['default-skin','images/default-skin'],
+      });
+    })
+    .pipe(function() {
+      return urlAdjuster({
+        replace: ['../',''],
+      });
+    })
+    .pipe(function() {
+      return urlAdjuster({
+        replace: ['./',''],
+      });
+    })
+    .pipe(function() {
+      return urlAdjuster({
+        prepend: '../',
+      });
+    })
+    .pipe(function() {
+      return postcss(plugins);
     })
     .pipe(function() {
       return gulpif(enabled.rev, rev());
@@ -241,6 +289,13 @@ gulp.task('translate', function() {
 // structure. See: https://github.com/armed/gulp-flatten
 gulp.task('fonts', function() {
   return gulp.src(globs.fonts)
+    .pipe(filter(function(file){
+      if(_.endsWith(file.path, '.svg')) {
+        return isSVGFont(file);
+      } else {
+        return true;
+      }
+    }))
     .pipe(flatten())
     .pipe(gulp.dest(path.dist + 'fonts'))
     .pipe(browserSync.stream());
@@ -257,6 +312,29 @@ gulp.task('images', function() {
     }))
     .pipe(gulp.dest(path.dist + 'images'))
     .pipe(browserSync.stream());
+});
+
+
+// ### Vendor
+// `gulp vendor`
+gulp.task('vendor', function() {
+  return gulp.src('assets/vendor/**/*')
+    .pipe(gulp.dest(path.dist + 'vendor'));
+});
+
+
+// ### Images SVG in font Bug from asset-builder
+// `gulp images-svg` - Run lossless compression on all the images.
+gulp.task('images-svg', function() {
+  return gulp.src(globs.fonts)
+    .pipe(filter(function(file){
+      if(_.endsWith(file.path, '.svg')) {
+        return !isSVGFont(file); // <-- Inverting the returned boolean here
+      } else {
+        return false;
+      }
+    }))
+    .pipe(gulp.dest(path.dist + 'images'));
 });
 
 // ### JSHint
@@ -302,7 +380,7 @@ gulp.task('watch', function() {
 gulp.task('build', function(callback) {
   runSequence('styles',
     'scripts',
-    ['fonts', 'images'],
+    ['fonts', 'images', 'images-svg', 'vendor'],
     callback);
 });
 

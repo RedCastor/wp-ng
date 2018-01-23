@@ -21,6 +21,9 @@ class Wp_Ng_Shortcodes_Form {
 
     $html = '';
 
+    //translation
+    $atts = wp_ng_apply_translation($atts, 'placeholder');
+
     $_atts = shortcode_atts( array(
       'type'   => null,
       'name'   => null,
@@ -40,6 +43,7 @@ class Wp_Ng_Shortcodes_Form {
       'minlength' => null,
       'maxlength' => null,
       'checkbox_class' => null,
+      'radio_class' => null,
     ), $atts );
 
     extract($_atts);
@@ -54,10 +58,7 @@ class Wp_Ng_Shortcodes_Form {
         $name = substr( $model, 0, 1) . ucwords($name);
       }
 
-      //Init
-      if ( empty($init) ) {
-        $init = '';
-      }
+
 
       //Label
       if( !empty($label) ) {
@@ -85,27 +86,72 @@ class Wp_Ng_Shortcodes_Form {
       $_attr_input['data-ng-maxlength'] = $maxlength;
       $_attr_input['data-ng-pattern'] = $pattern;
       $_attr_input['data-ng-change'] = $change;
+      $_attr_input['data-ng-init'] = $init;
 
-      //Model, Init, Value
+      //Initialize model
       if ( $model !== 'false' ) {
         $_attr_input['data-ng-model'] = $model;
-
-        if ( !empty($init) ) {
-          $init .= (substr($init, -1, 1) === ';') ? '' : ';';
-        }
-
-        if ( !empty($value) ) {
-          $init .= sprintf("%s='%s';", $model, $value);
-        }
-
-        if ( !empty($init) ) {
-          $_attr_input['data-ng-init'] = $init;
-        }
       }
 
       $_attr_input = wp_parse_args($_attr_input, $extra_attr);
 
       $attr_input = array();
+
+      //Special initialize input type
+      switch ($type) {
+        case 'checkbox':
+
+          if ($value === true || $value === 'true' || $checked === '' || $checked === true || $checked === 'true' ) {
+            $checked = 'true';
+          }
+          else {
+            $checked = 'false';
+          }
+
+          $_attr_input['data-ng-checked'] = $checked;
+
+          if (empty($value)) {
+            $value = '';
+          }
+
+          if( $model !== 'false') {
+            $_attr_input['initial-value'] = $value;
+          }
+          break;
+        case 'radio':
+
+          if ($checked !== null) {
+            if ($value === true || $value === 'true' || $checked === '' || $checked === true || $checked === 'true' ) {
+              $checked = 'true';
+            }
+            else {
+              $checked = 'false';
+            }
+
+            $_attr_input['data-ng-checked'] = $checked;
+
+            if( $model !== 'false') {
+              $_attr_input['initial-value'] = '';
+            }
+          }
+          break;
+        default:
+          if ( $model !== 'false' && $value !== null ) {
+            $_attr_input['initial-value'] = '';
+          }
+      }
+
+      //Parse attributes for display
+      foreach ($_attr_input as $attribute => $value) {
+        if ( $value !== null) {
+          if ( is_numeric($attribute) ) {
+            $attr_input[] = (string) $value;
+          }
+          else {
+            $attr_input[] = sprintf('%s="%s"', $attribute, htmlspecialchars($value, ENT_QUOTES));
+          }
+        }
+      }
 
       switch ($type) {
         case 'search':
@@ -116,43 +162,35 @@ class Wp_Ng_Shortcodes_Form {
         case 'email':
         case 'tel':
         case 'url':
+        case 'textarea':
 
-          foreach ($_attr_input as $attribute => $value) {
-            if ( $value !== null && $value !== 'false') {
-              if ( is_numeric($attribute) ) {
-                $attr_input[] = (string) $value;
-              }
-              else {
-                $attr_input[] = sprintf('%s="%s"', $attribute, esc_attr($value));
-              }
-            }
+          if ($type === 'textarea') {
+            $html = sprintf( '%s<textarea %s ></textarea> ', $label, implode(' ', $attr_input) );
+          }
+          else {
+            $html = sprintf( '%s<input %s /> ', $label, implode(' ', $attr_input) );
           }
 
-          $html = sprintf( '%s<input %s /> ', $label, implode(' ', $attr_input) );
           break;
-
         case 'checkbox':
-
-          $checked = ($checked === true || $checked === 'true' ) ? 'true' : 'false';
-
-          $_attr_input['data-ng-checked'] = $checked;
-
-          if ( $model !== 'false' ) {
-            $_attr_input['data-ng-init'] = sprintf('%s=%s;%s', $model, $checked, $init);
-          }
-
 
           //Class for checkbox block
           $checkbox_class = 'checkbox ' . $checkbox_class;
 
-          foreach ($_attr_input as $attribute => $value) {
-            if ( !empty($value) && $value !== 'false') {
-              $attr_input[] = sprintf('%s="%s"', $attribute, esc_attr($value));
-            }
-          }
-
           $html = sprintf( '<div class="%s"><input %s />%s</div>',
             $checkbox_class,
+            implode(' ', $attr_input),
+            $label
+          );
+
+          break;
+        case 'radio':
+
+          //Class for radio block
+          $radio_class = 'radio ' . $radio_class;
+
+          $html = sprintf( '<div class="%s"><input %s />%s</div>',
+            $radio_class,
             implode(' ', $attr_input),
             $label
           );
@@ -191,7 +229,28 @@ class Wp_Ng_Shortcodes_Form {
     return self::input( $atts );
   }
 
+  /**
+   * Shortcode radio form
+   *
+   * @param $atts
+   *
+   * @return string
+   */
+  public static function radio( $atts, $content = '' ) {
 
+    $atts = wp_parse_args( $atts, array(
+      'type' => 'radio',
+      'label' => '',
+    ) );
+
+    if ( !empty($atts['label']) ) {
+      $content = esc_html( $atts['label']  ) . ( empty( $content ) ? '' : ' ' ) . $content;
+    }
+
+    $atts['label'] = do_shortcode($content);
+
+    return self::input( $atts );
+  }
 
   /**
    * Shortcode select form
@@ -202,6 +261,9 @@ class Wp_Ng_Shortcodes_Form {
    */
   public static function select ( $atts ) {
     $html = '';
+
+    //translation
+    $atts = wp_ng_apply_translation($atts, 'placeholder');
 
     $_atts = shortcode_atts( array(
       'name'   => null,
@@ -234,7 +296,7 @@ class Wp_Ng_Shortcodes_Form {
       }
 
       //Options
-      $options_decoded = json_decode($options, true);
+      $options_decoded = wp_ng_json_decode($options);
       if ( !$options_decoded ) {
         $options_decoded = array();
       }
@@ -267,14 +329,12 @@ class Wp_Ng_Shortcodes_Form {
       $_attr_select['class'] = $class;
       $_attr_select['data-ng-change'] = $change;
       $_attr_select['data-ng-disabled'] = $disabled;
-      $_attr_select['data-ng-model'] = $model;
       $_attr_select['data-ng-required'] = $required;
       $_attr_select['data-ng-attr-size'] = $attr_size;
       $_attr_select['data-ng-options'] = sprintf('key as value for (key, value) in %s', $name);
 
       //Model, Init, Value
       if ( $model !== 'false' ) {
-        $_attr_input['data-ng-model'] = $model;
 
         //Init
         if ( empty($init) ) {
@@ -284,7 +344,9 @@ class Wp_Ng_Shortcodes_Form {
           $init .= (substr($init, -1, 1) === ';') ? '' : ';';
         }
 
-        $_attr_select['data-ng-init'] = sprintf("%s=%s;%s='%s';%s",$name, json_encode($options_decoded), $model, $selected, $init);
+        $_attr_select['data-ng-init'] = sprintf("%s=%s;%s",$name, wp_ng_json_encode( $options_decoded ), $init);
+        $_attr_select['data-ng-model'] = $model;
+        $_attr_select['data-initial-value'] = esc_attr($selected);
       }
 
         $_attr_select = wp_parse_args($_attr_select, $extra_attr);
@@ -297,7 +359,7 @@ class Wp_Ng_Shortcodes_Form {
             $attr_select[] = (string) $value;
           }
           else {
-            $attr_select[] = sprintf('%s="%s"', $attribute, esc_attr($value));
+            $attr_select[] = sprintf('%s="%s"', $attribute, htmlspecialchars($value, ENT_QUOTES));
           }
         }
       }
@@ -329,6 +391,9 @@ class Wp_Ng_Shortcodes_Form {
 
     $html = '';
 
+    //translation
+    $atts = wp_ng_apply_translation($atts, 'text');
+
     $_atts = shortcode_atts( array(
       'text'    => '',
       'id'      => null,
@@ -357,7 +422,7 @@ class Wp_Ng_Shortcodes_Form {
 
       foreach ($_attrs as $attribute => $value) {
         if ( $value !== null) {
-          $attrs[] = sprintf('%s="%s"', $attribute, esc_attr($value));
+          $attrs[] = sprintf('%s="%s"', $attribute, htmlspecialchars($value, ENT_QUOTES));
         }
       }
 
@@ -403,9 +468,201 @@ class Wp_Ng_Shortcodes_Form {
     }
 
     $atts = wp_parse_args( $atts, array(
-      'options' => json_encode($languages),
+      'options' => wp_ng_json_encode( $languages),
     ) );
 
     return self::select( $atts );
   }
+
+
+  /**
+   * Shortcode Token
+   *
+   * @param $atts
+   * @return string
+   */
+  public static function token ( $atts ) {
+
+    $atts = wp_parse_args( $atts, array(
+      'type'  => 'hidden',
+      'name'  => 'token',
+      'value' => 'form',
+    ) );
+
+    //Create Token
+    $atts['value'] = wp_ng_create_onetime_nonce($atts['value']);
+
+    return self::input( $atts );
+  }
+
+
+  /**
+   * Shortcode Media Select
+   *
+   * @param $atts
+   *
+   * @return string
+   */
+  public static function media_select( $atts, $content ) {
+    $html ='';
+
+    $_atts = shortcode_atts( array(
+      'id'      => null,
+      'name'      => null,
+      'class'   => null,
+      'theme'   => null,
+      'type'    => 'hidden',
+      'template_url' => null,
+      'onetime' => false,
+      'single'  => false,
+      'push'    => false,
+      'media'   => null,
+      'current_user' => false,
+      'sources_query'     => null,
+      'crop'              => true,
+      'crop_keep_aspect'   => true,
+      'crop_keep_aspect_ratio' => true,
+      'crop_touch_radius' => 10,
+      'crop_color'        => 'rgba(128, 128, 128, 1)',
+      'crop_color_drag'   => 'rgba(128, 128, 128, 1)',
+      'crop_color_bg'     => '#dddddd',
+      'crop_color_crop_bg' => 'rgba(0, 0, 0, 0.6)',
+      'upload_multiple' => false,
+      'upload_filename' => '',
+      'upload_fields'   => '{}',
+      'upload_width'    => 300,
+      'upload_height'   => 300,
+      'upload_pattern'  => '.png,.jpg',
+      'upload_accept'   => 'image/*',
+      'upload_spinner'  => 'spinner:clock',
+      'gallery_spinner' => 'spinner:ripple',
+      'gallery_multiple'  => true,
+      'gallery_order'     => 'date',
+      'gallery_search_value' => '',
+      'gallery_post' => null,
+      'init_sources' => null,
+      'text'         => '',
+
+    ), $atts);
+
+    extract($_atts);
+
+    if ( !empty( $text ) ) {
+      $content = esc_html( $text  ) . ( empty( $content ) ? '' : ' ' ) . $content;
+    } else if ( empty( $content ) ) {
+      $content = __('Add to Gallery', 'wp-ng');
+    }
+
+    //Convert to boolean
+    $crop             = filter_var($crop, FILTER_VALIDATE_BOOLEAN);
+    $crop_keep_aspect = filter_var($crop_keep_aspect, FILTER_VALIDATE_BOOLEAN);
+    $crop_keep_aspect_ratio = filter_var($crop_keep_aspect_ratio, FILTER_VALIDATE_BOOLEAN);
+    $onetime          = filter_var($onetime, FILTER_VALIDATE_BOOLEAN);
+    $single           = filter_var($single, FILTER_VALIDATE_BOOLEAN);
+    $push             = filter_var($push, FILTER_VALIDATE_BOOLEAN);
+    $current_user     = filter_var($current_user, FILTER_VALIDATE_BOOLEAN);
+    $upload_multiple  = filter_var($upload_multiple, FILTER_VALIDATE_BOOLEAN);
+
+    $sources_query = wp_ng_json_decode($sources_query);
+
+    if (!$sources_query) {
+      $sources_query = array(
+        "per_page" => 30,
+      );
+    }
+
+    $user_id = get_current_user_id();
+
+    if ($current_user && $user_id) {
+      $sources_query['author'] = $user_id;
+    }
+
+    $gallery_post = intval($gallery_post);
+
+    if ($gallery_post !== null && is_int($gallery_post)) {
+      $sources_query['parent'] = $gallery_post;
+    }
+
+
+    $media_config = array(
+      'sourceId' => 'id',
+      'sourceUrl' => '',
+      'sourceUrlKey' => 'source_url',
+      'sourceTitle' => 'title.rendered',
+      'returnModelType' => 'string',
+      'returnModelKey' => 'id',
+      'returnModelPush' => $push,
+      'sourcesOffsetKey' => 'offset',
+      'sourcesLimitKey' =>  'per_page',
+      'sourcesSearchKey' => 'search',
+      'sourcesQuery' => $sources_query,
+      'deleteQuery' => array(
+        "force" => true,
+      ),
+      'upload' => array(
+        'crop'      => $crop,
+        'multiple'  => $upload_multiple,
+        'pattern'   => $upload_pattern,
+        'accept'    => $upload_accept,
+        'fileName'  => $upload_filename,
+        'fields'    => wp_ng_json_decode( $upload_fields ),
+        'minWidth'  => intval($upload_width),
+        'minHeight' => intval($upload_height),
+        'cropArea'  => array(
+          'touchRadius' => intval($crop_touch_radius),
+          'keepAspect'  => $crop_keep_aspect,
+          'keepAspectRatio'  => $crop_keep_aspect_ratio,
+          'color'       => $crop_color,
+          'colorDrag'   => $crop_color_drag,
+          'colorBg'     => $crop_color_bg,
+          'colorCropBg' => $crop_color_crop_bg,
+        ),
+        'loadIcon' => $upload_spinner,
+      ),
+      'gallery' => array(
+        'order'       => $gallery_order,
+        'searchValue' => $gallery_search_value,
+        'loadIcon'    => $gallery_spinner,
+      ),
+    );
+
+    //Add More attribute not describe. (example for auto focus, or validation)
+    $extra_attr = array_diff_key($atts, $_atts);
+
+    $_attrs['rcm-onetime']  = $onetime === true ? 'true' : 'false';
+    $_attrs['rcm-single']   = $single === true ? 'true': 'false';
+    $_attrs['rcm-class']    = $class;
+    $_attrs['rcm-id']       = $id;
+    $_attrs['rcm-name']     = $name;
+    $_attrs['rcm-type']     = $type;
+    $_attrs['rcm-theme']    = $theme;
+    $_attrs['rcm-template-url'] = $template_url;
+    $_attrs['rcm-config']   = wp_ng_json_encode( $media_config );
+    $_attrs['rcm-media']    = $media;
+    $_attrs['rcm-init-sources'] = $init_sources;
+
+    $_attrs = wp_parse_args($_attrs, $extra_attr);
+
+    $attrs = array();
+
+    foreach ($_attrs as $attribute => $value) {
+      if ( $value !== null && $value !== 'null' ) {
+        if ( is_numeric($attribute) ) {
+          $attrs[] = (string) $value;
+        }
+        else {
+          $attrs[] = sprintf('%s="%s"', $attribute, htmlspecialchars($value, ENT_QUOTES));
+        }
+      }
+    }
+
+    $html .= sprintf('<rcm-select %1$s  >%2$s</rcm-select>',
+      implode(' ', $attrs),
+      $content
+    );
+
+    return $html;
+  }
+
+
 }

@@ -73,88 +73,13 @@
   //Create Root Application with all dependencie modules
   wpNg.app = angular.module(wpNg.appName, wpNg.ngModules);
 
-  //Filter config disable animation on element with class 'ng-animate-disabled'
-  if ( angular.isDefined(wpNg.ngModules.ngAnimate) ) {
-    wpNg.app.config(['$animateProvider', function ($animateProvider) {
-      $animateProvider.classNameFilter(/^(?:(?!ng-animate-disabled).)*$/);
-    }]);
-  }
-
-  //Configure Rest module provider if module is declared in modules.
-  if ( angular.isDefined(wpNg.config.modules.wpNgRest) ) {
-    wpNg.app.config(['wpNgRestProvider', 'WP_NG_CONFIG', function (wpNgRestProvider, WP_NG_CONFIG) {
-
-      if ( angular.isDefined(WP_NG_CONFIG.modules.wpNgRest.restNonceKey) && angular.isDefined(WP_NG_CONFIG.modules.wpNgRest.restNonceVal) ) {
-        wpNgRestProvider.setNonce({
-          key: WP_NG_CONFIG.modules.wpNgRest.restNonceKey,
-          val: WP_NG_CONFIG.modules.wpNgRest.restNonceVal
-        });
-      }
-      if ( angular.isDefined(WP_NG_CONFIG.modules.wpNgRest.restUrl) && angular.isDefined(WP_NG_CONFIG.modules.wpNgRest.restPath) ) {
-        wpNgRestProvider.setRest({
-          url: WP_NG_CONFIG.modules.wpNgRest.restUrl,
-          path: WP_NG_CONFIG.modules.wpNgRest.restPath
-        });
-      }
-      if ( angular.isDefined(WP_NG_CONFIG.modules.wpNgRest.restLangKey) && angular.isDefined(WP_NG_CONFIG.modules.wpNgRest.restLangVal) ) {
-        wpNgRestProvider.setLang({
-          key: WP_NG_CONFIG.modules.wpNgRest.restLangKey,
-          val: WP_NG_CONFIG.modules.wpNgRest.restLangVal
-        });
-      }
-
-    }]);
-  }
-
-  //Configure ngScrollbars module provider if module is declared in modules.
-  if ( angular.isDefined(wpNg.config.modules.ngScrollbars) ) {
-    wpNg.app.config(['ScrollBarsProvider', 'WP_NG_CONFIG', function (ScrollBarsProvider, WP_NG_CONFIG) {
-
-      var defaults = WP_NG_CONFIG.modules.ngScrollbars.defaults;
-
-      ScrollBarsProvider.defaults = angular.isDefined(defaults) ? defaults : {};
-    }]);
-  }
-
-  //Set the Debug Mode
-  wpNg.app.config(['$compileProvider', '$logProvider', '$qProvider', '$locationProvider', 'WP_NG_CONFIG',
-    function ($compileProvider, $logProvider, $qProvider, $locationProvider, WP_NG_CONFIG) {
-      //Set debug Enable
-      $logProvider.debugEnabled(WP_NG_CONFIG.enableDebug);
-      $compileProvider.debugInfoEnabled(WP_NG_CONFIG.enableDebug);
-
-
-      //Disable error Rejections
-      $qProvider.errorOnUnhandledRejections(WP_NG_CONFIG.errorOnUnhandledRejections);
-
-      //Set Html5 false and hash prefix to empty backward compatibility to 1.5
-      $locationProvider.html5Mode(WP_NG_CONFIG.html5Mode).hashPrefix(WP_NG_CONFIG.hashPrefix);
-  }]);
-
-
-  //Location Tool provide a encode and decode URI.
-  wpNg.app.factory('locationTools', [ function() {
-    return {
-      encode: function(data) {
-        return encodeURIComponent(JSON.stringify(data));
-      },
-      decode: function(str) {
-        var uri = null;
-
-        str = decodeURIComponent(str);
-        try {
-          uri =  JSON.parse(str);
-        }catch(e) {
-          uri = str;
-        }
-
-        return uri;
-      }
-    };
-  }]);
 
   //Run Application
   wpNg.app.run(['$rootScope', '$injector', '$location', 'locationTools', '$timeout', '$log', 'WP_NG_CONFIG', function ( $rootScope, $injector, $location, locationTools, $timeout, $log, WP_NG_CONFIG ) {
+
+    //Access root config
+    $rootScope.wpNgConfig = WP_NG_CONFIG;
+
 
     $timeout(function() {
       //Cloak Animation Remove Preload Delay class
@@ -196,7 +121,11 @@
     //Workaround form not send if action not defined add action empty. (woocommerce add to cart).
     angular.element( wpNg.appElement ).find('form').each(function( index ) {
 
-      if ( angular.element(this).attr('action') === undefined && angular.element(this).attr('data-ng-submit') === undefined && angular.element(this).attr('ng-submit') === undefined ) {
+      if (
+        angular.element(this).attr('action') === undefined &&
+        angular.element(this).attr('data-ng-submit') === undefined &&
+        angular.element(this).attr('ng-submit') === undefined
+      ) {
         angular.element(this).attr('action', '');
       }
     });
@@ -245,9 +174,9 @@
             throw "Call " + call + " is not a function";
           }
         }
-        catch(err) {
+        catch(e) {
           $log.error('WP-NG Query Error.');
-          $log.error(err);
+          $log.error(e);
         }
       }
     });

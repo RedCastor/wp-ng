@@ -77,6 +77,25 @@ class Wp_Ng_Settings {
     return $default_field;
   }
 
+
+  /**
+   * Get the default section
+   *
+   * @return array
+   */
+  private function get_default_section( $section ) {
+
+    $default_section = array(
+      'title'   => isset ($section['title']) ? $section['title'] : '',
+      'desc'    => isset ($section['desc']) ? $section['desc'] : '',
+      'display' => isset ($section['display']) ? $section['display'] : '',
+      'action'  => isset($section['action']) ? $section['action'] : '',
+    );
+
+    return $default_section;
+  }
+
+
   /**
    * Initialize the class and set its properties.
    *
@@ -97,11 +116,11 @@ class Wp_Ng_Settings {
 
       delete_option( $version_option );
       add_option( $version_option, $version );
+
+      do_action( $version_option . '_update', $version, $current_version );
     }
 
     self::$_instance[$name]['version'] = $version;
-
-    add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
   }
 
 
@@ -137,7 +156,7 @@ class Wp_Ng_Settings {
   /**
    * Enqueue scripts and styles
    */
-  public function admin_enqueue_scripts() {
+  public static function admin_enqueue_scripts() {
     wp_enqueue_style( 'wp-color-picker' );
 
     wp_enqueue_media();
@@ -153,6 +172,10 @@ class Wp_Ng_Settings {
    */
   public function register_fields( $fields ) {
 
+    $tabs_descriptor = array();
+    $sections_descriptor = array();
+    $fields_descriptor = array();
+
     foreach ($fields as $tab_key => $tabs) {
 
       $tabs_descriptor[] = array(
@@ -160,16 +183,14 @@ class Wp_Ng_Settings {
         'title' => $tabs['title'],
       );
 
-      foreach ($tabs['sections'] as $section_key => $sections) {
+      foreach ($tabs['sections'] as $section_key => $section) {
 
-        $sections_descriptor[$tab_key][] = array(
-          'id'      => $section_key,
-          'title'   => isset ($sections['title']) ? $sections['title'] : '',
-          'desc'    => isset ($sections['desc']) ? $sections['desc'] : '',
-          'display' => isset ($sections['display']) ? $sections['display'] : '',
-        );
+        $default_section = $this->get_default_section( $section );
+        $default_section['id'] = $section_key;
 
-        foreach ($sections['fields'] as $field ) {
+        $sections_descriptor[$tab_key][] = $default_section;
+
+        foreach ($section['fields'] as $field ) {
 
           if ( !isset($field['name']) || empty($field['name']) ) {
             continue;
@@ -283,11 +304,25 @@ class Wp_Ng_Settings {
   /**
    * Get settings fields
    *
-   * @param array   $fields settings fields array
-   * @return $this
+   * @return array
    */
   public function get_fields() {
     return $this->settings_fields;
+  }
+
+  /**
+   * Get settings field
+   *
+   * @param $name
+   * @return array
+   */
+  public function get_field_by( $name, $tab, $section ) {
+
+    if ( !empty($this->settings_fields[$tab][$section][$name]) ) {
+      return $this->settings_fields[$tab][$section][$name];
+    }
+
+    return false;
   }
 
   /**
@@ -311,12 +346,27 @@ class Wp_Ng_Settings {
    * Get the option with the prefix
    *
    * @param $option
-   *
    * @return string
    */
   public function get_option_prefix ( $option ) {
 
     return $this->settings_prefix . '_' . $option;
+  }
+
+  /**
+   * Get option name without the prefix.
+   *
+   * @param $option
+   * @return mixed
+   */
+  public function get_option_remove_prefix ( $option ) {
+
+    if (strpos( $option, $this->settings_prefix . '_' ) === 0) {
+
+      $option = substr($option, strlen($this->settings_prefix) + 1);
+    }
+
+    return $option;
   }
 
   /**
@@ -408,7 +458,7 @@ class Wp_Ng_Settings {
   }
 
   /**
-   * Get option from theme support
+   * Get option defined on constant.
    * @param $option
    *
    * @return mixed|string
@@ -468,33 +518,33 @@ class Wp_Ng_Settings {
   public function get_conditions () {
 
     $conditions = array(
-      'is_home'               => __('Is Home',                $this->settings_prefix),
-      'is_front_page'         => __('Is Front page',          $this->settings_prefix),
-      'is_home&is_front_page' => __('Is Home and Front page', $this->settings_prefix),
-      'is_single'             => __('Is Single',              $this->settings_prefix),
-      'is_sticky'             => __('Is Sticky',              $this->settings_prefix),
-      'is_page'               => __('Is Page',                $this->settings_prefix),
-      'is_page_template'      => __('Is Page Template',       $this->settings_prefix),
-      'is_category'           => __('Is Category',            $this->settings_prefix),
-      'is_tag'                => __('Is Tag',                 $this->settings_prefix),
-      'is_tax'                => __('Is Taxonomy',            $this->settings_prefix),
-      'is_author'             => __('Is Author ',             $this->settings_prefix),
-      'is_archive'            => __('Is Archive',             $this->settings_prefix),
-      'is_search'             => __('Is Search',              $this->settings_prefix),
-      'is_404'                => __('Is 404',                 $this->settings_prefix),
-      'is_singular'           => __('Is Singular',            $this->settings_prefix),
-      'is_user_logged_in'     => __('Is User Logged In',      $this->settings_prefix),
+      'is_home'               => __('Is Home',                'wp-ng'),
+      'is_front_page'         => __('Is Front page',          'wp-ng'),
+      'is_home&is_front_page' => __('Is Home and Front page', 'wp-ng'),
+      'is_single'             => __('Is Single',              'wp-ng'),
+      'is_sticky'             => __('Is Sticky',              'wp-ng'),
+      'is_page'               => __('Is Page',                'wp-ng'),
+      'is_page_template'      => __('Is Page Template',       'wp-ng'),
+      'is_category'           => __('Is Category',            'wp-ng'),
+      'is_tag'                => __('Is Tag',                 'wp-ng'),
+      'is_tax'                => __('Is Taxonomy',            'wp-ng'),
+      'is_author'             => __('Is Author ',             'wp-ng'),
+      'is_archive'            => __('Is Archive',             'wp-ng'),
+      'is_search'             => __('Is Search',              'wp-ng'),
+      'is_404'                => __('Is 404',                 'wp-ng'),
+      'is_singular'           => __('Is Singular',            'wp-ng'),
+      'is_user_logged_in'     => __('Is User Logged In',      'wp-ng'),
     );
 
     //Get Page list with page id in string value
     foreach ( wp_list_pluck(get_pages(), 'post_title', 'ID') as $page_id => $page_title) {
-      $conditions['is_page$' . strval($page_id)] = sprintf( '%s %s', __('Page', $this->settings_prefix), $page_title);
+      $conditions['is_page$' . strval($page_id)] = sprintf( '%s %s', __('Page', 'wp-ng'), $page_title);
     }
 
     //Get all page templates list
     $templates = get_page_templates();
     foreach ( $templates as $template_name => $template_filename ) {
-      $conditions[ 'is_page_template$' . $template_filename] = sprintf( '%s %s', __('Page Template ', $this->settings_prefix), $template_name);
+      $conditions[ 'is_page_template$' . $template_filename] = sprintf( '%s %s', __('Page Template ', 'wp-ng'), $template_name);
     }
 
     //Get all post type list
@@ -506,22 +556,22 @@ class Wp_Ng_Settings {
     );
 
     foreach ( $post_types as $post_type ) {
-      $conditions[$post_type->name] = sprintf( '%s %s', __('Post Type ', $this->settings_prefix), $post_type->name);
+      $conditions[$post_type->name] = sprintf( '%s %s', __('Post Type ', 'wp-ng'), $post_type->name);
     }
 
     //Woocommerce conditions
     if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 
-      $conditions['is_woocommerce']       = __('Is Woocommerce',  $this->settings_prefix);
-      $conditions['is_shop']              = __('Is Shop',         $this->settings_prefix);
-      $conditions['is_product_category']  = __('Is Product Category', $this->settings_prefix);
-      $conditions['is_product_tag']       = __('Is Product Tag',  $this->settings_prefix);
-      $conditions['is_product']           = __('Is Product',      $this->settings_prefix);
-      $conditions['is_cart']              = __('Is Cart',         $this->settings_prefix);
-      $conditions['is_checkout']          = __('Is Checkout',     $this->settings_prefix);
-      $conditions['is_account_page']      = __('Is Account Page', $this->settings_prefix);
-      $conditions['is_wc_endpoint_url']   = __('Is Endpoint Url', $this->settings_prefix);
-      $conditions['is_ajax']              = __('Is Ajax',         $this->settings_prefix);
+      $conditions['is_woocommerce']       = __('Is Woocommerce',  'wp-ng');
+      $conditions['is_shop']              = __('Is Shop',         'wp-ng');
+      $conditions['is_product_category']  = __('Is Product Category', 'wp-ng');
+      $conditions['is_product_tag']       = __('Is Product Tag',  'wp-ng');
+      $conditions['is_product']           = __('Is Product',      'wp-ng');
+      $conditions['is_cart']              = __('Is Cart',         'wp-ng');
+      $conditions['is_checkout']          = __('Is Checkout',     'wp-ng');
+      $conditions['is_account_page']      = __('Is Account Page', 'wp-ng');
+      $conditions['is_wc_endpoint_url']   = __('Is Endpoint Url', 'wp-ng');
+      $conditions['is_ajax']              = __('Is Ajax',         'wp-ng');
     }
 
     return $conditions;
@@ -687,8 +737,8 @@ class Wp_Ng_Settings {
 
     add_thickbox();
 
-    $html = sprintf( '<a href="#TB_inline?&height=270&width=370&inlineId=wp_ng_modal_%1$s" title="%2$s" class="button button-conditions thickbox">%3$s</a>', $elment_id, __('Select your conditions', $this->settings_prefix), __('Conditions', $this->settings_prefix) );
-    $html .= sprintf( '<div id="wp_ng_modal_%1$s" style="display:none;"><p>%2$s</p></div>', $elment_id, $multiselect_html );
+    $html = sprintf( '<a href="#TB_inline?&height=370&width=470&inlineId=%1$s_modal_%2$s" title="%3$s" class="button button thickbox">%4$s</a>', $this->settings_prefix, $elment_id, __('Select your conditions', 'wp-ng'), __('Conditions', 'wp-ng') );
+    $html .= sprintf( '<div id="%1$s_modal_%2$s" style="display:none;"><p>%3$s</p></div>', $this->settings_prefix, $elment_id, $multiselect_html );
 
     return $html;
   }
@@ -710,7 +760,7 @@ class Wp_Ng_Settings {
 
 
   /**
-   * Displays a text field for a settings field
+   * Displays sub fields for a group
    *
    * @param array   $args settings field args
    */
@@ -756,6 +806,15 @@ class Wp_Ng_Settings {
    * @param array   $args settings field args
    */
   public function callback_url( $args ) {
+    $this->callback_text( $args );
+  }
+
+  /**
+   * Displays a email field for a settings field
+   *
+   * @param array   $args settings field args
+   */
+  public function callback_email( $args ) {
     $this->callback_text( $args );
   }
 
@@ -928,12 +987,17 @@ class Wp_Ng_Settings {
       $value = $this->get_option( $args['id'], $args['section'], $args['std'], $args['global'] );
     }
 
+    $placeholder = isset( $args['placeholder'] ) ? $args['placeholder'] : '';
     $disable = (isset( $args['disable'] ) && $args['disable'] === true) ? 'disabled' : '';
     $size  = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
-    $html  = sprintf( '<select multiple="multiple" class="%1$s %2$s-multi-select-field" name="%3$s[]" id="%4$s" %5$s>', $size, $this->settings_prefix, $name_id, $elment_id, $disable );
+
+    //$html  = sprintf('<input type="hidden" name="%1$s[]" value="">', $name_id);
+    $html  = sprintf( '<select data-placeholder="%1$s" multiple="multiple" class="%2$s-text %3$s-chosen-field" name="%4$s[]" id="%5$s" %6$s>', $placeholder, $size, $this->settings_prefix, $name_id, $elment_id, $disable );
 
     foreach ( $args['options'] as $key => $label ) {
-      $html .= sprintf( '<option value="%s" %s>%s</option>', $key, selected( $value, $key, false ), $label );
+      $selected = (is_array($value) && in_array( $key, $value )) ? $key : $value;
+      $selected = is_array($selected) ? $selected[0] : $selected;
+      $html .= sprintf( '<option value="%s" %s>%s</option>', $key, selected( $selected, $key, false ), $label );
     }
 
     $html .= sprintf( '</select>' );
@@ -1023,16 +1087,23 @@ class Wp_Ng_Settings {
     if ($args['parent']) {
       $value = $this->get_option( $args['parent']['id'], $args['section'], $args['std'], $args['global'] );
       $value = isset($value[$args['id']]) ? $value[$args['id']] : $args['std'];
+      $args['disable'] = (isset( $args['parent']['disable'])) ? $args['parent']['disable'] : false;
     }else {
       $value = $this->get_option( $args['id'], $args['section'], $args['std'], $args['global'] );
     }
+
+    $disable = (isset( $args['disable'] ) && $args['disable'] === true) ? 'disabled' : '';
     $size  = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
     $id    = $args['section']  . '[' . $args['id'] . ']';
     $label = isset( $args['options']['button_label'] ) ? $args['options']['button_label'] : __( 'Choose File' );
+    $mime_type = isset( $args['options']['mime'] ) ? $args['options']['mime'] : 'image';
 
-    $html  = sprintf( '<input type="text" class="%1$s-text wpsa-url" id="%2$s" name="%2$s" value="%3$s"/>', $size, $name_id, $value );
-    $html  .= '<input type="button" class="button wpsa-browse" value="' . $label . '" />';
-    $html  .= $this->get_field_description( $args );
+    $html = '<fieldset>';
+    $html .= sprintf( '<input type="text" class="%1$s-text wpsa-url" id="%2$s" name="%2$s" value="%3$s" %4$s/>', $size, $name_id, $value, $disable );
+    $html .= '<input type="button" class="button wpsa-browse" value="' . $label . '" ' . $disable . '/>';
+    $html .= '<input type="hidden" class="wpsa-mime" value="' . $mime_type . '" />';
+    $html .= $this->get_field_description( $args );
+    $html .= '</fieldset>';
 
     echo $html;
   }
@@ -1206,17 +1277,23 @@ class Wp_Ng_Settings {
 
         //Initiate Multi Select
         $('.<?php echo $this->settings_prefix; ?>-multi-select-field').multiSelect({
-          selectableHeader: "<div class='custom-header'><?php _e( 'Conditions', $this->settings_prefix); ?></div>",
-          selectionHeader: "<div class='custom-header'><?php _e( 'Selected Conditions', $this->settings_prefix); ?></div>"
+          selectableHeader: "<div class='custom-header'><?php _e( 'Conditions', 'wp-ng'); ?></div>",
+          selectionHeader: "<div class='custom-header'><?php _e( 'Selected Conditions', 'wp-ng'); ?></div>"
         });
 
-        //Display button condition
-        $('fieldset .checkbox').parents('fieldset').find('a.button-conditions').css('display', 'none');
-        $('fieldset .checkbox:checked').parents('fieldset').find('a.button-conditions').css('display', '');
+        //Initia Multi Select Chosen
+        $('.<?php echo $this->settings_prefix; ?>-chosen-field').chosen({
+          inherit_select_classes: true,
+          width: 'auto'
+        });
+
+        //Display button thickbox
+        $('fieldset .checkbox').parents('fieldset').find('a.button.thickbox').css('display', 'none');
+        $('fieldset .checkbox:checked').parents('fieldset').find('a.button.thickbox').css('display', '');
 
         $('fieldset .checkbox').on('click', function (event) {
-          $('fieldset .checkbox').parents('fieldset').find('a.button-conditions').css('display', 'none');
-          $('fieldset .checkbox:checked').parents('fieldset').find('a.button-conditions').css('display', '');
+          $('fieldset .checkbox').parents('fieldset').find('a.button.thickbox').css('display', 'none');
+          $('fieldset .checkbox:checked').parents('fieldset').find('a.button.thickbox').css('display', '');
         });
 
         //Initiate Color Picker
@@ -1274,7 +1351,10 @@ class Wp_Ng_Settings {
             button: {
               text: self.data('uploader_button_text')
             },
-            multiple: false
+            multiple: false,
+            library: {
+              type: self.parent().find('.wpsa-mime').val()
+            },
           });
 
           file_frame.on('select', function () {
@@ -1436,11 +1516,11 @@ class Wp_Ng_Settings {
           echo '<thead>';
           echo '<tr>';
           echo '<td id="cb" class="manage-column column-cb check-column">';
-          echo __( 'Select', $this->settings_prefix);
+          echo __( 'Select', 'wp-ng');
           echo '</td>';
-          echo '<th scope="col" id="name" class="manage-column column-name column-primary">' . __('Module', $this->settings_prefix) . '</th>';
-          echo '<th scope="col" id="description" class="manage-column column-description">' . __('Description', $this->settings_prefix) . '</th>';
-          echo '<th scope="col" id="options" class="manage-column column-options">' . __('Options', $this->settings_prefix) . '</th>';
+          echo '<th scope="col" id="name" class="manage-column column-name column-primary">' . __('Module', 'wp-ng') . '</th>';
+          echo '<th scope="col" id="description" class="manage-column column-description">' . __('Description', 'wp-ng') . '</th>';
+          echo '<th scope="col" id="options" class="manage-column column-options">' . __('Options', 'wp-ng') . '</th>';
           echo '</tr>';
           echo '</thead>';
           echo '<tbody id="the-list">';
@@ -1473,12 +1553,12 @@ class Wp_Ng_Settings {
         <div id="<?php echo $tab['id']; ?>" class="group" style="display: none;">
           <form method="post" action="options.php">
             <?php
-            do_action( 'wp_ng_settings_form_top_' . $tab['id'], $tab );
+            do_action( $this->settings_prefix . '_settings_form_top_' . $tab['id'], $tab );
             settings_fields( $tab['id'] );
 
             $this->do_settings_sections( $tab['id'] );
 
-            do_action( 'wp_ng_settings_form_bottom_' . $tab['id'], $tab );
+            do_action( $this->settings_prefix . '_settings_form_bottom_' . $tab['id'], $tab );
             ?>
             <div>
               <?php submit_button(); ?>

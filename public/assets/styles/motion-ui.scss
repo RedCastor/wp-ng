@@ -7,7 +7,7 @@ $motion-ui-classes: (
   active: '-active',
 );
 
-@import "../../bower_components/motion-ui/src/motion-ui.scss";
+@import "../../bower_components/motion-ui/src/motion-ui";
 
 .tooltip {
   @include mui-fade(

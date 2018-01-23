@@ -52,17 +52,17 @@ class Wp_Ng_Admin {
 
     $this->load_dependencies();
 
-    add_action( 'admin_menu', array( $this, 'settings'), 100 );
-    add_action( 'admin_init', array( $this, 'settings_init') );
-
-    add_filter( 'tiny_mce_before_init', array($this, 'tiny_mce_before_init'), 100 );
-
+    /* Init Gallery */
+    add_action( 'admin_init', array( 'Wp_Ng_Admin_Gallery', 'init' ) );
 	}
 
 
   private function load_dependencies() {
 
     require_once plugin_dir_path( __FILE__ ) . '/includes/class-wp-ng-admin-fields-action.php';
+    require_once plugin_dir_path( __FILE__ ) . '/includes/class-wp-ng-admin-gallery.php';
+
+    require_once plugin_dir_path( __FILE__ ) . '/includes/metaboxes/class-metabox-email-options.php';
   }
 
 	/**
@@ -72,11 +72,27 @@ class Wp_Ng_Admin {
 	 */
 	public function enqueue_styles() {
 
+    global $pagenow;
+
+
+    //Register style wp-ng-metabox
+    if ( in_array( $pagenow, array( 'post-new.php', 'post.php', 'edit.php' ) ) ) {
+      wp_register_style($this->plugin_name . '-metabox', wp_ng_get_admin_asset_path('styles/' . $this->plugin_name . '-metabox.css'), array(), $this->version, 'all');
+      wp_enqueue_style($this->plugin_name . '-metabox');
+    }
+
+    if ( !in_array( $pagenow, array( 'options-general.php' ) ) || !isset($_GET['page']) || $_GET['page'] !== 'settings_' . $this->plugin_name ) {
+      return;
+    }
+
     //Register style wp-ng-admin
     wp_register_style($this->plugin_name . '-admin', wp_ng_get_admin_asset_path('styles/' . $this->plugin_name . '-admin.css'), array(), $this->version, 'all');
     wp_enqueue_style($this->plugin_name . '-admin');
 
+    //Dequeue jquery chosen load by third party plugin on wn ng settings page.
+    wp_dequeue_style('jquery-chosen');
 	}
+
 
 	/**
 	 * Register the JavaScript for the admin area.
@@ -85,9 +101,22 @@ class Wp_Ng_Admin {
 	 */
 	public function enqueue_scripts() {
 
+    global $pagenow;
+
+
+    if ( !in_array( $pagenow, array( 'options-general.php' ) ) && isset($_GET['page']) && $_GET['page'] === 'settings_' . $this->plugin_name ) {
+      return;
+    }
+
+    //Register settings
+    Wp_Ng_Settings::admin_enqueue_scripts();
+
     //Register script wp-ng-admin
     wp_register_script($this->plugin_name . '-admin', wp_ng_get_admin_asset_path('scripts/' . $this->plugin_name . '-admin.js'), array(), $this->version, false);
     wp_enqueue_script($this->plugin_name . '-admin');
+
+    //Dequeue jquery chosen load by third party plugin on wn ng settings page.
+    wp_dequeue_script('jquery-chosen');
 
 	}
 
@@ -99,12 +128,26 @@ class Wp_Ng_Admin {
 
     $settings_page = Wp_Ng_Settings::getInstance( $this->plugin_name );
 
+    //Action for fields !only for global.
     foreach ( $settings_page->get_fields() as $tab_key => $sections ) {
       foreach ($sections as $section_key => $field) {
         foreach ($field as $option) {
-          if ( isset($option['action']) && isset($option['name']) && !empty($option['action']) ) {
-            add_filter( 'pre_update_option_' . $settings_page->get_option_prefix( $option['name'] ), $option['action'], 10, 2 );
+          if ( !empty($option['action'] && !empty($option['name']) && $option['global'] === true) ) {
+
+            $option_name = $settings_page->get_option_prefix( $option['name'] );
+            add_filter( 'pre_update_option_' . $option_name, $option['action'], 10, 2 );
           }
+        }
+      }
+    }
+
+    //Action for section
+    foreach ( $settings_page->get_sections() as $tab_key => $sections ) {
+      foreach ($sections as $section) {
+        if ( !empty($section['action']) ) {
+
+          $option_name = $settings_page->get_option_prefix( $section['id'] );
+          add_filter( 'pre_update_option_' . $option_name, $section['action'], 10, 2 );
         }
       }
     }
@@ -135,10 +178,6 @@ class Wp_Ng_Admin {
 
     if( wp_ng_disable_tinymce_verify_html() === true) {
       $init['verify_html  '] = FALSE;
-    }
-
-    if( wp_ng_disable_wpautop() === true) {
-      //$init['wpautop'] = FALSE;
     }
 
     return $init;

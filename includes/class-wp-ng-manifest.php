@@ -59,7 +59,7 @@ class Wp_Ng_JsonManifest {
       if (isset($collection[$key])) {
           return $collection[$key];
       }
-      foreach (explode('.', $key) as $segment) {
+      foreach (explode('.', $key, 2) as $segment) {
           if (!isset($collection[$segment])) {
               return $default;
           } else {

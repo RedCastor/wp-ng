@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><defs>
+            <linearGradient id="sGD" gradientUnits="userSpaceOnUse" x1="55" y1="46" x2="2" y2="46">
+                <stop offset="0.1" class="stop1"/>
+                <stop offset="1" class="stop2"/>
+            </linearGradient>
+        </defs><symbol id="android" viewBox="0 0 64 64">
+    <g transform="rotate(274.6999999999999,32,32)">
+        <circle stroke-width="6" stroke-dasharray="136.264" stroke-dashoffset="19.656000000000006" r="26" cx="32" cy="32" fill="none" transform="scale(1,1) translate(0,0) rotate(-90,32,32)"/>
+    </g>
+</symbol><symbol id="balanced" viewBox="0 0 64 64">
+    <g stroke-width="0">
+        <circle cx="24" cy="0" transform="translate(32,32)" r="2.31111">
+            <animate attributeName="r" dur="750ms" values="8;7;6;5;4;3;2;1;8" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="16.970562748477143" cy="16.97056274847714" transform="translate(32,32)" r="3.31111">
+            <animate attributeName="r" dur="750ms" values="1;8;7;6;5;4;3;2;1" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="1.4695761589768238e-15" cy="24" transform="translate(32,32)" r="4.31111">
+            <animate attributeName="r" dur="750ms" values="2;1;8;7;6;5;4;3;2" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="-16.97056274847714" cy="16.970562748477143" transform="translate(32,32)" r="5.31111">
+            <animate attributeName="r" dur="750ms" values="3;2;1;8;7;6;5;4;3" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="-24" cy="2.9391523179536475e-15" transform="translate(32,32)" r="6.31111">
+            <animate attributeName="r" dur="750ms" values="4;3;2;1;8;7;6;5;4" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="-16.970562748477143" cy="-16.97056274847714" transform="translate(32,32)" r="7.31111">
+            <animate attributeName="r" dur="750ms" values="5;4;3;2;1;8;7;6;5" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="-4.408728476930472e-15" cy="-24" transform="translate(32,32)" r="5.82222">
+            <animate attributeName="r" dur="750ms" values="6;5;4;3;2;1;8;7;6" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="16.970562748477136" cy="-16.970562748477143" transform="translate(32,32)" r="1.31111">
+            <animate attributeName="r" dur="750ms" values="7;6;5;4;3;2;1;8;7" repeatCount="indefinite"/>
+        </circle>
+    </g>
+</symbol><symbol id="calme" viewBox="0 0 64 64">
+    <g stroke-width="7" stroke-linecap="round">
+        <line x1="10" x2="10" y1="22.4445" y2="40.4444">
+            <animate attributeName="y1" dur="750ms" values="16;18;28;18;16;16" repeatCount="indefinite"/>
+            <animate attributeName="y2" dur="750ms" values="48;46;36;44;48;48" repeatCount="indefinite"/>
+            <animate attributeName="stroke-opacity" dur="750ms" values="1;.4;.5;.8;1;1" repeatCount="indefinite"/>
+        </line>
+        <line x1="24" x2="24" y1="23.5555" y2="40.4445">
+            <animate attributeName="y1" dur="750ms" values="16;16;18;28;18;16" repeatCount="indefinite"/>
+            <animate attributeName="y2" dur="750ms" values="48;48;46;36;44;48" repeatCount="indefinite"/>
+            <animate attributeName="stroke-opacity" dur="750ms" values="1;1;.4;.5;.8;1" repeatCount="indefinite"/>
+        </line>
+        <line x1="38" x2="38" y1="17.1111" y2="46.8889">
+            <animate attributeName="y1" dur="750ms" values="18;16;16;18;28;18" repeatCount="indefinite"/>
+            <animate attributeName="y2" dur="750ms" values="44;48;48;46;36;44" repeatCount="indefinite"/>
+            <animate attributeName="stroke-opacity" dur="750ms" values=".8;1;1;.4;.5;.8" repeatCount="indefinite"/>
+        </line>
+        <line x1="52" x2="52" y1="16" y2="48">
+            <animate attributeName="y1" dur="750ms" values="28;18;16;16;18;28" repeatCount="indefinite"/>
+            <animate attributeName="y2" dur="750ms" values="36;44;48;48;46;36" repeatCount="indefinite"/>
+            <animate attributeName="stroke-opacity" dur="750ms" values=".5;.8;1;1;.4;.5" repeatCount="indefinite"/>
+        </line>
+    </g>
+</symbol><symbol id="clock" viewBox="0 0 100 100">
+    <g>
+        <circle fill="#fff" stroke-width="4" stroke-miterlimit="10" cx="50" cy="50" r="48"/>
+        <line stroke-linecap="round" stroke-width="4" stroke-miterlimit="10" x1="50" y1="50" x2="85" y2="50.5">
+            <animateTransform attributeName="transform" dur="2s" type="rotate" from="0 50 50" to="360 50 50" repeatCount="indefinite"/>
+        </line>
+        <line stroke-linecap="round" stroke-width="4" stroke-miterlimit="10" x1="50" y1="50" x2="49.5" y2="74">
+          <animateTransform attributeName="transform" dur="15s" type="rotate" from="0 50 50" to="360 50 50" repeatCount="indefinite"/>
+        </line>
+    </g>
+</symbol><symbol id="dots" viewBox="0 0 64 64">
+    <g>
+        <circle cx="16" cy="32" stroke-width="0" r="4.86667">
+            <animate attributeName="fill-opacity" dur="750ms" values=".5;.6;.8;1;.8;.6;.5;.5" repeatCount="indefinite"/>
+            <animate attributeName="r" dur="750ms" values="3;3;4;5;6;5;4;3" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="32" cy="32" stroke-width="0" r="5.86667">
+            <animate attributeName="fill-opacity" dur="750ms" values=".5;.5;.6;.8;1;.8;.6;.5" repeatCount="indefinite"/>
+            <animate attributeName="r" dur="750ms" values="4;3;3;4;5;6;5;4" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="48" cy="32" stroke-width="0" r="5.13333">
+            <animate attributeName="fill-opacity" dur="750ms" values=".6;.5;.5;.6;.8;1;.8;.6" repeatCount="indefinite"/>
+            <animate attributeName="r" dur="750ms" values="5;4;3;3;4;5;6;5" repeatCount="indefinite"/>
+        </circle>
+    </g>
+</symbol><symbol id="energized" viewBox="0 0 64 64">
+    <g>
+        <circle r="5" cx="24" cy="0" transform="translate(32,32)" stroke-width="0">
+            <animate attributeName="fill-opacity" dur="750ms" values="1;.9;.85;.7;.4;.3;.3;.3;1" repeatCount="indefinite"/>
+        </circle>
+        <circle r="5" cx="16.970562748477143" cy="16.97056274847714" transform="translate(32,32)" stroke-width="0">
+            <animate attributeName="fill-opacity" dur="750ms" values=".3;1;.9;.85;.7;.4;.3;.3;.3" repeatCount="indefinite"/>
+        </circle>
+        <circle r="5" cx="1.4695761589768238e-15" cy="24" transform="translate(32,32)" stroke-width="0">
+            <animate attributeName="fill-opacity" dur="750ms" values=".3;.3;1;.9;.85;.7;.4;.3;.3" repeatCount="indefinite"/>
+        </circle>
+        <circle r="5" cx="-16.97056274847714" cy="16.970562748477143" transform="translate(32,32)" stroke-width="0">
+            <animate attributeName="fill-opacity" dur="750ms" values=".3;.3;.3;1;.9;.85;.7;.4;.3" repeatCount="indefinite"/>
+        </circle>
+        <circle r="5" cx="-24" cy="2.9391523179536475e-15" transform="translate(32,32)" stroke-width="0">
+            <animate attributeName="fill-opacity" dur="750ms" values=".4;.3;.3;.3;1;.9;.85;.7;.4" repeatCount="indefinite"/>
+        </circle>
+        <circle r="5" cx="-16.970562748477143" cy="-16.97056274847714" transform="translate(32,32)" stroke-width="0">
+            <animate attributeName="fill-opacity" dur="750ms" values=".7;.4;.3;.3;.3;1;.9;.85;.7" repeatCount="indefinite"/>
+        </circle>
+        <circle r="5" cx="-4.408728476930472e-15" cy="-24" transform="translate(32,32)" stroke-width="0">
+            <animate attributeName="fill-opacity" dur="750ms" values=".85;.7;.4;.3;.3;.3;1;.9;.85" repeatCount="indefinite"/>
+        </circle>
+        <circle r="5" cx="16.970562748477136" cy="-16.970562748477143" transform="translate(32,32)" stroke-width="0">
+            <animate attributeName="fill-opacity" dur="750ms" values=".9;.85;.7;.4;.3;.3;.3;1;.9" repeatCount="indefinite"/>
+        </circle>
+    </g>
+</symbol><symbol id="half" viewBox="0 0 50 50">
+  <path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+    <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"/>
+  </path>
+</symbol><symbol id="ios" viewBox="0 0 64 64">
+    <g stroke-width="4" stroke-linecap="round">
+        <line y1="17" y2="29" transform="translate(32,32) rotate(180)">
+            <animate attributeName="stroke-opacity" dur="750ms" values="1;.85;.7;.65;.55;.45;.35;.25;.15;.1;0;1" repeatCount="indefinite"/>
+        </line>
+        <line y1="17" y2="29" transform="translate(32,32) rotate(210)">
+            <animate attributeName="stroke-opacity" dur="750ms" values="0;1;.85;.7;.65;.55;.45;.35;.25;.15;.1;0" repeatCount="indefinite"/>
+        </line>
+        <line y1="17" y2="29" transform="translate(32,32) rotate(240)">
+            <animate attributeName="stroke-opacity" dur="750ms" values=".1;0;1;.85;.7;.65;.55;.45;.35;.25;.15;.1" repeatCount="indefinite"/>
+        </line>
+        <line y1="17" y2="29" transform="translate(32,32) rotate(270)">
+            <animate attributeName="stroke-opacity" dur="750ms" values=".15;.1;0;1;.85;.7;.65;.55;.45;.35;.25;.15" repeatCount="indefinite"/>
+        </line>
+        <line y1="17" y2="29" transform="translate(32,32) rotate(300)">
+            <animate attributeName="stroke-opacity" dur="750ms" values=".25;.15;.1;0;1;.85;.7;.65;.55;.45;.35;.25" repeatCount="indefinite"/>
+        </line>
+        <line y1="17" y2="29" transform="translate(32,32) rotate(330)">
+            <animate attributeName="stroke-opacity" dur="750ms" values=".35;.25;.15;.1;0;1;.85;.7;.65;.55;.45;.35" repeatCount="indefinite"/>
+        </line>
+        <line y1="17" y2="29" transform="translate(32,32) rotate(0)">
+            <animate attributeName="stroke-opacity" dur="750ms" values=".45;.35;.25;.15;.1;0;1;.85;.7;.65;.55;.45" repeatCount="indefinite"/>
+        </line>
+        <line y1="17" y2="29" transform="translate(32,32) rotate(30)">
+            <animate attributeName="stroke-opacity" dur="750ms" values=".55;.45;.35;.25;.15;.1;0;1;.85;.7;.65;.55" repeatCount="indefinite"/>
+        </line>
+        <line y1="17" y2="29" transform="translate(32,32) rotate(60)">
+            <animate attributeName="stroke-opacity" dur="750ms" values=".65;.55;.45;.35;.25;.15;.1;0;1;.85;.7;.65" repeatCount="indefinite"/>
+        </line>
+        <line y1="17" y2="29" transform="translate(32,32) rotate(90)">
+            <animate attributeName="stroke-opacity" dur="750ms" values=".7;.65;.55;.45;.35;.25;.15;.1;0;1;.85;.7" repeatCount="indefinite"/>
+        </line>
+        <line y1="17" y2="29" transform="translate(32,32) rotate(120)">
+            <animate attributeName="stroke-opacity" dur="750ms" values=".85;.7;.65;.55;.45;.35;.25;.15;.1;0;1;.85" repeatCount="indefinite"/>
+        </line>
+        <line y1="17" y2="29" transform="translate(32,32) rotate(150)">
+            <animate attributeName="stroke-opacity" dur="750ms" values="1;.85;.7;.65;.55;.45;.35;.25;.15;.1;0;1" repeatCount="indefinite"/>
+        </line>
+    </g>
+</symbol><symbol id="line-1" viewBox="0 0 24 24">
+    <rect x="0" y="0" width="4" height="7" fill="#333">
+      <animateTransform attributeType="xml" attributeName="transform" type="scale" values="1,1; 1,3; 1,1" begin="0s" dur="0.6s" repeatCount="indefinite"/>
+    </rect>
+
+    <rect x="10" y="0" width="4" height="7" fill="#333">
+      <animateTransform attributeType="xml" attributeName="transform" type="scale" values="1,1; 1,3; 1,1" begin="0.2s" dur="0.6s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="20" y="0" width="4" height="7" fill="#333">
+      <animateTransform attributeType="xml" attributeName="transform" type="scale" values="1,1; 1,3; 1,1" begin="0.4s" dur="0.6s" repeatCount="indefinite"/>
+    </rect>
+</symbol><symbol id="line-2" viewBox="0 0 24 30">
+    <rect x="0" y="0" width="4" height="10" fill="#333">
+      <animateTransform attributeType="xml" attributeName="transform" type="translate" values="0 0; 0 20; 0 0" begin="0" dur="0.6s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="10" y="0" width="4" height="10" fill="#333">
+      <animateTransform attributeType="xml" attributeName="transform" type="translate" values="0 0; 0 20; 0 0" begin="0.2s" dur="0.6s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="20" y="0" width="4" height="10" fill="#333">
+      <animateTransform attributeType="xml" attributeName="transform" type="translate" values="0 0; 0 20; 0 0" begin="0.4s" dur="0.6s" repeatCount="indefinite"/>
+    </rect>
+</symbol><symbol id="line-3" viewBox="0 0 24 30">
+    <rect x="0" y="13" width="4" height="5" fill="#333">
+      <animate attributeName="height" attributeType="XML" values="5;21;5" begin="0s" dur="0.6s" repeatCount="indefinite"/>
+      <animate attributeName="y" attributeType="XML" values="13; 5; 13" begin="0s" dur="0.6s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="10" y="13" width="4" height="5" fill="#333">
+      <animate attributeName="height" attributeType="XML" values="5;21;5" begin="0.15s" dur="0.6s" repeatCount="indefinite"/>
+      <animate attributeName="y" attributeType="XML" values="13; 5; 13" begin="0.15s" dur="0.6s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="20" y="13" width="4" height="5" fill="#333">
+      <animate attributeName="height" attributeType="XML" values="5;21;5" begin="0.3s" dur="0.6s" repeatCount="indefinite"/>
+      <animate attributeName="y" attributeType="XML" values="13; 5; 13" begin="0.3s" dur="0.6s" repeatCount="indefinite"/>
+    </rect>
+</symbol><symbol id="line-4" viewBox="0 0 24 30">
+    <rect x="0" y="0" width="4" height="20" fill="#333">
+      <animate attributeName="opacity" attributeType="XML" values="1; .2; 1" begin="0s" dur="0.6s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="7" y="0" width="4" height="20" fill="#333">
+      <animate attributeName="opacity" attributeType="XML" values="1; .2; 1" begin="0.2s" dur="0.6s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="14" y="0" width="4" height="20" fill="#333">
+      <animate attributeName="opacity" attributeType="XML" values="1; .2; 1" begin="0.4s" dur="0.6s" repeatCount="indefinite"/>
+    </rect>
+</symbol><symbol id="line-5" viewBox="0 0 24 30">
+    <rect x="0" y="10" width="4" height="10" fill="#333" opacity="0.2">
+      <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0s" dur="0.6s" repeatCount="indefinite"/>
+      <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0s" dur="0.6s" repeatCount="indefinite"/>
+      <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0s" dur="0.6s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="8" y="10" width="4" height="10" fill="#333" opacity="0.2">
+      <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0.15s" dur="0.6s" repeatCount="indefinite"/>
+      <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0.15s" dur="0.6s" repeatCount="indefinite"/>
+      <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0.15s" dur="0.6s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="16" y="10" width="4" height="10" fill="#333" opacity="0.2">
+      <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0.3s" dur="0.6s" repeatCount="indefinite"/>
+      <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0.3s" dur="0.6s" repeatCount="indefinite"/>
+      <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0.3s" dur="0.6s" repeatCount="indefinite"/>
+    </rect>
+</symbol><symbol id="point" viewBox="0 0 40 40">
+  <path opacity="0.2" fill="#000" d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946
+    s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634
+    c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z"/>
+  <path fill="#000" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0
+    C22.32,8.481,24.301,9.057,26.013,10.047z">
+    <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" dur="0.5s" repeatCount="indefinite"/>
+  </path>
+</symbol><symbol id="quarter" viewBox="0 0 50 50">
+  <path fill="#000" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z">
+    <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"/>
+  </path>
+</symbol><symbol id="ripple" viewBox="0 0 64 64">
+    <g fill="none" fill-rule="evenodd" stroke-width="3">
+        <circle cx="32" cy="32" r="8.52059">
+            <animate attributeName="r" begin="0s" dur="2s" values="0;24" keyTimes="0;1" keySplines="0.1,0.2,0.3,1" calcMode="spline" repeatCount="indefinite"/>
+            <animate attributeName="stroke-opacity" begin="0s" dur="2s" values=".2;1;.2;0" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="32" cy="32" r="22.1314">
+            <animate attributeName="r" begin="-1s" dur="2s" values="0;24" keyTimes="0;1" keySplines="0.1,0.2,0.3,1" calcMode="spline" repeatCount="indefinite"/>
+            <animate attributeName="stroke-opacity" begin="-1s" dur="2s" values=".2;1;.2;0" repeatCount="indefinite"/>
+        </circle>
+    </g>
+</symbol><symbol id="spiral" viewBox="0 0 64 64">
+    <g>
+        
+        <g stroke-width="4" stroke-linecap="round" fill="none" transform="rotate(336 32 32)">
+            <path stroke="url(#sGD)" d="M4,32 c0,15,12,28,28,28c8,0,16-4,21-9"/>
+            <path d="M60,32 C60,16,47.464,4,32,4S4,16,4,32"/>
+            <animateTransform values="0,32,32;360,32,32" attributeName="transform" type="rotate" repeatCount="indefinite" dur="750ms"/>
+        </g>
+    </g>
+</symbol><symbol id="square" viewBox="0 0 100 100">
+   <rect fill="none" stroke-width="4" x="25" y="25" width="50" height="50" id="square_rect1">
+       <animateTransform attributeName="transform" dur="0.5s" from="0 50 50" to="180 50 50" type="rotate" id="strokeBox" attributeType="XML" begin="rectBox.end"/>
+    </rect>
+    <rect x="27" y="27" width="46" height="50" id="square_rect2">
+        <animate attributeName="height" dur="1.3s" attributeType="XML" from="50" to="0" id="rectBox" fill="freeze" begin="0s;strokeBox.end"/>
+    </rect>
+</symbol></svg>

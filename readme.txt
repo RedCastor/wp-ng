@@ -1,9 +1,10 @@
 === Angular for WordPress ===
 Contributors: redcastor
-Tags: wp-ng, WP-NG, WPNG, wp ng, wp-angular, wp angular, angular, angular js, bootstrapper, bootstrap, module, ng, script, enqueue, rest, wp-rest, wp-api, ngResource
+Tags: wp-ng, WP-NG, WPNG, wp ng, wpng, wp-angular, wp angular, wp-angularjs, wp angularjs, angular, angular js, AngularJs,  bootstrapper, bootstrap, module, ng, script, enqueue, rest, wp-rest, wp-api, ngResource, rollbar, Rollbar, logging, logs, logger
 Requires at least: 4.5
-Tested up to: 4.7
-Stable tag: trunk
+Requires PHP: 5.6.31
+Tested up to: 4.8
+Stable tag: 1.5.0
 License: MIT License
 License URI: http://opensource.org/licenses/MIT
 
@@ -16,6 +17,10 @@ WP-NG is a plugin to automatic bootstrap angular application. Activate module by
 
 = Features =
 
+* New Support Rollbar logging (https://rollbar.com)
+* New Shortcodes for galleries, form, map, social
+* New angular modules
+* New built-in directive, decorator form directive
 * Automatic bootstrapper angular application.
 * Activate modules by settings page like wordpress plugins page.
 * Collection of default modules registered (example: ngRessource, ngRoute, ngAnimate, ui.bootstrap, mm.foundation,  ...).
@@ -52,11 +57,14 @@ List of handle available
 * wp-ng_pascalprecht.translate
 * wp-ng_offClick
 * wp-ng_nya.bootstrap.select
+* wp-ng_oi.select
 * wp-ng_ngDialog
 * wp-ng_smoothScroll
+* wp-ng_ngTinyScrollbar
 * wp-ng_ngScrollbars
 * wp-ng_slick
 * wp-ng_slickCarousel
+* wp-ng_angular-owl-carousel-2
 * wp-ng_ngMagnify
 * wp-ng_infinite-scroll
 * wp-ng_ui-leaflet
@@ -66,8 +74,10 @@ List of handle available
 * wp-ng_pageslide-directive
 * wp-ng_ui.mask
 * wp-ng_ui.validate
+* wp-ng_trTrustpass
 * wp-ng_ui.grid
 * wp-ng_ui.select
+* wp-ng_ui.swiper
 * wp-ng_ngAntimoderate
 * wp-ng_ngGeonames
 * wp-ng_socialLinks
@@ -77,6 +87,7 @@ List of handle available
 * wp-ng_foundation
 * wp-ng_angular-loading-bar
 * wp-ng_angular-svg-round-progressbar
+* wp-ng_angularjs-gauge
 * wp-ng_ngStorage
 * wp-ng_xeditable
 * wp-ng_ngTagsInput
@@ -84,11 +95,42 @@ List of handle available
 * wp-ng_angularLazyImg
 * wp-ng_breakpointApp
 * wp-ng_bs.screenSize
+* wp-ng_ng.deviceDetector
 * wp-ng_angularProgressbar
 * wp-ng_hl.sticky
 * wp-ng_focus-if
 * wp-ng_LiveSearch
 * wp-ng_satellizer
+* wp-ng_angular-img-cropper
+* wp-ng_rcDialog
+* wp-ng_rcMedia
+* wp-ng_rcGallery
+* wp-ng_rcGalleria
+* wp-ng_webicon
+* wp-ng_rcRollbar
+* wp-ng_jtt_aping
+* wp-ng_jtt_aping_instagram
+* wp-ng_jtt_aping_facebook
+* wp-ng_jtt_aping_codebird
+* wp-ng_jtt_aping_flickr
+* wp-ng_jtt_aping_tumblr
+* wp-ng_jtt_aping_wikipedia
+* wp-ng_jtt_aping_dailymotion
+* wp-ng_jtt_aping_vimeo
+* wp-ng_jtt_aping_youtube
+* wp-ng_jtt_aping_openweathermap
+* wp-ng_vButton
+* wp-ng_vAccordion
+* wp-ng_vModal
+* wp-ng_vTabs
+* wp-ng_vTextfield
+* wp-ng_ng-sweet-alert
+* wp-ng_angular.backtop
+* wp-ng_ngLocationSearch
+* wp-ng_bgf.paginateAnything
+* wp-ng_angularGrid
+* wp-ng_ngImageDimensions
+* wp-ng_angular-gridster2
 
 
 = Default Registered modules styles =
@@ -101,22 +143,40 @@ List of handle available
 * wp-ng_foundation-flex
 * wp-ng_font-awesome
 * wp-ng_nya.bootstrap.select
+* wp-ng_oi.select
 * wp-ng_ngDialog
+* wp-ng_ngTinyScrollbar
 * wp-ng_ngScrollbars
 * wp-ng_slick
 * wp-ng_slick-theme
 * wp-ng_slickCarousel
 * wp-ng_slickCarouselTheme
+* wp-ng_angular-owl-carousel-2
 * wp-ng_ngMagnify
 * wp-ng_ui-leaflet
+* wp-ng_trTrustpass
 * wp-ng_ui.grid
 * wp-ng_ui.select
+* wp-ng_ui.swiper
 * wp-ng_angular-loading-bar
 * wp-ng_xeditable
 * wp-ng_ngTagsInput
 * wp-ng_pageslide-directive
 * wp-ng_hl.sticky
 * wp-ng_LiveSearch
+* wp-ng_rcMedia-dialog
+* wp-ng_rcMedia-select
+* wp-ng_rcMedia-zf
+* wp-ng_valitycss
+* wp-ng_vButton
+* wp-ng_vAccordion
+* wp-ng_vModal
+* wp-ng_vTabs
+* wp-ng_vTextfield
+* wp-ng_ng-sweet-alert
+* wp-ng_angular.backtop
+* wp-ng_angular-gridster2
+
 
 = Hook Filters =
 
@@ -132,228 +192,28 @@ List of hook available
 * wp_ng_get_option
 * wp_ng_get_options
 * wp_ng_get_active_modules
+* wp_ng_get_module_options
+* wp_ng_get_module_option
 * wp_ng_register_external_modules
+* wp_ng_json_encode
+* wp_ng_json_decode
+* wp_ng_json_encode_shortcode
+* wp_ng_get_language
+* wp_ng_apply_translation
+* wp_ng_create_onetime_nonce
+* wp_ng_verify_onetime_nonce
 
-= Theme Support =
-
-Add in your functions.php this snippet to force the angular app name. In the Settings page the setting App Name is set to readonly.
-
-`
-<?php
-/**
- * Theme setup
- */
-function setup() {
-  add_theme_support('wp-ng_app_name', 'your_app.name');
-  add_theme_support('wp-ng_modules', array(
-        'ngAnimate',
-        'ngSanitize',       //sanitize for $sce trusted ng-bind-html
-        'ui__dot__bootstrap' => array( 'active' => 'on', 'style' => 'on', 'script' => 'bootstrap' ),
-        'pascalprecht__dot__translate' => array(  'active' => 'on', 'script_static' => 'on'),
-        'ui__dot__router'   //Change module name '.' to with '__dot__'
-     )
-  );
-}
-add_action('after_setup_theme', 'setup');
-?>
-`
-
-= PLugin Support =
-
-Add in your plugin this snippet to force active module.
-
-`
-<?php
-/**
- * Plugin setup
- */
-wp_ng_add_plugin_support( 'modules',
-  array(
-    'ngResource',
-    'ngAnimate',
-    'ui__dot__bootstrap' => array( 'active' => 'on', 'style' => 'on', 'script' => 'bootstrap' ),
-  )
-);
-`
-
-= Example =
-
-Load Module included in wp-ng with default wordpress function
-
-`
-<?php
-wp_enqueue_script('wp-ng_slick');
-wp_enqueue_style('wp-ng_slick');
-
-wp_enqueue_script('wp-ng_ui-leaflet');
-wp_enqueue_style('wp-ng_ui-leaflet');
-?>
-`
-
-Add your Module in wp-ng
-
-`
-<?php
-wp_enqueue_script( 'wp-ng_myModule', '/my-module.js', array('wp-ng'), null, true );
-wp_enqueue_style( 'wp-ng_myModule', '/my-module.css', array('wp-ng'), null, 'all' );
-
-wp_enqueue_script( 'wp-ng_app', '/your_app.js', array('wp-ng'), null, true );
-?>
-`
-
-or with filter 'wp_ng_register_ng_modules':
-
-`
-<?php
-/**
- * Register only a Angular Module and not include the script in combine
- * (to combine the script add prefix 'wp-ng_' in the handle name).
- */
-function register_ng_modules ( $ng_modules ) {
-
-  $ng_modules[] = 'myModule';
-
-  return $ng_modules;
-}
-add_filter('wp_ng_register_ng_modules', 'register_ng_modules');
-
-wp_enqueue_script( 'myModule', 'my-module.js', array(), null, true );
-?>
-`
-
-Multiple module in one js. This is possible with concat angular module name with '+' : "wp-ng_moduleService1+moduleService2"
-
-`
-<?php
-wp_enqueue_script( 'wp-ng_moduleService1+moduleService2', '/module.js', array('wp-ng'), null, true );
-?>
-`
-
-Register External Modules
-
-`
-<?php
-/**
- * Register a Angular Module to module list (you can view in admin modules tab)
- */
-function register_external_modules( $modules ) {
-
-    $modules[] = array(
-      'name'    => 'module_name',                     //Angular Module Name
-      'label' => 'Label Module Name',                 //The Label Module Name
-      'active'  => true,                              //Default active true or false
-      'desc'    => 'The description of the module.',  //Description module
-      'version' => $this->version,                    //Version module
-      'scripts_src' => array(                         //Source url scripts
-        '' => wp_rc_auth_get_asset_path( 'scripts/rc-auth.js' ),
-      ),
-      'styles_src' => array(                          //Source url styles
-        '' => wp_rc_auth_get_asset_path( 'styles/rc-auth.css' ),
-      ),
-    );
-
-    return $modules;
-}
-add_filter( 'wp_ng_register_external_modules',  'register_external_modules' );
-`
-
-Add Config to module
-
-`
-<?php
-add_filter('wp_ng_myModule_config', function ( $config ) {
-
-  $config['l10n'] = array(
-    'title' => __( 'My Title', 'my-domain'),            // Translation
-  );
-  $config['restNamespace'] = 'v1/my-route';             // Rest Api route
-  $config['partialUrl'] = 'http://domain.com/partials'; //Template html url
-
-  return $config;
-});
-?>
-`
-
-= Example Script =
-
-Get Config and create module constant
-
-`
-(function(angular, wpNg){
-  'use strict';
+= Hook Actions =
+* wp_ng_invalidate_onetime_nonce
 
 
-  // Create my module
-  var wpMyModule = angular.module('wpMyModule', [
-    'wpNgRest'
-  ]);
-
-
-  var constant = {};
-
-  if ( (angular.isDefined(wpNg.config.modules.wpMyModule) && angular.isObject(wpNg.config.modules.wpMyModule)) ) {
-    constant = angular.extend(constant, wpNg.config.modules.wpMyModule);
-  }
-
-
-  // Constant my module
-  wpMyModule.constant('WP_MY_MODULE_CONFIG', constant);
-
-})(angular, wpNg);
-`
-
-Example your_app.js
-
-`
-(function(angular, wpNg){
-  'use strict';
-
-  var app = angular.module(wpNg.appName);
-
-
-  //Run Application.
-  app.run(['$rootScope', 'WP_NG_CONFIG', function ($log, WP_NG_CONFIG) {
-
-    function init() {
-
-        $log.info('Environment:     ' + WP_NG_CONFIG.env);
-        $log.info('Version Theme:  V' + WP_NG_CONFIG.themeVersion);
-        $log.info('Version Wp:     V' + WP_NG_CONFIG.wpVersion);
-        $log.info('Debug Mode:      ' + WP_NG_CONFIG.debugEnabled);
-
-
-    }
-
-    init();
-
-}]);
-
-})(angular, wpNg);
-`
-
-= Internal Angular Filters =
-
-wp-ng include generic angular filters
-
-  * html
-  * isEmpty
-
-wp-ng include generic angular directives
-
-  * ng-bind-html-compile
-  * if-module-loaded
-
-`
-<div data-ng-bing-html="content | html"></div>
-<div data-ng-hide="data | isEmpty"></div>
-`
 
 
 == Installation ==
 
-1. Upload the plugin files to the `/wp-content/plugins/plugin-name` directory, or install the plugin through the WordPress plugins screen directly.
+1. Upload the plugin files to the `/wp-content/plugins/wp-ng` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress
-3. Use the Settings->Plugin Name screen to configure the plugin
+3. Use the Settings->WP NG screen to configure the plugin
 
 == Frequently Asked Questions ==
 
@@ -362,45 +222,68 @@ wp-ng include generic angular directives
 
 1. Angular Modules.
 2. Settings Page.
+3. Logging Page.
 
 == Frequently Asked Questions ==
 
+
 == Upgrade Notice ==
+Major Update.
+* New feature logging with Rollbar
+* New feature shortcodes for galleries, form, map, social
+* New angular modules
+* Update Angular v1.6.4
+* Update angular foundation v0.11.5
+* Update foundation to v6.3.1
+* Update ui.bootstrap to v2.5.0
 
 == Changelog ==
+
+= 1.5.0 =
+* Add wp-ng Built-in directives
+* Add Module Rollbar
+* Add Module Videogular
+* Add Module rc-media module
+* Add Module ngLocationSearch
+* Add Module bgf.paginateAnything
+* Add Module apiNG plugin instagram
+* Add Module apiNG plugin facebook
+* Add Module apiNG plugin flickr
+* Add Module apiNG plugin tumblr
+* Add Module apiNG plugin wikipedia
+* Add Module apiNG plugin dailymotion
+* Add Module apiNG plugin vimeo
+* Add Module apiNG plugin youtube
+* Add Module ngStickyFooter
+* Add Module ngInput
+* Add Module angular-sortable-view
+* Add MutationObserver-shim for ngStickyFooter
+* Various Bug bixing
 
 = 1.4.0 =
 * Update ngAntimoderate v1.0.4
 * Update Angular v1.6.4
-* Update angular foundation v0.11.15
+* Update angular foundation v0.11.5
 * Update foundation to v6.3.1
-
 * Add module social 720kb.socialshare.
 * Add module videogular
 * Add module vimeo and youtube module for videogular
 * Add module Authentication satellizer
 * Add module bootstrap-screensize
 * Add module ui.mask
-
 * Add directive ifModuleLoaded. Example check ui-bootstrap module loaded or and mm.foundation module load.
 * Add factory locationTools to encode and decode URL.
-
 * Add shortcode ng-socialshare (use module 720kb.socialshare)
 * Add Shortcodes for Form (ng-form-input, ng-form-submit).
 * Add shrotcode ng-form-select for form select
 * Add shortcode ng-form-locale for create a select with locale available language.
 * Add Shortcode alert
-
 * Add filter wp_ng_get_active_modules
 * Add filter wp_ng_register_external_modules
 * Add function wp_ng_add_plugin_support
 * Add Generic search URL Query on locationStart
-  Example url: http://www.your-domain.com/#/?wpNgQuery={"service":"$log","call":"debug","params":["test"]}
-  Example encoded url: http://www.your-domain.com/#/?wpNgQuery=%7B%22service%22%3A%22%24log%22%2C%22call%22%3A%22debug%22%2C%22params%22%3A%5B%22test%22%5D%7D
-
 * Add conditional 'or' in the inline string conditions (condition|condition2)
 * Add workaround CSS for angular foundation tabs not working with foundation v6.3
-
 * Bug fix bower fallback
 * Bug fix js angular-social-share
 * Bug Fix conditional inline string (condition|condition2|condition3&condition4|condition5)
@@ -410,7 +293,6 @@ wp-ng include generic angular directives
 * Bug fix not found in queue script and style removed by deregister. Add dequeue before deregister.
 * Bug fix tiny mce editor.
 * Bug fix wp_ng_add_plugin_support on add mixed features with param and without param.
-
 * Refactoring Conditional to accepted multiple args.
 
 = 1.2.16 =

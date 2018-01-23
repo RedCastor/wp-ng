@@ -51,6 +51,8 @@ class Wp_Ng_Loader {
 		$this->actions = array();
 		$this->filters = array();
 
+    //Create Autoload libraries
+    new Wp_Ng_Autoloader( plugin_dir_path( dirname( __FILE__ ) ) . 'lib/');
 	}
 
 	/**

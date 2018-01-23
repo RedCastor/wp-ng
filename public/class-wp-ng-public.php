@@ -62,35 +62,42 @@ class Wp_Ng_Public {
     $this->load_dependencies();
 
     //Init
+    Wp_Ng_Public_Hooks::init();
+    Wp_Ng_Public_Fix::init();
+    Wp_Ng_Public_wpml::init();
+
+
+    /* Init Shortcode */
     add_action( 'init', array( 'Wp_Ng_Public_Shortcodes', 'init' ) );
 
     /* Support for REST API  */
-    add_action( 'init',                       array( 'Wp_Ng_Public_Rest_Api', 'remove_option_rewrite_rules' ), 10 );
-    add_action( 'rest_api_init',              array( 'Wp_Ng_Public_Rest_Api', 'set_language'), 1 );
-    add_filter( 'rest_authentication_errors', array( 'Wp_Ng_Public_Rest_Api', 'cookie_check_errors'), 90 );
+    add_action( 'init',                         array( 'Wp_Ng_Public_Rest_Api', 'remove_option_rewrite_rules' ), 10 );
+    add_action( 'rest_api_init',                array( 'Wp_Ng_Public_Rest_Api', 'set_language'), 1 );
+    add_filter( 'rest_authentication_errors',   array( 'Wp_Ng_Public_Rest_Api', 'cookie_check_errors'), 90 );
+    add_filter( 'rest_request_after_callbacks', array( 'Wp_Ng_Public_Rest_Api', 'rest_request_after_callbacks'), 10, 3 );
 
-    /* Add Remove WPAUTOP */
-    add_action( 'acf/init', array($this, 'remove_wpautop') ); //Acf plugin
-    add_action( 'init', array($this, 'remove_wpautop') );
-
-
-    /* Custom Filter */
-    add_filter( 'wp_ng_current_language', array( $this, 'wp_ng_get_current_language') );
-
-
-    //Script and style
-    add_action( 'wp_enqueue_scripts',  array( $this, 'enqueue_script_jquery'), 2 );
-    add_action( 'wp_enqueue_scripts',  array( $this, 'enqueue_script_angular'), 2 );
-    add_action( 'wp_enqueue_scripts',  array( $this, 'process_style_angular_modules'), 1000 );
-    add_action( 'wp_enqueue_scripts',  array( $this, 'process_script_angular_modules'), 1000 );
-
-
-    add_filter( 'body_class', array( $this, 'body_class') );
+    /* Init Emails */
+    add_action( 'init', array( 'Wp_Ng_Emails', 'init_transactional_emails' ), 100 );
 
   }
 
 
   private function load_dependencies() {
+
+    /**
+     * Include Hooks class
+     */
+    require_once plugin_dir_path( __FILE__ ) . '/includes/class-wp-ng-public-hooks.php';
+
+    /**
+     * Include Fix class
+     */
+    require_once plugin_dir_path( __FILE__ ) . '/includes/class-wp-ng-public-fix.php';
+
+    /**
+     * Include Fix class
+     */
+    require_once plugin_dir_path( __FILE__ ) . '/includes/class-wp-ng-public-wpml.php';
 
     /**
      * Include Fallback class
@@ -107,6 +114,7 @@ class Wp_Ng_Public {
      */
     require_once plugin_dir_path( __FILE__ ) . '/includes/class-wp-ng-public-shortcodes.php';
   }
+
 
 
   /**
@@ -158,7 +166,7 @@ class Wp_Ng_Public {
 
     //Register External modules
     foreach ($this->external_modules as $external_module) {
-      $ng_module = Wp_Ng_Module::getInstance();
+      $ng_module = wp_ng_modules();
       $ng_module->register_module(
         $external_module['name'],
         $external_module['scripts_src'],
@@ -167,6 +175,7 @@ class Wp_Ng_Public {
       );
     }
   }
+
 
  /**
    * Register the stylesheets for the public-facing side of the site.
@@ -221,6 +230,7 @@ class Wp_Ng_Public {
     //Register script wp-ng
     wp_register_script($this->plugin_name, wp_ng_get_asset_path('scripts/' . $this->plugin_name . '.js'), array('angular'), $this->version, true);
     wp_enqueue_script($this->plugin_name);
+
   }
 
 	/**
@@ -230,7 +240,7 @@ class Wp_Ng_Public {
 	 */
 	public function default_styles( &$styles ) {
 
-    $ng_module = Wp_Ng_Module::getInstance();
+    $ng_module = wp_ng_modules();
     $ng_module->default_styles( $styles );
 	}
 
@@ -241,18 +251,53 @@ class Wp_Ng_Public {
 	 */
 	public function default_scripts( &$scripts ) {
 
-	  $ng_module = Wp_Ng_Module::getInstance();
+	  $ng_module = wp_ng_modules();
     $ng_module->default_scripts( $scripts );
 	}
 
 
+  /**
+   * Initialize Logger
+   */
+  public function init_logging () {
+
+    if (defined('WP_ENV')) {
+      wp_ng_add_plugin_support( 'log_rollbar_env', WP_ENV);
+    }
+
+    $log_options = wp_ng_get_log_options();
+    $logger = wp_ng_logger();
+
+    //Init File logging
+    if (isset($log_options['file']['enable']) && $log_options['file']['enable'] === 'on' ) {
+
+      $track_level = wp_ng_logger()->get_log_level_int($log_options['file']['track_level']);
+
+      $logger->init_log_file($track_level);
+    }
+
+    //Init Rollbar
+    if (isset($log_options['rollbar']['enable']) && $log_options['rollbar']['enable'] === 'on' ) {
+
+      $track_level = wp_ng_logger()->get_log_level_int($log_options['rollbar']['track_level']);
+      $enable_php_debug = (isset($log_options['rollbar']['enable_debug']) && $log_options['rollbar']['enable_debug'] === 'on') ? true : false;
+      $enable_track_php = (isset($log_options['rollbar']['enable_track_php']) && $log_options['rollbar']['enable_track_php'] === 'on') ? true : false;
+
+      $logger->init_log_rollbar( $track_level, $log_options['rollbar']['access_token'], $log_options['rollbar']['env'], $enable_php_debug, $enable_track_php, $log_options['rollbar']['track_php_errno'] );
+    }
+  }
+
 
   /**
-   * After theme support
+   * Initialize Options
    *
    * @since   1.0.0
    */
-  public function after_setup_theme() {
+  public function init_options() {
+
+    if ( ! function_exists( 'is_plugin_active' ) ) {
+      include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+    }
 
     //Setup Ext Angular Modules
     $external_modules_fields = array();
@@ -267,7 +312,7 @@ class Wp_Ng_Public {
           continue;
         }
 
-        $name         = str_replace('.', '__dot__', $external_module['name']);
+        $name         = wp_ng_sanitize_name('name', $external_module['name']);
         $desc         = isset( $external_module['desc'] ) ? $external_module['desc'] : '';
         $active       = ( isset( $external_module['active'] ) && is_bool($external_module['active']) ) ? $external_module['active'] : false;
         $version      = ( isset( $external_module['version'] ) && !empty( $external_module['version'] ) ) ? $external_module['version'] : false;
@@ -315,6 +360,21 @@ class Wp_Ng_Public {
     $settings_page->register_fields( $fields );
   }
 
+
+  /**
+   * Initialize emails
+   *
+   * @since 1.5.0
+   */
+  public function init_emails () {
+
+    if ( wp_ng_plugin_supports('wp-ng_email') ) {
+
+      //Create Instance Emails
+      Wp_Ng_Emails::getInstance();
+    }
+  }
+
   /**
    * Register the JavaScript jquery.
    *
@@ -345,7 +405,7 @@ class Wp_Ng_Public {
     global $wp_scripts;
 
 
-    $ng_module = Wp_Ng_Module::getInstance();
+    $ng_module = wp_ng_modules();
 
     $ng_modules = $ng_module->get_ng_module_from_handles_script();
     $wp_ng_handles_src = $ng_module->get_scripts_src();
@@ -434,7 +494,7 @@ class Wp_Ng_Public {
    */
   public function process_style_angular_modules() {
 
-    $ng_module = Wp_Ng_Module::getInstance();
+    $ng_module = wp_ng_modules();
     $ng_modules = $ng_module->get_ng_module_from_handles_style();
     $wp_ng_handles_src = $ng_module->get_styles_src();
 
@@ -497,14 +557,6 @@ class Wp_Ng_Public {
     return $classes;
   }
 
-  /**
-   * Get Current Language
-   */
-  function wp_ng_get_current_language( $lang = '' ) {
-    $lang = (function_exists('icl_object_id')) ? ICL_LANGUAGE_CODE : explode("_", get_locale())[0];
-
-    return $lang;
-  }
 
   /**
    * Add script inline Config
@@ -512,7 +564,7 @@ class Wp_Ng_Public {
    */
   private function add_wp_ng_env( $ng_modules = array() ) {
 
-    $_lang = apply_filters('wp_ng_get_language', null);
+    $_lang = wp_ng_get_language();
 
     //Theme
     $_theme = wp_get_theme();
@@ -532,13 +584,14 @@ class Wp_Ng_Public {
     $config = apply_filters('wp_ng_app_config', array(
       'baseUrl'     => trailingslashit( get_home_url() ),
       'ajaxUrl'     => admin_url( 'admin-ajax.php' ),
+      'distUrl'     => WP_NG_PLUGIN_URL . 'public/dist',
       'local'       => get_locale(),
       'defaultLang' => $_lang['default'],
       'currentLang' => $_lang['current'],
       'themeName'   => $_theme->get('Name'),
       'themeVersion'=> $_theme->get('Version'),
       'wpVersion'   => get_bloginfo('version'),
-      'enableDebug' => (WP_DEBUG !== false) ? true : false,
+      'enableDebug' => ((WP_DEBUG !== false) || wp_ng_is_enbale_ng_debug()) ? true : false,
       'html5Mode'   => false,
       'hashPrefix'  => '',
       'errorOnUnhandledRejections' => false,
@@ -560,7 +613,7 @@ class Wp_Ng_Public {
     );
 
 
-    $script = sprintf( 'window.wpNg = %s', json_encode( $env ) );
+    $script = sprintf( 'window.wpNg = %s', json_encode( $env, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP ) );
     wp_add_inline_script($this->plugin_name, $script, 'before');
   }
 
@@ -569,10 +622,22 @@ class Wp_Ng_Public {
    * Remove WPAUTOP.
    */
   public function remove_wpautop() {
-    if ( wp_ng_disable_wpautop() === true ) {
+    if ( wp_ng_disable_wpautop() === true || wp_ng_enable_wpngautop() === true ) {
       remove_filter( 'acf_the_content', 'wpautop' );
       remove_filter( 'the_content', 'wpautop' );
       remove_filter( 'the_excerpt', 'wpautop' );
     }
   }
+
+  /**
+   * Add WPNGAUTOP.
+   */
+  public function add_wpngautop() {
+    if ( wp_ng_enable_wpngautop() === true ) {
+      add_filter ( 'the_content',     'wpngautop' );
+      add_filter ( 'the_excerpt',     'wpngautop' );
+      add_filter ( 'acf_the_content', 'wpngautop' );
+    }
+  }
+
 }

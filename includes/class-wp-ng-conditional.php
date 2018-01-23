@@ -11,7 +11,7 @@
  */
 
 /**
- * Bower
+ * Conditional Class
  *
  * @package    Wp_Ng
  * @subpackage Wp_Ng/includes
@@ -66,7 +66,7 @@ class Wp_Ng_Conditional {
       }
     }
 
-    return apply_filters('wp_ng_check_condition', $result, $conditions);
+    return apply_filters('wp_ng_check_conditions', $result, $conditions);
   }
 
 

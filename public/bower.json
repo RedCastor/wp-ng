@@ -17,17 +17,17 @@
     "angular-touch": "1.6.4",
     "angular-simple-logger": "0.1.7",
     "angular-animate-css": "0.0.4",
-    "angular-bootstrap": "2.1.4",
+    "angular-bootstrap": "2.5.0",
     "bootstrap": "3.3.7",
     "angular-ui-router": "0.3.1",
     "angular-translate": "2.13.1",
     "angular-translate-loader-static-files": "2.13.1",
     "angular-translate-storage-cookie": "^2.13.1",
     "angular-off-click": "1.0.8",
-    "font-awesome": "4.6.3",
+    "font-awesome": "4.7.0",
     "nya-bootstrap-select": "2.1.9",
     "ng-dialog": "0.6.4",
-    "ng-magnify": "*",
+    "ng-magnify": "https://github.com/RedCastor/ng-magnify.git#0.0.3-redcastor",
     "ngSmoothScroll": "2.0.0",
     "ng-scrollbars": "0.0.11",
     "angular-slick": "0.2.1",
@@ -35,26 +35,25 @@
     "ui-leaflet": "2.0.0",
     "ui-leaflet-layers": "0.1.3",
     "leaflet": "0.7.7",
-    "leaflet-plugins": "1.9.1",
+    "leaflet-plugins": "1.9.3",
     "Leaflet.awesome-markers": "2.0.2",
     "Leaflet.vector-markers": "0.0.6",
     "angular-foundation-6": "0.11.5",
     "foundation-sites": "6.3.1",
     "jquery": "2.2.4",
-    "what-input": "2.0.1",
+    "what-input": "4.0.6",
     "angular-scroll": "1.0.0",
-    "angular-pageslide-directive": "2.1.1",
+    "angular-pageslide-directive": "2.1.5",
     "angular-ui-grid": "3.2.9",
     "angular-ui-validate": "1.2.2",
     "angular-ui-mask": "1.8.7",
-    "ng-geonames": "1.0.9",
-    "ng-antimoderate": "1.0.4",
+    "ng-geonames": "1.1.0",
+    "ng-antimoderate": "1.1.5",
     "ng-color-utils": "1.0.0",
     "angular-ui-select": "0.19.6",
     "angular-social-links": "0.0.23",
     "ngInfiniteScroll": "1.3.4",
     "slick-carousel": "1.6.0",
-    "ng-file-upload": "12.2.13",
     "angular-loading-bar": "0.9.0",
     "ngstorage": "0.3.11",
     "angular-xeditable": "0.5.0",
@@ -67,10 +66,10 @@
     "progressbar.js": "1.0.1",
     "angular-progressbar": "0.1.0",
     "motion-ui": "1.2.2",
-    "angular-sticky": "angular-sticky-plugin#0.3.0",
+    "angular-sticky": "angular-sticky-plugin#0.4.1",
     "ng-focus-if": "1.0.7",
-    "angular-livesearch": "https://github.com/RedCastor/angular-livesearch.git#0.2.0",
-    "angular-socialshare": "angularjs-socialshare#2.3.7",
+    "angular-livesearch": "https://github.com/RedCastor/angular-livesearch.git#0.2.0-redcastor",
+    "angular-socialshare": "angularjs-socialshare#2.3.11",
     "videogular-poster": "1.4.4",
     "videogular-overlay-play": "1.4.4",
     "videogular-buffering": "1.4.4",
@@ -78,20 +77,87 @@
     "videogular-themes-default": "1.4.4",
     "videogular": "1.4.4",
     "bower-videogular-youtube": "videogular-youtube#2.0.6",
-    "videogular-vimeo": "0.1.3",
+    "videogular-vimeo": "https://github.com/RedCastor/videogular-vimeo.git#1.0.0-redcastor",
     "satellizer": "0.15.5",
-    "es6-shim": "0.35.3"
+    "es6-shim": "0.35.3",
+    "ng-progress-button-styles": "1.0.1",
+    "ngTinyScrollbar": "ng-tiny-scrollbar#0.10.1",
+    "rc-dialog": "1.0.4",
+    "rc-media": "1.1.0",
+    "webicon": "0.10.7",
+    "svg-icons-spin": "1.0.4",
+    "angular-img-cropper-redcastor": "1.2.6",
+    "ng-file-upload": "12.2.13",
+    "ng-file-upload-shim": "12.2.13",
+    "ng-device-detector": "4.0.3",
+    "oi.select": "0.2.21",
+    "angularjs-gauge": "2.0.1",
+    "selectize": "0.12.4",
+    "angular-trustpass": "0.4.0",
+    "rc-galleria": "1.0.2",
+    "rc-rollbar": "2.1.0",
+    "v-button": "1.1.1",
+    "v-accordion": "1.6.0",
+    "v-modal": "1.3.7",
+    "v-tabs": "0.2.0",
+    "v-textfield": "0.1.4",
+    "valitycss": "0.3.3",
+    "ng-sweet-alert": "1.0.11",
+    "sweetalert": "1.1.3",
+    "apiNG": "1.4.1",
+    "apiNG-plugin-instagram": "0.7.7",
+    "apiNG-plugin-facebook": "0.7.8",
+    "apiNG-plugin-codebird": "0.7.8",
+    "apiNG-plugin-flickr": "0.7.9",
+    "apiNG-plugin-tumblr": "0.7.8",
+    "apiNG-plugin-wikipedia": "0.5.0",
+    "apiNG-plugin-dailymotion": "0.7.10",
+    "apiNG-plugin-vimeo": "0.7.8",
+    "apiNG-plugin-youtube": "0.7.12",
+    "apiNG-plugin-openweathermap": "0.8.0",
+    "angular-owl-carousel2": "https://github.com/RedCastor/angular-owl-carousel-2.git#1.0.0-redcastor",
+    "rc-photoswipe": "1.0.0",
+    "angular-json-pretty": "1.0.0",
+    "bs3-2-zf6": "1.1.0",
+    "awesome-foundation6-checkbox": "1.0.0",
+    "awesome-bootstrap-checkbox": "0.3.7",
+    "custom-event-polyfill": "0.3.0",
+    "ng-input": "0.0.9",
+    "ng-sticky-footer": "1.0.4",
+    "MutationObserver-shim": "0.3.2",
+    "angular-sortable-view": "https://github.com/RedCastor/angular-sortable-view.git#0.0.17-redcastor",
+    "angular-backtop": "https://github.com/RedCastor/angular-backtop.git#0.0.5",
+    "ng-location-search": "1.0.2",
+    "angular-paginate-anything": "4.2.0",
+    "angular-mocks": "1.6.4",
+    "angulargrid": "0.6.5",
+    "rc-gallery": "1.0.4",
+    "rc-gallery-unitegallery": "1.0.3",
+    "rc-gallery-galleria": "1.0.3",
+    "angular-gridster2-1": "1.18.0",
+    "angular-image-dimensions": "1.1.0",
+    "angular-ui-swiper": "https://github.com/RedCastor/ui-swiper.git#2.4.0-redcastor",
+    "ng-parallax": "https://github.com/RedCastor/angular-parallax.git#0.2.0-redcastor",
+    "ng-slide-down": "1.2.0",
+    "dragular": "4.4.6",
+    "angular-vertilize": "1.0.1",
+    "ng-ScrollSpy.js": "3.2.2",
+    "angular-nicescroll": "0.0.9",
+    "angular-flatpickr": "3.4.0"
   },
   "resolutions": {
     "jquery": "~2.2.0",
-    "what-input": "~4.0.4",
-    "angular": "~1.6.4",
-    "angular-route": "~1.6.4",
+    "what-input": "~4.0.6",
+    "angular": "1.6.4",
+    "angular-route": "1.6.4",
+    "angular-animate": "1.6.4",
+    "angular-mocks": "1.6.4",
     "angular-translate": "~2.13.1",
     "slick-carousel": "~1.6.0",
     "ui-leaflet": "~2.0.0",
     "leaflet": "~0.7.x",
-    "progressbar.js": "~1.0.1"
+    "progressbar.js": "~1.0.1",
+    "angular-scroll": "~1.0.0"
   },
   "overrides": {
     "bootstrap": {
@@ -100,10 +166,25 @@
         "dist/css/bootstrap.css"
       ]
     },
+    "awesome-bootstrap-checkbox": {
+      "main": [
+        "awesome-bootstrap-checkbox.css"
+      ]
+    },
+    "awesome-foundation6-checkbox": {
+      "main": [
+        "dist/awesome-foundation6-checkbox.css"
+      ]
+    },
     "motion-ui": {
       "main": [
         "src/motion-ui.scss",
         "dist/motion-ui.js"
+      ]
+    },
+    "ng-dialog": {
+      "main": [
+        "js/ngDialog.js"
       ]
     },
     "font-awesome": {
@@ -111,9 +192,6 @@
         "css/font-awesome.min.css",
         "fonts/*"
       ]
-    },
-    "angular-animate-css": {
-      "main": "build/nga.all.css"
     },
     "ng-magnify": {
       "main": [
@@ -166,6 +244,81 @@
     },
     "angular-progressbar": {
       "main": "dist/angular-progressbar.js"
+    },
+    "rc-media": {
+      "main": [
+        "dist/rc-media.js",
+        "src/styles/rc-media-dialog.scss",
+        "src/styles/rc-media-zf.scss",
+        "src/styles/rc-media-select.scss",
+        "src/images/empty-stroke-upload.svg",
+        "src/images/file.svg"
+      ]
+    },
+    "rc-gallery": {
+      "main": [
+        "dist/rc-gallery.js",
+        "dist/plugins/rc-media-dialog.scss",
+        "dist/plugins/rc-media-zf.scss"
+      ]
+    },
+    "webicon": {
+      "main": [
+        "angular-webicon.js"
+      ]
+    },
+    "owl.carousel": {
+      "main": [
+        "dist/owl.carousel.js",
+        "dist/assets/owl.carousel.css",
+        "dist/assets/ajax-loader.gif",
+        "dist/assets/owl.video.play.png"
+      ]
+    },
+    "selectize": {
+      "main": [
+        "dist/css/selectize.default.css"
+      ]
+    },
+    "ng-input": {
+      "main": [
+        "dist/css/ng-input.css",
+        "dist/ng-input.js",
+        "dist/img/search.svg"
+      ]
+    },
+    "apiNG-plugin-instagram": {
+      "main": "dist/aping-plugin-instagram.js"
+    },
+    "apiNG-plugin-facebook": {
+      "main": "dist/aping-plugin-facebook.js"
+    },
+    "apiNG-plugin-codebird": {
+      "main": "dist/aping-plugin-codebird.js"
+    },
+    "apiNG-plugin-flickr": {
+      "main": "dist/aping-plugin-flickr.js"
+    },
+    "apiNG-plugin-tumblr": {
+      "main": "dist/aping-plugin-tumblr.js"
+    },
+    "apiNG-plugin-wikipedia": {
+      "main": "dist/aping-plugin-wikipedia.js"
+    },
+    "apiNG-plugin-dailymotion": {
+      "main": "dist/aping-plugin-dailymotion.js"
+    },
+    "apiNG-plugin-vimeo": {
+      "main": "dist/aping-plugin-vimeo.js"
+    },
+    "apiNG-plugin-youtube": {
+      "main": "dist/aping-plugin-youtube.js"
+    },
+    "apiNG-plugin-openweathermap": {
+      "main": "dist/apiNG-plugin-openweathermap.js"
+    },
+    "angular-image-dimensions": {
+      "main": "dist/angular-image-dimensions.js"
     }
   }
 }

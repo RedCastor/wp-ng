@@ -7,8 +7,15 @@
     "angular-animate-css.css": {
       "bower": ["angular-animate-css"]
     },
+    "angular-animate-css-all.css": {
+      "files": "styles/nga.all.scss",
+      "main": true
+    },
     "bootstrap.css": {
       "bower": ["bootstrap"]
+    },
+    "bs3-2-zf6.css": {
+      "bower": ["bs3-2-zf6"]
     },
     "foundation.css": {
       "files": "styles/foundation.scss",
@@ -32,11 +39,24 @@
     "font-awesome.css": {
       "bower": ["font-awesome"]
     },
+    "awesome-foundation6-checkbox.css": {
+      "bower": ["awesome-foundation6-checkbox"]
+    },
+    "awesome-bootstrap-checkbox.css": {
+      "bower": ["awesome-bootstrap-checkbox"]
+    },
     "nya-bootstrap-select.css": {
       "bower": ["nya-bootstrap-select"]
     },
+    "oi-select.css": {
+      "bower": ["oi.select"]
+    },
     "ng-dialog.css": {
-      "bower": ["ng-dialog"]
+      "files": [
+        "styles/ng-dialog.scss",
+        "styles/ng-dialog-default.scss"
+      ],
+      "main": true
     },
     "ng-magnify.css": {
       "bower": ["ng-magnify"]
@@ -51,6 +71,9 @@
     "ng-scrollbars.css": {
       "files": "styles/ng-scrollbars.scss",
       "main": true
+    },
+    "ng-tiny-scrollbar.css": {
+      "bower": ["ngTinyScrollbar"]
     },
     "leaflet.css": {
       "files": "styles/leaflet.scss",
@@ -72,6 +95,16 @@
     },
     "angular-ui-select.css": {
       "bower": ["angular-ui-select"]
+    },
+    "angular-ui-swiper.css": {
+      "bower": ["angular-ui-swiper"]
+    },
+    "selectize.css": {
+      "bower": ["selectize"]
+    },
+    "select-bs-2-zf.css": {
+      "files": "styles/select-bs-2-zf.scss",
+      "main": true
     },
     "angular-pageslide-directive.css": {
       "files": "styles/angular-pageslide-directive.scss",
@@ -98,6 +131,88 @@
     "videogular.css": {
       "bower": ["videogular-themes-default"]
     },
+    "ng-progress-button-styles.css": {
+      "bower": ["ng-progress-button-styles"]
+    },
+    "rc-media-dialog.css": {
+      "files": "styles/rc-media-dialog.scss",
+      "main": true,
+      "bower": ["rc-media"]
+    },
+    "rc-media-select.css": {
+      "files": "styles/rc-media-select.scss",
+      "main": true,
+      "bower": ["rc-media"]
+    },
+    "rc-media-zf.css": {
+      "files": "styles/rc-media-zf.scss",
+      "main": true,
+      "bower": ["rc-media"]
+    },
+    "angular-trustpass.css": {
+      "bower": ["angular-trustpass"]
+    },
+    "valitycss.css": {
+      "bower": ["valitycss"]
+    },
+    "v-button.css": {
+      "bower": ["v-button"]
+    },
+    "v-tabs.css": {
+      "bower": ["v-tabs"]
+    },
+    "v-modal.css": {
+      "bower": ["v-modal"]
+    },
+    "v-accordion.css": {
+      "bower": ["v-accordion"]
+    },
+    "v-textfield.css": {
+      "bower": ["v-textfield"]
+    },
+    "ng-sweet-alert.css": {
+      "bower": [
+        "ng-sweet-alert",
+        "sweetalert"
+      ]
+    },
+    "owl-carousel.css": {
+      "bower": ["owl.carousel"]
+    },
+    "owl-carousel-theme-default.css": {
+      "files": "styles/owl-carousel-theme-default.scss",
+      "main": true
+    },
+    "owl-carousel-theme-green.css": {
+      "files": [
+        "styles/owl-carousel-theme-green.scss"
+      ],
+      "main": true
+    },
+    "photoswipe.css": {
+      "bower": [
+        "photoswipe"
+      ]
+    },
+    "angular-json-pretty.css": {
+      "bower": ["angular-json-pretty"]
+    },
+    "ng-input.css": {
+      "bower": [
+        "ng-input"
+      ]
+    },
+    "angular-backtop.css": {
+      "bower": [
+        "angular-backtop"
+      ]
+    },
+    "dragular.css": {
+      "bower": ["dragular"]
+    },
+    "flatpickr.css": {
+      "bower": ["flatpickr"]
+    },
     "ng-tags-input.js": {
       "bower": ["ng-tags-input"]
     },
@@ -108,6 +223,7 @@
       "files": [
         "scripts/angular-deferred-bootstrap.js",
         "scripts/wp-ng.js",
+        "scripts/wp-ng-config.js",
         "scripts/wp-ng-filters.js",
         "scripts/wp-ng-directives.js",
         "scripts/wp-ng-services.js"
@@ -116,6 +232,14 @@
     },
     "wp-ng-rest.js": {
       "files": "scripts/wp-ng-rest.js",
+      "main": true
+    },
+    "wp-ng-router.js": {
+      "files": "scripts/wp-ng-router.js",
+      "main": true
+    },
+    "iso-currencies.js": {
+      "files": "scripts/iso-currencies.js",
       "main": true
     },
     "bootstrap.js": {
@@ -158,11 +282,17 @@
     "angular-resource.js": {
       "bower": ["angular-resource"]
     },
+    "angular-mocks.js": {
+      "bower": ["angular-mocks"]
+    },
     "angular-ui-router.js": {
       "bower": ["angular-ui-router"]
     },
     "angular-ui-select.js": {
       "bower": ["angular-ui-select"]
+    },
+    "angular-ui-swiper.js": {
+      "bower": ["angular-ui-swiper"]
     },
     "angular-bootstrap.js": {
       "bower": ["angular-bootstrap"]
@@ -188,6 +318,9 @@
     "nya-bootstrap-select.js": {
       "bower": ["nya-bootstrap-select"]
     },
+    "oi-select.js": {
+      "bower": ["oi.select"]
+    },
     "ng-dialog.js": {
       "bower": ["ng-dialog"]
     },
@@ -204,11 +337,17 @@
         "ng-scrollbars"
       ]
     },
+    "ng-tiny-scrollbar.js": {
+      "bower": ["ngTinyScrollbar"]
+    },
     "angular-slick.js": {
       "bower": ["angular-slick"]
     },
     "angular-slick-carousel.js": {
       "bower": ["angular-slick-carousel"]
+    },
+    "angulargrid.js": {
+      "bower": ["angulargrid"]
     },
     "ngInfiniteScroll.js": {
       "bower": ["ngInfiniteScroll"]
@@ -321,7 +460,7 @@
     "videogular-vimeo.js": {
       "bower": [
         "videogular-vimeo",
-        "vimeo-jquery-api"
+        "vimeo-player-js"
       ]
     },
     "videogular-youtube.js": {
@@ -330,11 +469,191 @@
     "satellizer.js": {
       "bower": ["satellizer"]
     },
+    "ng-progress-button-styles.js": {
+      "bower": ["ng-progress-button-styles"]
+    },
+    "rc-dialog.js": {
+      "bower": ["rc-dialog"]
+    },
+    "rc-media.js": {
+      "bower": ["rc-media"]
+    },
+    "rc-gallery.js": {
+      "bower": ["rc-gallery"]
+    },
+    "rc-gallery-galleria.js": {
+      "bower": ["rc-gallery-galleria"]
+    },
+    "rc-gallery-unitegallery.js": {
+      "bower": ["rc-gallery-unitegallery"]
+    },
+    "webicon.js": {
+      "bower": ["webicon"]
+    },
+    "ng-file-upload.js": {
+      "bower": [
+        "ng-file-upload",
+        "ng-file-upload-shim"
+      ]
+    },
+    "angular-img-cropper.js": {
+      "bower": ["angular-img-cropper-redcastor"]
+    },
+    "ng-device-detector.js": {
+      "bower": ["ng-device-detector"]
+    },
+    "angularjs-gauge.js": {
+      "bower": ["angularjs-gauge"]
+    },
+    "angular-trustpass.js": {
+      "bower": ["angular-trustpass"]
+    },
+    "rc-galleria.js": {
+      "bower": [
+        "rc-galleria",
+        "galleria"
+      ]
+    },
+    "apiNG.js": {
+      "bower": ["apiNG"]
+    },
+    "apiNG-plugin-instagram.js": {
+      "bower": ["apiNG-plugin-instagram"]
+    },
+    "apiNG-plugin-facebook.js": {
+      "bower": ["apiNG-plugin-facebook"]
+    },
+    "apiNG-plugin-codebird.js": {
+      "bower": ["apiNG-plugin-codebird"]
+    },
+    "apiNG-plugin-flickr.js": {
+      "bower": ["apiNG-plugin-flickr"]
+    },
+    "apiNG-plugin-tumblr.js": {
+      "bower": ["apiNG-plugin-tumblr"]
+    },
+    "apiNG-plugin-wikipedia.js": {
+      "bower": ["apiNG-plugin-wikipedia"]
+    },
+    "apiNG-plugin-dailymotion.js": {
+      "bower": ["apiNG-plugin-dailymotion"]
+    },
+    "apiNG-plugin-vimeo.js": {
+      "bower": ["apiNG-plugin-vimeo"]
+    },
+    "apiNG-plugin-youtube.js": {
+      "bower": ["apiNG-plugin-youtube"]
+    },
+    "apiNG-plugin-openweathermap.js": {
+      "bower": ["apiNG-plugin-openweathermap"]
+    },
+    "rc-rollbar.js": {
+      "bower": ["rc-rollbar"]
+    },
+    "v-button.js": {
+      "bower": ["v-button"]
+    },
+    "v-tabs.js": {
+      "bower": ["v-tabs"]
+    },
+    "v-modal.js": {
+      "bower": ["v-modal"]
+    },
+    "v-accordion.js": {
+      "bower": ["v-accordion"]
+    },
+    "v-textfield.js": {
+      "bower": ["v-textfield"]
+    },
+    "ng-sweet-alert.js": {
+      "bower": [
+        "ng-sweet-alert",
+        "sweetalert"
+      ]
+    },
+    "angular-owl-carousel2.js": {
+      "bower": ["angular-owl-carousel2"]
+    },
+    "rc-photoswipe.js": {
+      "bower": ["rc-photoswipe"]
+    },
+    "angular-json-pretty.js": {
+      "bower": ["angular-json-pretty"]
+    },
+    "photoswipe.js": {
+      "bower": ["photoswipe"]
+    },
+    "owl-carousel.js": {
+      "bower": ["owl.carousel"]
+    },
+    "ng-input.js": {
+      "bower": ["ng-input"]
+    },
+    "angular-backtop.js": {
+      "bower": ["angular-backtop"]
+    },
+    "ng-sticky-footer.js": {
+      "bower": ["ng-sticky-footer"]
+    },
+    "angular-sortable-view.js": {
+      "bower": ["angular-sortable-view"]
+    },
+    "ng-location-search.js": {
+      "bower": ["ng-location-search"]
+    },
+    "angular-paginate-anything.js": {
+      "bower": ["angular-paginate-anything"]
+    },
+    "angular-image-dimensions.js": {
+      "bower": ["angular-image-dimensions"]
+    },
+    "angular-gridster2-1.js": {
+      "bower": ["angular-gridster2-1"]
+    },
+    "angular-parallax.js": {
+      "bower": ["ng-parallax"]
+    },
+    "ng-slide-down.js": {
+      "bower": ["ng-slide-down"]
+    },
+    "dragular.js": {
+      "bower": ["dragular"]
+    },
+    "angular-vertilize.js": {
+      "bower": ["angular-vertilize"]
+    },
+    "ng-ScrollSpy.js": {
+      "bower": ["ng-ScrollSpy.js"]
+    },
+    "angular-nicescroll.js": {
+      "bower": ["angular-nicescroll"]
+    },
+    "angular-flatpickr.js": {
+      "bower": ["angular-flatpickr"]
+    },
+    "jquery-nicescroll.js": {
+      "bower": ["jquery.nicescroll"]
+    },
+    "flatpickr.js": {
+      "bower": ["flatpickr"]
+    },
+    "mutationObserver-shim.js": {
+      "bower": ["MutationObserver-shim"]
+    },
+    "custom-event-polyfill.js": {
+      "bower": ["custom-event-polyfill"]
+    },
     "es6-shim.js": {
       "bower": ["es6-shim"]
     },
     "jquery.js": {
       "bower": ["jquery"]
+    },
+    "galleria.js": {
+      "bower": ["galleria"]
+    },
+    "unitegallery.js": {
+      "bower": ["unitegallery"]
     }
   }
 }

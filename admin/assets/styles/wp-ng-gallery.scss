@@ -1,0 +1,14 @@
+//
+// WP-NG Gallery
+// --------------------------------------------------
+
+//Attachment Fields
+.compat-field-video_url {
+  .field {
+    width: 65%;
+
+    input, select {
+      width: 100%;
+    }
+  }
+}

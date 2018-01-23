@@ -62,7 +62,7 @@ class Wp_Ng_Shortcodes_720kbSocialShare {
       if ($content) {
         foreach ($_attr as $attribute => $value) {
           if ( !empty($value) && $value !== 'false') {
-            $attr[] = sprintf('socialshare-%s="%s"', $attribute, esc_attr($value));
+            $attr[] = sprintf('socialshare-%s="%s"', $attribute, htmlspecialchars($value, ENT_QUOTES));
           }
         }
 
