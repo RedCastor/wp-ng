@@ -26,6 +26,21 @@ class Wp_Ng_Public_Rest_Api {
 
 
   /**
+   * Initialize Rest API
+   */
+  static public function init() {
+
+    add_action( 'init',                         array( __CLASS__, 'remove_option_rewrite_rules' ), 10 );
+    add_action( 'rest_api_init',                array( __CLASS__, 'set_language'), 1 );
+
+    add_filter( 'rest_authentication_errors',   array( __CLASS__, 'cookie_check_errors'), 90 );
+    add_filter( 'rest_request_after_callbacks', array( __CLASS__, 'rest_request_after_callbacks'), 10, 3 );
+    add_filter( 'rest_post_dispatch',           array( __CLASS__, 'rest_post_dispatch'), 10, 3);
+  }
+
+
+
+  /**
    * Check for errors when using cookie-based authentication.
    *
    * WordPress' built-in cookie authentication is always active
@@ -70,13 +85,13 @@ class Wp_Ng_Public_Rest_Api {
     }
 
     // Check the nonce.
-    $result = wp_verify_nonce( $nonce, 'wp_ng_rest' );
+    $result = wp_ng_verify_rest_nonce( $nonce );
+
+
     if ( ! $result ) {
+
       return new WP_Error( 'rest_cookie_invalid_nonce', __( 'Cookie nonce is invalid', 'wp-ng' ), array( 'status' => 406 ) );
     }
-
-    // Send a refreshed nonce in header.
-    $wp_rest_server->send_header( 'X-WP-NG-Nonce', wp_create_nonce( 'wp_ng_rest' ) );
 
     return true;
   }
@@ -93,11 +108,6 @@ class Wp_Ng_Public_Rest_Api {
 
     if ( $response instanceof WP_HTTP_Response ) {
 
-      //Set Cookie Cart Woocommerce
-      if (function_exists('WC')) {
-        WC()->cart->maybe_set_cart_cookies();
-      }
-
       // Update a refreshed nonce in header.
       $response->header( 'X-WP-NG-Nonce', wp_create_nonce( 'wp_ng_rest' ), true );
       $response->header( 'X-WP-Nonce', wp_create_nonce( 'wp_rest' ), true );
@@ -111,6 +121,9 @@ class Wp_Ng_Public_Rest_Api {
    * Set the wpml language based on header param
    */
   static public function set_language() {
+
+    $is_wpml = false;
+    $language_code = apply_filters('wp_ng_current_language', 'en');
 
     if (isset($_SERVER['HTTP_X_WP_NG_LANG']) && function_exists('icl_object_id')) {
       global $sitepress;
@@ -128,11 +141,14 @@ class Wp_Ng_Public_Rest_Api {
         $cur_lang = $default_language;
       }
 
-      $lang = $cur_lang;
+      $language_code = $cur_lang;
 
-      $sitepress->switch_lang($lang);
+      $sitepress->switch_lang($language_code);
+
+      $is_wpml = true;
     }
 
+    do_action('wp_ng_rest_set_language', $language_code, $is_wpml);
   }
 
   /**
@@ -158,6 +174,25 @@ class Wp_Ng_Public_Rest_Api {
     }
   }
 
+
+  /**
+   * Pre Serve request
+   *
+   * @param $result
+   * @param $rest_server
+   * @param $request
+   * @return mixed
+   */
+  static function rest_post_dispatch ($result, $rest_server, $request) {
+
+    //Set Fresh nonce on GET and error or success
+    if ( !$result->is_error() || ($result->is_error() && $request->get_method() == $rest_server::READABLE) ) {
+
+      $result->header( 'X-WP-NG-Nonce', wp_ng_create_rest_nonce(), true );
+    }
+
+    return $result;
+  }
 
 
 }

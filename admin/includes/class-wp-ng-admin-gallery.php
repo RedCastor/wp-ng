@@ -176,7 +176,7 @@ class Wp_Ng_Admin_Gallery {
    */
   static public function attachment_fields_save( $post, $attachment ) {
 
-    $form_fields = self::attachment_fields(array(), $post->ID);
+    $form_fields = self::attachment_fields(array(), $post);
 
     foreach ($form_fields as $field_key => $field_values) {
 

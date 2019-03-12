@@ -22,7 +22,6 @@ class ExceptionInfo implements \JsonSerializable
 
     public function setClass($class)
     {
-        $this->utilities->validateString($class, "class", null, false);
         $this->class = $class;
         return $this;
     }
@@ -34,7 +33,6 @@ class ExceptionInfo implements \JsonSerializable
 
     public function setMessage($message)
     {
-        $this->utilities->validateString($message, "message", null, false);
         $this->message = $message;
         return $this;
     }
@@ -46,15 +44,17 @@ class ExceptionInfo implements \JsonSerializable
 
     public function setDescription($description)
     {
-        $this->utilities->validateString($description, "description");
         $this->description = $description;
         return $this;
     }
 
     public function jsonSerialize()
     {
-        $result = get_object_vars($this);
-        unset($result['utilities']);
+        $result = array(
+            "class" => $this->class,
+            "message" => $this->message,
+            "description" => $this->description,
+        );
         return $this->utilities->serializeForRollbar($result);
     }
 }

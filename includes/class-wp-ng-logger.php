@@ -204,8 +204,8 @@ class Wp_Ng_Logger {
    */
   public function log( $log_handle, $log_msg, $log_type ) {
 
-    $this->log_file($log_handle, $log_msg, $log_type);
-    $this->log_rollbar($log_handle, $log_msg, $log_type);
+    $this->log_file($log_handle, (string)$log_msg, $log_type);
+    $this->log_rollbar($log_handle, (string)$log_msg, $log_type);
   }
 
 

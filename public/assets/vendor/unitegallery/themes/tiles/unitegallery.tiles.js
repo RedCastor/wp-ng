@@ -109,7 +109,7 @@ function UGTheme_tiles() {
     }
     function initEvents() {
         if (g_objPreloader) {
-            jQuery(g_tiles).on(g_tiles.events.TILES_FIRST_PLACED, function() {
+            g_gallery.onEvent(g_tiles.events.TILES_FIRST_PLACED, function() {
                 g_objWrapper.height("auto");
                 g_objPreloader.hide();
             });
@@ -120,7 +120,7 @@ function UGTheme_tiles() {
     }
     this.destroy = function() {
         jQuery(g_objTileDesign).off(g_objTileDesign.events.TILE_CLICK);
-        jQuery(g_tiles).off(g_tiles.events.TILES_FIRST_PLACED);
+        g_gallery.destroyEvent(g_tiles.events.TILES_FIRST_PLACED);
         g_objGallery.off(g_gallery.events.GALLERY_BEFORE_REQUEST_ITEMS);
         jQuery(g_lightbox).off(g_lightbox.events.LIGHTBOX_INIT);
         g_tiles.destroy();
@@ -128,6 +128,9 @@ function UGTheme_tiles() {
     };
     this.run = function() {
         runTheme();
+    };
+    this.addItems = function() {
+        g_tiles.runNewItems();
     };
     this.init = function(gallery, customOptions) {
         initTheme(gallery, customOptions);

@@ -1,0 +1,18 @@
+//
+// Flatpickr Fix
+// --------------------------------------------------
+
+//Fix placeholder on mobile, field forced change to input date to use native date selector (input date not support placeholder).
+input {
+  //Hide plceholder if angular validation is not empty
+  &.flatpickr-input.ng-not-empty ~ .flatpickr-mobile:before {
+    content: '' !important;
+    margin: 0;
+  }
+
+  //Visible placeholder
+  &.flatpickr-mobile:before {
+    color: inherit;
+    content: attr(placeholder) !important;
+  }
+}

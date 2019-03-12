@@ -22,10 +22,16 @@ class Wp_Ng_Shortcodes_Form {
     $html = '';
 
     //translation
-    $atts = wp_ng_apply_translation($atts, 'placeholder');
+    if (!empty($atts['type']) && ($atts['type'] === 'checkbox' || $atts['type'] === 'radio') ) {
+      $translate_default = 'label';
+    }
+    else {
+      $translate_default = 'placeholder';
+    }
+    $atts = wp_ng_apply_translation($atts, $translate_default);
 
     $_atts = shortcode_atts( array(
-      'type'   => null,
+      'type'   => 'text',
       'name'   => null,
       'model'  => null,
       'label'  => null,
@@ -102,19 +108,29 @@ class Wp_Ng_Shortcodes_Form {
         case 'checkbox':
 
           if ($value === true || $value === 'true' || $checked === '' || $checked === true || $checked === 'true' ) {
-            $checked = 'true';
+            $checked = true;
           }
           else {
-            $checked = 'false';
+            $checked = false;
           }
 
-          $_attr_input['data-ng-checked'] = $checked;
+          if ($value === null) {
 
-          if (empty($value)) {
-            $value = '';
+            if ($checked) {
+              $value = !empty($_attr_input['ng-true-value']) ? $_attr_input['ng-true-value'] : 'true';
+              $value = !empty($_attr_input['data-ng-true-value']) ? $_attr_input['data-ng-true-value'] : $value;
+            }
+            else {
+              $value = !empty($_attr_input['ng-false-value']) ? $_attr_input['ng-false-value'] : 'false';
+              $value = !empty($_attr_input['data-ng-false-value']) ? $_attr_input['data-ng-false-value'] : $value;
+            }
+
+            $value = str_replace("'", '', $value);
           }
 
-          if( $model !== 'false') {
+          $_attr_input['data-ng-checked'] = $checked ? 'true' : 'false';
+
+          if( $model !== 'false' && $value !== null) {
             $_attr_input['initial-value'] = $value;
           }
           break;
@@ -154,23 +170,9 @@ class Wp_Ng_Shortcodes_Form {
       }
 
       switch ($type) {
-        case 'search':
-        case 'number':
-        case 'hidden':
-        case 'text':
-        case 'password':
-        case 'email':
-        case 'tel':
-        case 'url':
         case 'textarea':
 
-          if ($type === 'textarea') {
-            $html = sprintf( '%s<textarea %s ></textarea> ', $label, implode(' ', $attr_input) );
-          }
-          else {
-            $html = sprintf( '%s<input %s /> ', $label, implode(' ', $attr_input) );
-          }
-
+          $html = sprintf( '%s<textarea %s ></textarea> ', $label, implode(' ', $attr_input) );
           break;
         case 'checkbox':
 
@@ -197,7 +199,8 @@ class Wp_Ng_Shortcodes_Form {
 
           break;
         default:
-          $html = '';
+
+          $html = sprintf( '%s<input %s /> ', $label, implode(' ', $attr_input) );
           break;
 
       }

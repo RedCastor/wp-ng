@@ -20,7 +20,6 @@ class Context implements \JsonSerializable
 
     public function setPre($pre)
     {
-        $this->validateAllString($pre, "pre");
         $this->pre = $pre;
         return $this;
     }
@@ -32,24 +31,16 @@ class Context implements \JsonSerializable
 
     public function setPost($post)
     {
-        $this->validateAllString($post, "post");
         $this->post = $post;
         return $this;
     }
 
     public function jsonSerialize()
     {
-        $result = get_object_vars($this);
-        unset($result['utilities']);
+        $result = array(
+            "pre" => $this->pre,
+            "post" => $this->post,
+        );
         return $this->utilities->serializeForRollbar($result);
-    }
-
-    private function validateAllString($arr, $arg)
-    {
-        foreach ($arr as $line) {
-            if (!is_string($line)) {
-                throw new \InvalidArgumentException("\$$arg must be all strings");
-            }
-        }
     }
 }

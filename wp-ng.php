@@ -10,11 +10,12 @@
  *
  * @wordpress-plugin
  * Plugin Name:       WP NG
+ * Plugin URI:        http://redcastor.io
  * Description:       WP NG is a Angular bootstrapper for wordpress. The plugin do automatic bootstrap your app and add module dependencie in your app.
- * Version:           1.5.0
- * Author:            RedCastor
- * Author URI:        http://redcastor.io
- * Copyright:         Copyright (c) 2017, RedCastor.
+ * Version:           1.7.8
+ * Author:            Auban le Grelle
+ * Author URI:        https://redcastor.io
+ * Copyright:         Copyright (c) 2018, Auban le Grelle.
  * License:           MIT License
  * License URI:       http://opensource.org/licenses/MIT
  * Text Domain:       wp-ng
@@ -28,8 +29,10 @@ if ( ! defined( 'WPINC' ) ) {
 
 
 define('WP_NG_PLUGIN_NAME',         'wp-ng');
-define('WP_NG_PLUGIN_VERSION',      '1.5.0');
+define('WP_NG_PLUGIN_VERSION',      '1.7.8');
 define('WP_NG_REQUIRED_WP_VERSION',	'4.5');
+define('WP_NG_WP_URL', 'https://wordpress.org/plugins/wp-ng');
+define('WP_NG_GITHUB_URL', 'https://github.com/RedCastor/wp-ng');
 
 //Plugin directory
 define('WP_NG_PLUGIN_DIR', plugin_dir_path(__FILE__));
@@ -70,6 +73,8 @@ register_deactivation_hook( __FILE__, 'deactivate_wp_ng' );
  * admin-specific hooks, and public-facing site hooks.
  */
 require plugin_dir_path( __FILE__ ) . 'includes/class-wp-ng.php';
+require plugin_dir_path( __FILE__ ) . 'includes/class-wp-ng-dependencies.php';
+
 
 /**
  * Begins execution of the plugin.

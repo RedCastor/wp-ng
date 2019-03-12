@@ -133,17 +133,21 @@
               return undefined;
             }
 
-            var min_num = (scope.minNumbers() ? scope.minNumbers() : attrs.numbersOnly) || 0;
+            var min_num = parseInt(((scope.minNumbers() ? scope.minNumbers() : attrs.numbersOnly) || 0), 10);
 
+            var transformedInput = inputValue ? inputValue.toString().replace(/[^\d]/g,'') : min_num.toString();
 
-            var transformedInput = inputValue ? inputValue.replace(/[^\d]/g,'') : min_num.toString();
-
-
-            if (parseInt(transformedInput) < min_num){
+            if (parseInt(transformedInput, 10) < min_num){
               transformedInput = min_num.toString();
             }
 
+            if (attrs.type === 'number') {
+              transformedInput = parseInt(transformedInput, 10);
+            }
+
             if (transformedInput !== inputValue) {
+
+
               modelCtrl.$setViewValue(transformedInput);
               modelCtrl.$render();
             }
@@ -195,7 +199,7 @@
 
 
           if (val === 'on' && $element.attr('type') === 'checkbox') {
-            val = '';
+            val = undefined;
           }
 
           //Bypass check attribut if initial value is set.
@@ -203,7 +207,7 @@
 
             if(tag === 'input'){
               if($element.attr('type') === 'checkbox'){
-                val = $element[0].checked;
+                val = $element.val === undefined ? $element[0].checked : val;
               } else if($element.attr('type') === 'radio'){
                 val = ($element[0].checked || $element.attr('selected') !== undefined) ? $element.val() : undefined;
               } else if($element.attr('type') === 'number'){
@@ -224,6 +228,9 @@
                 }
               }
             }
+          }
+          else if($element.attr('type') === 'number'){
+            val = parseFloat(val, 10);
           }
 
           if (values !== undefined && values.length) {
@@ -253,6 +260,7 @@
 
       var fn = $parse(attrs.elSize);
       var debounce = scope.$eval(attrs.sizeDebounce) || 250;
+      var viewport = scope.$eval(attrs.viewport) || false;
 
       var debounce_timeout = null;
 
@@ -273,10 +281,14 @@
       }
 
       //Window change
-      function fn_w_change() {
-        var size = { width: elem.width(), height: elem.height() };
+      function fn_w_change( now ) {
 
-        fn_debounce(fn_apply, parseInt(debounce, 10), size);
+        var height = viewport === true ? window.screen.height : elem.height();
+        var width = viewport === true ? window.screen.width : elem.width();
+
+        var size = { width: width, height: height };
+
+        fn_debounce(fn_apply, (now === true ? 0 : parseInt(debounce, 10)), size);
       }
 
 
@@ -287,13 +299,12 @@
       }, function(new_size, old_size) {
 
         if ( angular.equals(new_size, old_size) ) {
-
           fn_debounce(fn_apply, parseInt(debounce, 10), new_size);
         }
       }, true);
 
       //Bind resize event
-      angular.element($window).on('resize', fn_w_change);
+      angular.element($window).on('resize', fn_w_change(true));
 
       //Observe Dom Element change
       if (typeof MutationObserver === 'function') {

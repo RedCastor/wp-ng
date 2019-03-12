@@ -37,15 +37,16 @@ class Payload implements \JsonSerializable
 
     public function setAccessToken($accessToken)
     {
-        $this->utilities->validateString($accessToken, "accessToken", 32, false);
         $this->accessToken = $accessToken;
         return $this;
     }
 
     public function jsonSerialize()
     {
-        $result = get_object_vars($this);
-        unset($result['utilities']);
+        $result = array(
+            "data" => $this->data,
+            "access_token" => $this->accessToken,
+        );
         return $this->utilities->serializeForRollbar($result);
     }
 }

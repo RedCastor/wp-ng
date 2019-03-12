@@ -71,21 +71,28 @@ class Wp_Ng_Cache {
         //combine content for each handle
         foreach ($handles as $handle => $src) {
 
+          if (empty($src)) {
+            continue;
+          }
+
           // Load the content of the css file
           $_local_path_src = $this->get_local_path($src);
 
-          if( $_local_path_src ) {
-            $_content = '/*! ' . $handle . ' */' . PHP_EOL . file_get_contents( $this->get_local_path($src) ) . PHP_EOL . PHP_EOL;
-
-            //Replace relative url in css file to abs url (for resolve relative url in css url with combine cache in different directory).
-            $_filename = pathinfo( $_local_path_src );
-            if( $_filename['extension'] === 'css' ) {
-              $_src_url = trailingslashit(dirname($src));
-              $_content = self::css_rel2abs($_content, $_src_url);
-            }
-
-            $this->content .= $_content;
+          if( empty($_local_path_src) ) {
+            continue;
           }
+
+          $_content = '/*! ' . $handle . ' */' . PHP_EOL . file_get_contents( $this->get_local_path($src) ) . PHP_EOL . PHP_EOL;
+
+          //Replace relative url in css file to abs url (for resolve relative url in css url with combine cache in different directory).
+          $_filename = pathinfo( $_local_path_src );
+
+          if( $_filename['extension'] === 'css' ) {
+            $_src_url = trailingslashit(dirname($src));
+            $_content = self::css_rel2abs($_content, $_src_url);
+          }
+
+          $this->content .= $_content;
         }
 
         //Write file
@@ -137,6 +144,45 @@ class Wp_Ng_Cache {
     }
 
     return false;
+  }
+
+
+  /**
+   * Create file cache
+   *
+   * @param string $content
+   * @return bool|string
+   */
+  public function create_file ( $content = '', $override = false ) {
+
+    //Create dir if not exist and check if file exist in cache
+    $basename = $this->get_basename_crc32( $content );
+    $filename = trailingslashit($this->base) . $basename;
+
+    if ( file_exists($filename) ) {
+      if ($override !== true) {
+        return $basename;
+      }
+
+      wp_delete_file($filename);
+    }
+
+    if (wp_mkdir_p($this->base) && !file_exists($filename) ) {
+
+      $this->content = $content;
+
+      //Write file
+      if ($file_handle = @fopen($filename, 'w')) {
+        fwrite($file_handle, $this->content);
+        fclose($file_handle);
+
+        return $basename;
+      }
+
+      return false;
+    }
+
+    return $basename;
   }
 
 

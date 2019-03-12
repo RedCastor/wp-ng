@@ -22,6 +22,13 @@ function wp_ng_settings_fields( $fields )
     'sections' => array(
       'general' => array(
         'title' => __('General Settings', 'wp-ng'),
+        'desc' => wp_ng_angular_desc_html('Current AngularJS '),
+        'actions' => array(
+          array(
+            'function_to_add' => array( 'Wp_Ng_Admin_Fields_Action', 'clean_wp_cache' ),
+            'priority' => 100
+          )
+        ),
         'fields' => array(
           array(
             'name'        => 'app_name',
@@ -98,6 +105,12 @@ function wp_ng_settings_fields( $fields )
     'sections' => array(
       'advanced' => array(
         'title' => __('Adanced Settings', 'wp-ng'),
+        'actions' => array(
+          array(
+            'function_to_add' => array( 'Wp_Ng_Admin_Fields_Action', 'clean_wp_cache' ),
+            'priority' => 100
+          )
+        ),
         'fields' => array(
           array(
             'name'        => 'disable_wpautop',
@@ -141,6 +154,14 @@ function wp_ng_settings_fields( $fields )
             'sanitize_callback' => ''
           ),
           array(
+            'name'        => 'cdn_angular_url',
+            'label'       => __('CDN URL Angular', 'wp-ng'),
+            'desc'        => __('CDN Format ( //your-cdn.com/libs/angularjs/%version%/%file% )', 'wp-ng'),
+            'placeholder' => '//your-cdn.com/libs/%name%/%version%/%file%',
+            'default'     => '',
+            'type'        => 'text',
+          ),
+          array(
             'name'        => 'cdn_jquery',
             'label'       => __('Enable CDN Jquery', 'wp-ng'),
             'desc'        => __('Enable the jquery and jquery-migrate cdn with fallback.', 'wp-ng'),
@@ -148,6 +169,58 @@ function wp_ng_settings_fields( $fields )
             'default'     => 'on',
             'type'        => 'checkbox',
             'sanitize_callback' => ''
+          ),
+          array(
+            'name'        => 'cdn_jquery_footer',
+            'label'       => __('CDN Jquery In Footer', 'wp-ng'),
+            'desc'        => __('Place the jquery and jquery-migrate cdn in the footer only for frontend.', 'wp-ng'),
+            'global'      => true,
+            'default'     => 'off',
+            'type'        => 'checkbox',
+            'sanitize_callback' => ''
+          ),
+          array(
+            'name'        => 'cdn_jquery_url',
+            'label'       => __('CDN URL Jquery', 'wp-ng'),
+            'desc'        => __('CDN Format ( //your-cdn.com/libs/jquery/%version%/%file% )', 'wp-ng'),
+            'placeholder' => '//your-cdn.com/libs/%name%/%version%/%file%',
+            'default'     => '',
+            'type'        => 'text',
+          ),
+          array(
+            'name'        => 'cdn_jquery_migrate_url',
+            'label'       => __('CDN URL Jquery Migrate', 'wp-ng'),
+            'desc'        => __('CDN Format ( //your-cdn.com/libs/jquery-migrate/%version%/%file% )', 'wp-ng'),
+            'placeholder' => '//your-cdn.com/libs/%name%/%version%/%file%',
+            'default'     => '',
+            'type'        => 'text',
+          ),
+          array(
+            'name'        => 'combine_handles_style',
+            'label'       => __('Combine handles style', 'wp-ng'),
+            'desc'        => __('One handle per line.', 'wp-ng'),
+            'global'      => true,
+            'default'     => '',
+            'type'        => 'textarea',
+            'sanitize_callback' => 'sanitize_textarea_field'
+          ),
+          array(
+            'name'        => 'combine_handles_script',
+            'label'       => __('Combine handles script', 'wp-ng'),
+            'desc'        => __('One handle per line.', 'wp-ng'),
+            'global'      => true,
+            'default'     => '',
+            'type'        => 'textarea',
+            'sanitize_callback' => 'sanitize_textarea_field'
+          ),
+          array(
+            'name'        => 'rest_nonce_hours',
+            'label'       => __('Rest Api nonce Life Hours', 'wp-ng'),
+            'desc'        => __( 'Set the time of the nonce life for rest api header X-WP-NG-Nonce if 0 is disabled or if use cache enabler set 1 minute greather than cache value.' , 'wp-ng'),
+            'global'      => true,
+            'default'     => 0,
+            'type'        => 'number',
+            'sanitize_callback' => 'absint'
           ),
           array(
             'name'        => 'enable_ng_debug',
@@ -162,6 +235,7 @@ function wp_ng_settings_fields( $fields )
       ),
     ),
   );
+
 
   $fields['wp_ng_log'] = array(
     'title' => __('Logging', 'wp-ng'),
@@ -355,7 +429,7 @@ function wp_ng_settings_fields( $fields )
     );
 
     //Options for woocommerce
-    if (is_plugin_active('woocommerce/woocommerce.php')) {
+    if ( Wp_Ng_Dependencies::Woocommerce_active_check() ) {
 
       $fields['wp_ng_email']['sections']['email_template']['fields'][] = array(
         'name' => 'woocommerce_hf',
@@ -373,6 +447,17 @@ function wp_ng_settings_fields( $fields )
         'type' => 'checkbox',
       );
     }
+  }
+
+  if ( Wp_Ng_Dependencies::Elementor_active_check() ) {
+
+    $fields['wp_ng_advanced']['sections']['advanced']['fields'][] = array(
+      'name' => 'combine_elementor',
+      'label' => __('Combine Elementor', 'wp-ng'),
+      'desc' => __('Combine the scripts and styles elementor handles.', 'wp-ng'),
+      'default' => 'off',
+      'type' => 'checkbox',
+    );
   }
 
   return $fields;

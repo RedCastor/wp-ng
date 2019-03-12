@@ -1,5 +1,205 @@
 ### HEAD
 
+### 1.7.8 Marsh 4th, 2019
+* Add 720k angular-tooltips module
+* Fix sticky sass
+* Fix template list
+* Fix wp-ng-router base state
+* Replace component mm.foundation
+* Fix module init
+* Fix url ui-router
+* Fix wp_ng_get_ng_router_url with nested route
+* Add transient cache ui router states
+* Bug fix controllerAs and rename with prefix $
+* Fix smoothscrool offset selector not found.
+* Add foundation angularjs dropdown pane-align top for dropup
+
+### 1.7.7 January 28th, 2019
+* Remove woocommerce fix cart cookie on rest request.
+* Add some function class template. Fix list template add action template
+* Bug fixing wp-ng-router set otherwise to all url not only wrapped.
+* Update ng-location-search to v1.1.2
+* Update slick-carousel
+* Add template_plugin, template_plugin_item params to ng-gallery shortcode.
+* ng-gallery fix gallery shortcode content not empty
+* Fix html attributes change empty val to null val  
+* Remove antimoderate svg. Only jpeg or png.
+* Bug fix initial-value if input number
+* Fix foundation init
+* Add reinit object fit on module loaded by oc.lazyload
+
+### 1.7.6 December 18th, 2018
+* Fix not exist $current_screen
+* Fix ui-router 
+* Add ui-router option for set baseUrl
+* Add multiple aliases and multiple sources webicon for default settings.
+
+### 1.7.5 December 2th, 2018
+* Fix webfont class 
+* Add shortcode pageslide
+* Add foundation reinit on module loaded with oc.lazyload
+* Some bug fix
+* Fix slider height auto
+* Fix wp_ng_json_encode unicode for shortcode
+* Add module rc-http
+
+### 1.7.4 November 13th, 2018
+* Add parser tools
+
+### 1.7.3 October 31th, 2018
+* Fix unitegallery error
+
+### 1.7.2 October 31th, 2018
+* Fix aping gallery template link target and add rel attribute.
+
+### 1.7.1 October 24th, 2018
+* Add module ngRateIt
+* Fix do_shortcode for content by apply_filters 'the_content'
+
+### 1.7.0 October 23th, 2018
+* Add shortcode ng-social-share-links
+* Bug fixing ui-router restrict metabox for manage_options user
+* Bug fix ui-router redirect page url or state name
+* Refactoring ui-router page
+
+### 1.7.0-beta4: October 12th, 2018
+* Small Refactoring
+
+### 1.7.0-beta3: October 8th, 2018
+* Fix shortcode hook gallery for ngGallery
+
+### 1.7.0-beta2: October 5th, 2018
+* Add module checkox-list
+
+### 1.7.0-beta1: October 4th, 2018
+* Update Angular and dep modules from 1.6.9 to 1.7.4
+
+### 1.6.5-beta15: October 4th, 2018
+* Fix ng-dialog button css.
+* Add rest set language action.
+
+### 1.6.5-beta14: September 27th, 2018
+* Fix clear cache on update section
+
+### 1.6.5-beta12: September 26th, 2018
+* Fix smoothscroll default param value
+
+### 1.6.5-beta11: September 20th, 2018
+* Add no-anim-out class for animsition for remove out animation.
+
+### 1.6.5-beta10: September 20th, 2018
+* Add Resend one time request for nonce update
+* Add extend nonce life time from same as cache third party (wp cache enabler)
+
+### 1.6.5-beta9: September 6th, 2018
+* Fix elementor post id support
+* Fix ngDialog style overflow .ngdialog-content
+* Replace wpautop by wpngautop for content in template shortcode
+
+### 1.6.5-beta8: August 28th, 2018
+* Fix elementor pages for woocommerce and stag-catalog
+
+### 1.6.5-beta7: August 27th, 2018
+* Bug Fix style ValityCss. Add option style valitycss on v modules and 
+  add dependencie if one of v modules is active
+* Add scroll by id with smoothScroll module.
+* Add smoothScrool Options in descriptor modules
+
+### 1.6.5-beta6: August 24th, 2018
+* Update rc-gallery to v1.1.1
+* Add tabs shortcode
+
+### 1.6.5-beta5: August 22th, 2018
+* Update ng-dialog to v1.4.0
+
+### 1.6.5-beta4: August 21th, 2018
+* Add Accordion shortcode
+
+### 1.6.5-beta3: August 6th, 2018
+* Fix wpng_json_encode single.
+* Add ui-router wrap_exclude
+* Fix logout destroy_session not exist.
+
+### 1.6.5-beta1: August 3th, 2018
+* Fix wpngautop function for not wrap paragraph if not contain html and shortcode
+
+### 1.6.4: July 6th, 2018
+* Update module ui.select.zf6
+* Add compatibility wp_cache_clear_cache
+* Add mode shuffle sources for shortcode gallery
+
+
+### 1.6.3: July 4th, 2018
+* Fix webfontloader async display
+* Add action clean cache for compatibility with cache enabler.
+* Update angular module ui.select and bs3-2-zf6
+* Update ng-location-search
+* Add module ui.select.zf6
+* Add check global function wp_ng_is_advanced_cache
+* Add Outdated browser template redirect for ie under 11.
+* Remove angular module ng.deviceDetector
+
+### 1.6.2: June 2th, 2018
+* Add routed page with ui-router module
+* Add compatibility wpNgConfig for WP_CACHE enabled (use cookie)
+* Update ui-router to v0.4.2
+* Update rollbar-php to v1.4.2
+* Update rc-rollbar to v2.3.9
+* Update foundation to v6.4.3
+* Update ng-location-search to v1.0.2
+* Update awesome-foundation6-checkbox to v1.0.2
+* Update bs3tozf6 to v1.1.1
+* Add timeout animsition options
+* Set enabled timeout on default with 3000ms animsition script.
+* Add modules: angular-ismobile, angular-inview
+* Fix webfont loader if not combine scripts.
+* Add logout remove php SESSION COOKIE
+* Fix elementor 2.0
+* Fix init settings options before other plugins set prio to -1.
+* Fix Gallery unitegallery source alt mandatory.
+* Fix wpngautop
+* Add wp_get_attachment_image_attributes hook for work with antimoderate.
+* Update antimoderate to v1.1.7
+
+### 1.6.1: Marsh 28th, 2018
+* Fix anisition not load href empty.
+* update angular 1.6.4 to 1.6.9
+* Fix select bs2zf
+* Fix parser shortcode map type
+* Fix wp_ng_get_module_options and wp_ng_get_script_options if use module with dot (ui.router) 
+
+### 1.6.0: Marsh 15th, 2018
+* Elementor Compatibility widget to invoke the angular compile.
+* Elementor Compatibility lazyload angular module.
+* Elementor Compatibility for combine script and style.
+* Fix input form.
+* Add console icon
+* Add angular flatpickr fix
+* Add translation boolean
+* Fix Checkbox value initial.
+* Add module ui-event.
+* Update module ng-antimoderate.
+* Fix input translation label for checkbox and radio.
+* Add Lib Google Geocode
+* Add is active module.
+* Fix module check is module handle already have prefix.
+* Add Extra Scripts options
+* Add extra script object-fit.js and aos.js
+* Fix get_template return at string Remove undesired characters like trim but for all string.
+* Add function wp_ng_trim_all
+* Add function wp_ng_get_modules_scripts
+* Add function wp_ng_get_modules_styles
+* Add function wp_ng_get_html_attributes
+* Add implementation of lazyload modules.
+* Add template and action hook for lazyload.
+* Add module angular-snapscroll and angular-swipe
+* Add options for custom handles to combine script and style.
+* Add options for custom cdn url angular and jquery.
+* Add WebFont Loader script.
+* Add AOT Animate On Trigger
+* Add ui-swiper templates
+* Add template galleries for aping support.
+
 ### 1.5.0: January 21th, 2018
 * Release.
 

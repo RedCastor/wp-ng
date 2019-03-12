@@ -53,15 +53,14 @@ class Wp_Ng_Helper {
     _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'wp-ng' ), '1.4.2' );
   }
 
+
   /**
    * Helper Instance.
    *
    * Ensures only one instance of helper is loaded or can be loaded.
-   *
    * @since 1.4.2
-   * @static
-   * @see ()
-   * @return Wp_Ng_Template - Main instance.
+   *
+   * @return null|Wp_Ng_Helper
    */
   public static function getInstance() {
     if ( is_null( self::$_instance ) ) {
@@ -391,4 +390,5 @@ class Wp_Ng_Helper {
 
     return $hex ? '#' . $hex : null;
   }
+
 }

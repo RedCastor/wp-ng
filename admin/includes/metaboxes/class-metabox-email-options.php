@@ -60,7 +60,7 @@ class Wp_Ng_Admin_Metabox_Email_Options {
   public function remove_media_buttons() {
     $current_screen = get_current_screen();
 
-    if( $current_screen->post_type === $this->post_type ) {
+    if( $current_screen && $current_screen->post_type === $this->post_type ) {
       remove_action('media_buttons', 'media_buttons');
     }
   }

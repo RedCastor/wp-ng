@@ -27,6 +27,8 @@ var replace      = require('gulp-replace');
 var _            = require('lodash');
 var filter       = require('gulp-filter');
 var urlAdjuster  = require('gulp-css-url-adjuster');
+var google_fonts = require('google-fonts-complete');
+var jsoncombinearray = require("gulp-jsoncombine-array");
 
 var ngAnnotate   = require('gulp-ng-annotate');
 var minifyHTML   = require('gulp-htmlmin');
@@ -301,6 +303,18 @@ gulp.task('fonts', function() {
     .pipe(browserSync.stream());
 });
 
+// ### Google Font List
+// `gulp google-fonts`
+gulp.task('google-fonts', function(callback) {
+
+  return gulp.src('')
+    .pipe(jsoncombinearray("google-fonts.json",function(data) {
+
+      return new Buffer(JSON.stringify(google_fonts));
+    }))
+    .pipe(gulp.dest(path.dist + 'fonts'));
+});
+
 // ### Images
 // `gulp images` - Run lossless compression on all the images.
 gulp.task('images', function() {
@@ -340,9 +354,8 @@ gulp.task('images-svg', function() {
 // ### JSHint
 // `gulp jshint` - Lints configuration JSON and project JS.
 gulp.task('jshint', function() {
-  return gulp.src([
-    'bower.json', 'gulpfile.js'
-  ].concat(project.js))
+
+  return gulp.src(['bower.json', 'gulpfile.js', '!**/bower_components/**/*.js'].concat(project.js))
     .pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'))
     .pipe(gulpif(enabled.failJSHint, jshint.reporter('fail')));
@@ -380,7 +393,7 @@ gulp.task('watch', function() {
 gulp.task('build', function(callback) {
   runSequence('styles',
     'scripts',
-    ['fonts', 'images', 'images-svg', 'vendor'],
+    ['fonts', 'images', 'images-svg', 'vendor', 'google-fonts'],
     callback);
 });
 

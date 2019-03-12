@@ -1,0 +1,11 @@
+//
+// Web Font Loader
+// --------------------------------------------------
+.wf-load,
+.wf-loading {
+  opacity: 0;
+}
+
+.wf-animated * {
+  transition: opacity 0.3s ease-out;
+}

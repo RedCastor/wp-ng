@@ -25,6 +25,8 @@ class Wp_Ng_Shortcodes_Map {
       'id'        => null,
       'height'    => '400px',
       'width'     => 'auto',
+      'class'     => '',
+      'load'      => '',
     ), $atts );
 
 
@@ -51,6 +53,33 @@ class Wp_Ng_Shortcodes_Map {
       $type = isset($marker['icon']['type']) ? $marker['icon']['type'] : '';
       $icon_id = isset($marker['icon']['iconUrl']) ? absint($marker['icon']['iconUrl']) : 0;
       $shadow_id = isset($marker['icon']['shadowUrl']) ? absint($marker['icon']['shadowUrl']) : 0;
+      $icon_html = null;
+      $thumb_src = null;
+      $thumb_id = null;
+      $thumb_url = null;
+      $thumb_class = '';
+      $icon_class = '';
+
+      if (isset($marker['icon']['html'])) {
+        $icon_html = $marker['icon']['html'];
+
+        if (is_array($icon_html)) {
+          $thumb_id = !empty($icon_html['id']) ? $icon_html['id'] : 0;
+          $thumb_url = !empty($icon_html['url']) && wp_ng_is_valid_url($icon_html['url']) ? $icon_html['url'] : false;
+          $thumb_class = !empty($icon_html['imgClass']) ? $icon_html['imgClass'] : '';
+          $icon_class = !empty($icon_html['iconClass']) ? $icon_html['iconClass'] : '';
+
+          $map['markers'][$marker_key]['icon']['html'] = '';
+        }
+        else {
+          $thumb_id = absint($icon_html);
+
+          if (wp_ng_is_valid_url($icon_html)) {
+            $thumb_url = $icon_html;
+          }
+        }
+      }
+
 
       //Set icon image
       if ($icon_id) {
@@ -69,21 +98,33 @@ class Wp_Ng_Shortcodes_Map {
       }
 
 
-      if ($type === 'div') {
-        $thumb_id = isset($marker['icon']['html']) ? absint($marker['icon']['html']) : 0;
+      if ($thumb_id) {
         $thumb_src = wp_get_attachment_image_src($thumb_id, 'thumbnail');
-        $thumb_html = $thumb_src ? sprintf('<img src="%s" width="%s" height="%s" style="width: 100%%; height: 100%%;" />', $thumb_src[0], $thumb_src[1], $thumb_src[2]) : '';
+      }
+      else if (!empty($thumb_url)) {
+        $thumb_src[0] = $thumb_url;
+        $thumb_src[1] = get_option( 'thumbnail_size_w' );
+        $thumb_src[2] = get_option( 'thumbnail_size_h' );
+      }
 
-        $map['markers'][$marker_key]['icon']['html'] = $thumb_html;
+      if ($type === 'div' && $thumb_src ) {
+
+        $map['markers'][$marker_key]['icon']['html'] = wp_ng_get_template( 'maps/ui-leaflet/icon.php', null, array(
+          'icon'    => $marker['icon'],
+          'icon_class' => $icon_class,
+          'thumb_class' => $thumb_class,
+          'thumb_src' => $thumb_src,
+        ), false );
       }
     }
 
-
-    $html = wp_ng_get_template( 'maps/simple-map.php', null, array(
+    $html = wp_ng_get_template( 'maps/ui-leaflet/map.php', null, array(
       'id'      => $id,
       'map'     => $map,
       'height'  => $_atts['height'],
       'width'   => $_atts['width'],
+      'class'   => $_atts['class'],
+      'load'    => array_merge(array_map('trim', explode(',', $_atts['load'])), array('ui-leaflet')),
       ), false );
 
 
@@ -118,8 +159,8 @@ class Wp_Ng_Shortcodes_Map {
 
     $atts = array_replace_recursive( $atts, array(
       'layers' => $google_default_layer,
+      'load' => 'ui-leaflet-layers,ui-leaflet-layer-google',
     ) );
-
 
     return self::leaflet( $atts );
   }

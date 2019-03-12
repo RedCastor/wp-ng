@@ -1,0 +1,17 @@
+//
+// Animsition Addon
+// --------------------------------------------------
+@keyframes no-anim-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+
+.no-anim-out {
+  animation-name: no-anim-out;
+  animation-duration: 1ms !important;
+}

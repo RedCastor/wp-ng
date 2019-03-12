@@ -708,6 +708,27 @@ img.ug-sepia-effect {
   color: #F3F3F3;
   font-size: 16px; }
 
+.ug-loadmore-wrapper {
+  margin-top: 20px;
+  text-align: center; }
+
+.ug-loadmore-wrapper .ug-loadmore-button {
+  display: inline-block;
+  padding: 5px;
+  border: 1px solid #939393;
+  text-decoration: none;
+  color: #4F4F4F; }
+
+.ug-loadmore-wrapper .ug-loadmore-error {
+  color: red; }
+
+.ug-loadmore-wrapper .ug-loadmore-button:hover {
+  background-color: #F0F0F0;
+  color: #515151; }
+
+.ug-loadmore-wrapper .ug-loadmore-loader {
+  color: #515151; }
+
 .ug-tabs-wrapper {
   margin-top: 0px;
   margin-bottom: 20px;

@@ -66,6 +66,7 @@ class Wp_Ng_Settings {
       'global'            => isset($field['global']) ? $field['global'] : false,
       'name'              => $field['name'],
       'action'            => isset($field['action']) ? $field['action'] : '',
+      'actions'            => isset($field['actions']) ? $field['actions'] : array(),
       'label'             => isset($field['label']) ? $field['label'] : str_replace('_', ' ', ucwords($field['name'], '_')),
       'desc'              => isset($field['desc']) ? $field['desc'] : '',
       'type'              => isset($field['type']) ? $field['type'] : 'text',
@@ -90,6 +91,7 @@ class Wp_Ng_Settings {
       'desc'    => isset ($section['desc']) ? $section['desc'] : '',
       'display' => isset ($section['display']) ? $section['display'] : '',
       'action'  => isset($section['action']) ? $section['action'] : '',
+      'actions'  => isset($section['actions']) ? $section['actions'] : array(),
     );
 
     return $default_section;
@@ -350,6 +352,12 @@ class Wp_Ng_Settings {
    */
   public function get_option_prefix ( $option ) {
 
+    $prefix_pos = strpos($option, $this->settings_prefix);
+
+    if ($prefix_pos === 0) {
+      return $option;
+    }
+
     return $this->settings_prefix . '_' . $option;
   }
 
@@ -559,8 +567,10 @@ class Wp_Ng_Settings {
       $conditions[$post_type->name] = sprintf( '%s %s', __('Post Type ', 'wp-ng'), $post_type->name);
     }
 
+    $active_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ) );
+
     //Woocommerce conditions
-    if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+    if ( Wp_Ng_Dependencies::Woocommerce_active_check() ) {
 
       $conditions['is_woocommerce']       = __('Is Woocommerce',  'wp-ng');
       $conditions['is_shop']              = __('Is Shop',         'wp-ng');
@@ -574,7 +584,18 @@ class Wp_Ng_Settings {
       $conditions['is_ajax']              = __('Is Ajax',         'wp-ng');
     }
 
-    return $conditions;
+    //Stag Catalog conditions
+    if ( Wp_Ng_Dependencies::StagCatalog_active_check() ) {
+
+      $conditions['is_catalogs_page']         = __('Is Catalogs Page',    'wp-ng');
+      $conditions['is_catalog_page']          = __('Is Catalog Page',     'wp-ng');
+      $conditions['is_catalog_item']          = __('Is Catalog Item',     'wp-ng');
+      $conditions['is_catalog_item_category'] = __('Is Catalog Category', 'wp-ng');
+      $conditions['is_catalog_item_taxonomy'] = __('Is Catalog Taxonomy', 'wp-ng');
+
+    }
+
+    return apply_filters('wp_ng_settings_conditions', $conditions, $this);
   }
 
 
@@ -651,7 +672,9 @@ class Wp_Ng_Settings {
 
         if ( isset($section['desc']) && !empty($section['desc']) ) {
           $section['desc'] = '<div class="inside">'.$section['desc'].'</div>';
-          $callback = create_function('', 'echo "'.str_replace('"', '\"', $section['desc']).'";');
+          $callback = function () use($section) {
+            echo str_replace('"', '\"', $section['desc']);
+          };
         } else if ( isset( $section['callback'] ) ) {
           $callback = $section['callback'];
         } else {
@@ -1257,6 +1280,33 @@ class Wp_Ng_Settings {
     return $default;
   }
 
+
+  /**
+   * Set default values
+   *
+   * @param $field
+   * @param $value
+   * @return mixed
+   */
+  public function set_default_values ( $field, $value ) {
+
+    //Set default value if sub_fields option not set.
+    if ( $field['type'] === 'sub_fields' ) {
+
+      if (!is_array($value)) {
+        $value = array();
+      }
+
+      foreach ($field['sub_fields'] as $sub_field) {
+        if (!isset($value[$sub_field['name']])) {
+          $value[$sub_field['name']] = isset($sub_field['default']) ? $sub_field['default'] : '';
+        }
+      }
+    }
+
+    return $value;
+  }
+
   /**
    * Tabbable JavaScript codes & Initiate Color Picker
    *
@@ -1516,9 +1566,9 @@ class Wp_Ng_Settings {
           echo '<thead>';
           echo '<tr>';
           echo '<td id="cb" class="manage-column column-cb check-column">';
-          echo __( 'Select', 'wp-ng');
+          echo __( 'Active', 'wp-ng');
           echo '</td>';
-          echo '<th scope="col" id="name" class="manage-column column-name column-primary">' . __('Module', 'wp-ng') . '</th>';
+          echo '<th scope="col" id="name" class="manage-column column-name column-primary">' . __('Name', 'wp-ng') . '</th>';
           echo '<th scope="col" id="description" class="manage-column column-description">' . __('Description', 'wp-ng') . '</th>';
           echo '<th scope="col" id="options" class="manage-column column-options">' . __('Options', 'wp-ng') . '</th>';
           echo '</tr>';

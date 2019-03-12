@@ -21,7 +21,6 @@ class Server implements \JsonSerializable
 
     public function setHost($host)
     {
-        $this->utilities->validateString($host, "host");
         $this->host = $host;
         return $this;
     }
@@ -33,7 +32,6 @@ class Server implements \JsonSerializable
 
     public function setRoot($root)
     {
-        $this->utilities->validateString($root, "root");
         $this->root = $root;
         return $this;
     }
@@ -45,7 +43,6 @@ class Server implements \JsonSerializable
 
     public function setBranch($branch)
     {
-        $this->utilities->validateString($branch, "branch");
         $this->branch = $branch;
         return $this;
     }
@@ -57,29 +54,36 @@ class Server implements \JsonSerializable
 
     public function setCodeVersion($codeVersion)
     {
-        $this->utilities->validateString($codeVersion, "codeVersion");
         $this->codeVersion = $codeVersion;
         return $this;
     }
 
-    public function __get($key)
+    public function setExtras($extras)
     {
-        return isset($this->extra[$key]) ? $this->extra[$key] : null;
+        $this->extra = $extras;
     }
 
-    public function __set($key, $val)
+    public function getExtras()
     {
-        $this->extra[$key] = $val;
+        return $this->extra;
+    }
+
+    public function setArgv($argv)
+    {
+        $this->extra['argv'] = $argv;
     }
 
     public function jsonSerialize()
     {
-        $result = get_object_vars($this);
-        unset($result['utilities']);
-        unset($result['extra']);
+        $result = array(
+            "host" => $this->host,
+            "root" => $this->root,
+            "branch" => $this->branch,
+            "code_version" => $this->codeVersion,
+        );
         foreach ($this->extra as $key => $val) {
             $result[$key] = $val;
         }
-        return $this->utilities->serializeForRollbar($result, null, array_keys($this->extra));
+        return $this->utilities->serializeForRollbar($result, array_keys($this->extra));
     }
 }

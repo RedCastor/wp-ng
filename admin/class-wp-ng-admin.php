@@ -57,13 +57,22 @@ class Wp_Ng_Admin {
 	}
 
 
+  /**
+   * Load Dependencies
+   */
   private function load_dependencies() {
 
-    require_once plugin_dir_path( __FILE__ ) . '/includes/class-wp-ng-admin-fields-action.php';
-    require_once plugin_dir_path( __FILE__ ) . '/includes/class-wp-ng-admin-gallery.php';
+    require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-ng-admin-fields-action.php';
+    require_once plugin_dir_path( __FILE__ ) . 'includes/class-wp-ng-admin-gallery.php';
 
-    require_once plugin_dir_path( __FILE__ ) . '/includes/metaboxes/class-metabox-email-options.php';
+    /**
+     * Metaboxes
+     */
+    require_once plugin_dir_path( __FILE__ ) . 'includes/metaboxes/class-metabox-email-options.php';
+    require_once plugin_dir_path( __FILE__ ) . 'includes/metaboxes/class-metabox-ng-router.php';
+
   }
+
 
 	/**
 	 * Register the stylesheets for the admin area.
@@ -120,6 +129,21 @@ class Wp_Ng_Admin {
 
 	}
 
+
+  /**
+   * Admin Init
+   */
+  public function init() {
+
+    /* Custom Meta Box */
+    $routed_post_types = wp_ng_get_module_option( 'routed_post_types', 'wp-ng_ui.router', array() );
+
+    foreach ($routed_post_types as $routed_post_type) {
+      wp_ng_add_meta_box_ng_router( $routed_post_type, $routed_post_type);
+    }
+  }
+
+
   /**
    * Settings Admin Init
    *
@@ -132,10 +156,21 @@ class Wp_Ng_Admin {
     foreach ( $settings_page->get_fields() as $tab_key => $sections ) {
       foreach ($sections as $section_key => $field) {
         foreach ($field as $option) {
-          if ( !empty($option['action'] && !empty($option['name']) && $option['global'] === true) ) {
+          if ( (!empty($option['action'] || !empty($option['actions'])) && !empty($option['name']) && $option['global'] === true) ) {
+            $_actions = !empty($option['actions'] ) ? $option['actions'] : array();
+
+            if ( !empty($option['action'] ) ) {
+              $_actions[] = array(
+                'function_to_add' => $option['action'],
+                'priority' => 10
+              );
+			      }
 
             $option_name = $settings_page->get_option_prefix( $option['name'] );
-            add_filter( 'pre_update_option_' . $option_name, $option['action'], 10, 2 );
+
+            foreach ( $_actions as $_action) {
+              add_filter( 'pre_update_option_' . $option_name, $_action['function_to_add'], (!empty($_action['priority']) ? $_action['priority'] : 10), 3 );
+            }
           }
         }
       }
@@ -144,10 +179,22 @@ class Wp_Ng_Admin {
     //Action for section
     foreach ( $settings_page->get_sections() as $tab_key => $sections ) {
       foreach ($sections as $section) {
-        if ( !empty($section['action']) ) {
+        if ( !empty($section['action']) || !empty($section['actions']) ) {
+
+          $_actions = !empty($section['actions'] ) ? $section['actions'] : array();
+
+          if ( !empty($section['action'] ) ) {
+            $_actions[] = array(
+              "function_to_add" => $section['action'],
+              "priority" => 10
+            );
+          }
 
           $option_name = $settings_page->get_option_prefix( $section['id'] );
-          add_filter( 'pre_update_option_' . $option_name, $section['action'], 10, 2 );
+
+          foreach ( $_actions as $_action) {
+            add_filter( 'pre_update_option_' . $option_name, $_action['function_to_add'], (!empty($_action['priority']) ? $_action['priority'] : 10), 2 );
+          }
         }
       }
     }
@@ -177,10 +224,12 @@ class Wp_Ng_Admin {
   public function tiny_mce_before_init( $init ) {
 
     if( wp_ng_disable_tinymce_verify_html() === true) {
-      $init['verify_html  '] = FALSE;
+      $init['verify_html'] = FALSE;
     }
 
     return $init;
   }
+
+
 
 }

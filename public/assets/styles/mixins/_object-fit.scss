@@ -1,0 +1,97 @@
+//
+// Framework Object Fit
+//------------------------------------------------------------
+
+/*
+  This mixin can be used to set the object-fit:
+  @include object-fit-image(contain);
+
+  or object-fit and object-position:
+  @include object-fit-image(cover, top);
+*/
+@mixin object-fit-image($fit: fill, $position: null){
+  -o-object-fit: $fit;
+     object-fit: $fit;
+  @if $position {
+	  -o-object-position: $position;
+	     object-position: $position;
+  	font-family: 'object-fit: #{$fit}; object-position: #{$position}';
+  } @else {
+  	font-family: 'object-fit: #{$fit}';
+  }
+}
+
+// [converter] This is defined recursively in LESS, but Sass supports real loops
+@mixin make-object-fit-position($fit: fill, $position: null) {
+
+  @if $position {
+	  @include object-fit-image($fit, $position);
+	  
+  } @else {
+  	&.fit-pos-top-left {
+	  @include object-fit-image($fit, 0 0);
+	}
+	&.fit-pos-top-center {
+	  @include object-fit-image($fit, 0 50%);
+	}
+    &.fit-pos-top-right {
+	  @include object-fit-image($fit, 0 100%);
+	}
+	&.fit-pos-center-left {
+	  @include object-fit-image($fit, 50% 0);
+	}
+	&.fit-pos-center-center {
+	  @include object-fit-image($fit, 50% 50%);
+	}
+	&.fit-pos-center-right {
+	  @include object-fit-image($fit, 50% 100%);
+	}
+    &.fit-pos-bottom-left {
+	  @include object-fit-image($fit, 100% 0);
+	}
+	&.fit-pos-bottom-center {
+	  @include object-fit-image($fit, 100% 50%);
+	}
+	&.fit-pos-bottom-right {
+	  @include object-fit-image($fit, 100% 100%);
+	}
+  }
+  
+}
+
+// Create object fit
+@mixin make-object-fit($position: null) {
+
+  img {
+    &.fit {
+      width: 100%;
+      height: 100%;
+    }
+
+    // Object-fit value
+    &.fit-cover {
+      @include object-fit-image(cover);
+      @include make-object-fit-position(cover, $position);
+    }
+
+    &.fit-contain {
+      @include object-fit-image(contain);
+      @include make-object-fit-position(contain, $position);
+    }
+
+    &.fit-fill {
+      @include object-fit-image(fill);
+      @include make-object-fit-position(fill, $position);
+    }
+
+    &.fit-none {
+      @include object-fit-image(none);
+      @include make-object-fit-position(none, $position);
+    }
+
+    &.fit-scale-down {
+      @include object-fit-image(scale-down);
+      @include make-object-fit-position(scale-down, $position);
+    }
+  }
+}

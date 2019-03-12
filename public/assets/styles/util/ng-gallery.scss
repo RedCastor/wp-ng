@@ -1,0 +1,132 @@
+//
+// Angular Gallery
+// --------------------------------------------------
+ng-gallery {
+  display: block;
+}
+
+
+//Remove list style
+ul, ol {
+  &.gallery {
+    margin: 0;
+    padding: 0;
+
+    li { list-style: none; }
+  }
+}
+
+//-- Gallery
+ng-gallery,
+.gallery-grid,
+.gallery {
+
+  figure {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background-clip: content-box;
+
+    figcaption {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      background-color: #666;
+      color: #fff;
+      opacity: 0;
+      transition: opacity .5s ease-out;
+      padding: 0.33em;
+      line-height: normal;
+    }
+
+    > a:hover ~ figcaption,
+    > img:hover ~ figcaption,
+    .gallery-content:hover ~ figcaption,
+    figcaption:hover{
+      opacity: 0.7;
+    }
+
+    .gallery-content {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 20px;
+    }
+
+    img + .gallery-content {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+}
+
+.gallery-grid,
+.gallery {
+  position: relative;
+
+  .gallery-item {
+    min-height: 1px;
+    float: left;
+  }
+
+  &.gallery-columns-1 { .gallery-item { width: (100% / 1); }}
+  &.gallery-columns-2 { .gallery-item { width: (100% / 2); }}
+  &.gallery-columns-3 { .gallery-item { width: (100% / 3); }}
+  &.gallery-columns-4 { .gallery-item { width: (100% / 4); }}
+  &.gallery-columns-5 { .gallery-item { width: (100% / 5); }}
+  &.gallery-columns-6 { .gallery-item { width: (100% / 6); }}
+  &.gallery-columns-7 { .gallery-item { width: (100% / 7); }}
+  &.gallery-columns-8 { .gallery-item { width: (100% / 8); }}
+  &.gallery-columns-9 { .gallery-item { width: (100% / 9); }}
+  &.gallery-columns-10 { .gallery-item { width: (100% / 10); }}
+  &.gallery-columns-11 { .gallery-item { width: (100% / 11); }}
+  &.gallery-columns-12 { .gallery-item { width: (100% / 12); }}
+}
+
+
+//-- Gallery Grid Animation
+.gallery-animated.angular-grid  {
+
+  .gallery-item {
+    position: absolute;
+    box-sizing: border-box;
+    overflow: hidden;
+    transition: all 400ms ease;
+
+    img {
+      width: 100%;
+      vertical-align: middle;
+      opacity: 0;
+      visibility: hidden;
+    }
+    img.img-loaded {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    &.ng-leave {
+      transition: all ease 400ms;
+    }
+
+    &.ng-leave.ng-leave-active {
+      transform: scale(0.5);
+      opacity: 0;
+    }
+
+    &.ng-enter {
+      transition: all ease 400ms;
+      transition-delay: 500ms;
+      transform: scale(0.5);
+      opacity: 0;
+    }
+
+    &.ng-enter.ng-enter-active {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+}
+
+

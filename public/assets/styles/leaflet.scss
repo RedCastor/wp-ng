@@ -2,3 +2,37 @@
 // Leaflet
 // --------------------------------------------------
 
+
+//DIV MAP PIN ICON
+.leaflet-div-icon {
+  border: none;
+  background-color: transparent;
+}
+.wp-ng-leaflet-icon-container {
+  width: 100%;
+  height: 100%;
+  background-color: #21759A;
+  top: -10px;
+
+  img {
+    padding: 4px;
+  }
+}
+.wp-ng-leaflet-icon-pin {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  width: 14px;
+  height: 20px;
+  background-color: #21759A;
+  transform: rotate(45deg) translateX(-50%);
+  z-index: -1;
+}
+
+//Layer Control Display
+.wp-ng-leaflet-control-layers-hide {
+  .leaflet-control-layers {
+    display: none;
+  }
+}

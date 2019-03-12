@@ -42,6 +42,7 @@ class Wp_Ng_Public_Fallback {
     wp_deregister_script('angular');
 
     if ( wp_ng_is_cdn_angular() ) {
+
       $src = $bower->map_to_cdn([
         'name' => 'angular',
         'cdn' => 'google-angular',
@@ -72,7 +73,7 @@ class Wp_Ng_Public_Fallback {
    */
   static public function register_jquery_fallback( $deps = array()) {
 
-    global $wp_scripts;
+    $wp_scripts = wp_scripts();
 
     if ( ! is_array( $deps ) ) {
       $deps = array( strval( $deps ) );
@@ -84,7 +85,7 @@ class Wp_Ng_Public_Fallback {
     wp_deregister_script( 'jquery' );
     wp_deregister_script( 'jquery-core' );
 
-    if ( wp_ng_is_cdn_jquery() ) {
+  if ( wp_ng_is_cdn_jquery() ) {
 
       $src = $bower->map_to_cdn( [
         'name' => 'jquery',
@@ -96,7 +97,7 @@ class Wp_Ng_Public_Fallback {
       $src = wp_ng_get_asset_path( 'scripts/jquery.js' );
     }
 
-    wp_register_script( 'jquery', false, array( 'jquery-core', 'jquery-migrate' ), $version );
+    wp_register_script( 'jquery', false, array( 'jquery-core', 'jquery-migrate' ), $version, (wp_ng_is_cdn_jquery_footer()) );
     wp_register_script(
       'jquery-core',
       $src,
@@ -116,6 +117,7 @@ class Wp_Ng_Public_Fallback {
       $version = $wp_scripts->registered['jquery-migrate']->ver;
 
       if ( wp_ng_is_cdn_jquery() ) {
+
         $src = $bower->map_to_cdn( [
           'name' => 'jquery-migrate',
           'cdn'  => 'jquery-migrate',

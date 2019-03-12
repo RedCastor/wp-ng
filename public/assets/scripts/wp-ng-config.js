@@ -1,6 +1,14 @@
-//Angular bootstrap application with modules. Author: Auban le Grelle
+//Angular Config application modules. Author: Auban le Grelle
 (function (angular, wpNg) {
   'use strict';
+
+  //Configure LazyLoad modules.
+  if ( angular.isDefined(wpNg.config.modules['oc.lazyLoad']) ) {
+    wpNg.app.config(['$ocLazyLoadProvider', 'WP_NG_CONFIG' , function($ocLazyLoadProvider, WP_NG_CONFIG) {
+
+      $ocLazyLoadProvider.config(WP_NG_CONFIG.modules['oc.lazyLoad']);
+    }]);
+  }
 
   //Configure Rollbar module provider if module is declared in modules.
   if ( angular.isDefined(wpNg.config.modules.rcRollbar) ) {
@@ -43,7 +51,7 @@
       if ( angular.isDefined(WP_NG_CONFIG.modules.wpNgRest.restNonceKey) && angular.isDefined(WP_NG_CONFIG.modules.wpNgRest.restNonceVal) ) {
         wpNgRestProvider.setNonce({
           key: WP_NG_CONFIG.modules.wpNgRest.restNonceKey,
-          val: WP_NG_CONFIG.modules.wpNgRest.restNonceVal
+          val: WP_NG_CONFIG.modules.wpNgRest.restNonceVal,
         });
       }
       if ( angular.isDefined(WP_NG_CONFIG.modules.wpNgRest.restUrl) && angular.isDefined(WP_NG_CONFIG.modules.wpNgRest.restPath) ) {
@@ -121,7 +129,7 @@
       if ( angular.isDefined(WP_NG_CONFIG.modules.webicon.alias) && angular.isObject(WP_NG_CONFIG.modules.webicon.alias) ) {
 
         angular.forEach(WP_NG_CONFIG.modules.webicon.alias, function (value, key) {
-          $webiconProvider.alias(key, value);
+          $webiconProvider.alias(value, key);
         });
       }
 

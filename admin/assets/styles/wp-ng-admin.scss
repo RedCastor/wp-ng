@@ -14,6 +14,14 @@
 
 //Wp Ng Page Settings
 .settings_page_settings_wp-ng {
+
+  .wp-list-table.plugins {
+    .plugin-title {
+      white-space: unset;
+    }
+  }
+
+
   //Multi Select wp style
   .ms-container {
     width: 100%;
@@ -29,12 +37,20 @@
     }
   }
 
-  //Multi Select Chosen wp style
+
+  .chosen-container.regular-text {
+    width: 25em !important;
+
+    .column-options & {
+      width: 25em !important;
+    }
+  }
+
+   //Multi Select Chosen wp style
   .chosen-container.regular-text .chosen-choices {
     margin: 1px;
     padding: 3px 5px;
     font-size: 14px;
-    width: 25em !important;
     border: 1px solid #ddd;
   }
   .chosen-container-active.regular-text .chosen-choices {
@@ -43,7 +59,12 @@
 
 
   //Table module list
+  #wp_ng_load_scripts .wp-list-table,
   #wp_ng_load_modules .wp-list-table {
+
+    th.column-options {
+        width: 22em;
+    }
 
     &.widefat thead td.check-column {
       padding: 8px 10px;

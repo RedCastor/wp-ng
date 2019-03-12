@@ -143,6 +143,23 @@
 
   wpNgRest.factory('wpNgRestHttpInterceptor', ['$injector', function($injector){
 
+    var retry_request = [];
+
+    function _update_nonce(response) {
+
+      var wpNgRestStatus = $injector.get("wpNgRestStatus");
+
+      var nonce = wpNgRestStatus.getNonce();
+      var nonce_val = response.headers(nonce.key);
+
+      //Update nonce if is changed
+      if (nonce_val && nonce_val !== nonce.val) {
+        nonce.val = nonce_val;
+        wpNgRestStatus.setNonce(nonce);
+      }
+    }
+
+
     return {
       request: function (request) {
 
@@ -179,28 +196,45 @@
       },
       response: function( response ) {
 
-        var wpNgRestStatus = $injector.get("wpNgRestStatus");
-
-        var nonce = wpNgRestStatus.getNonce();
-        var nonce_val = response.headers(nonce.key);
-
-        //Update nonce if is changed
-        if (nonce_val && nonce_val !== nonce.val) {
-          nonce.val = nonce_val;
-          wpNgRestStatus.setNonce(nonce);
-        }
+        _update_nonce(response);
 
         return response;
       },
       responseError: function(response) {
 
         var $q = $injector.get("$q");
+        var retry_index = response.config ? retry_request.indexOf(response.config.url) : -1;
 
-        if (response.status === 406) {
-          var $window = $injector.get("$window");
+        if (response.status === 406 && retry_index === -1) {
+          var deferred = $q.defer();
 
-          //Reload page if error 406 nonce error. Force renew nonce on server
-          $window.location.reload();
+          _update_nonce(response);
+
+          retry_request.push(response.config.url);
+
+          //Resend request after update nonce
+          $injector.get("$http")(response.config).then(
+            function(resend_response) {
+
+              _update_nonce(resend_response);
+
+              delete retry_request[retry_index];
+              deferred.resolve(resend_response);
+            },function(resend_response) {
+
+              if (resend_response.status === 406) {
+                var $window = $injector.get("$window");
+
+                //Reload page if error 406 nonce error. Force renew nonce on server
+                $window.location.reload();
+              }
+
+              delete retry_request[retry_index];
+              deferred.reject(resend_response);
+            }
+          );
+
+          return deferred.promise;
         }
         else {
           return $q.reject(response);

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wp-ng V1.1.0\n"
-"POT-Creation-Date: 2018-01-22 22:45+0100\n"
+"POT-Creation-Date: 2018-01-25 15:44+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: RedCastor <team@redcastor.io>\n"
@@ -51,6 +51,10 @@ msgstr "Video Url"
 msgid "Email Settings"
 msgstr "Réglages d’e-mail"
 
+#: admin/includes/metaboxes/class-metabox-email-options.php:144
+msgid "Default fields"
+msgstr ""
+
 #: admin/partials/gallery-view.php:3
 msgid "NG Gallery Settings"
 msgstr "Paramètres de NG Gallery"
@@ -72,53 +76,53 @@ msgstr "Type"
 msgid "Theme"
 msgstr "Thème"
 
-#: admin/partials/metaboxes/metabox-email-options.php:13
+#: admin/partials/metaboxes/email-options-view.php:13
 msgid "Enable email"
 msgstr "Activer les e-mail"
 
-#: admin/partials/metaboxes/metabox-email-options.php:16
-#: admin/partials/metaboxes/metabox-email-options.php:25
+#: admin/partials/metaboxes/email-options-view.php:16
+#: admin/partials/metaboxes/email-options-view.php:25
 msgid "Yes"
 msgstr "Oui"
 
-#: admin/partials/metaboxes/metabox-email-options.php:18
-#: admin/partials/metaboxes/metabox-email-options.php:27
+#: admin/partials/metaboxes/email-options-view.php:18
+#: admin/partials/metaboxes/email-options-view.php:27
 msgid "No"
 msgstr "Non"
 
-#: admin/partials/metaboxes/metabox-email-options.php:22
+#: admin/partials/metaboxes/email-options-view.php:22
 msgid "Html"
 msgstr "Html"
 
-#: admin/partials/metaboxes/metabox-email-options.php:31
+#: admin/partials/metaboxes/email-options-view.php:31
 msgid "Recipient"
 msgstr "Destinataire"
 
-#: admin/partials/metaboxes/metabox-email-options.php:34
+#: admin/partials/metaboxes/email-options-view.php:34
 msgid "From Name"
 msgstr "Nom de l'expéditeur"
 
-#: admin/partials/metaboxes/metabox-email-options.php:37
+#: admin/partials/metaboxes/email-options-view.php:37
 msgid "From Address"
 msgstr "Adresse de l'expéditeur"
 
-#: admin/partials/metaboxes/metabox-email-options.php:41
+#: admin/partials/metaboxes/email-options-view.php:41
 msgid "Headers"
 msgstr "En-têtes"
 
-#: admin/partials/metaboxes/metabox-email-options.php:44
+#: admin/partials/metaboxes/email-options-view.php:44
 msgid "Heading"
 msgstr "En-tête"
 
-#: admin/partials/metaboxes/metabox-email-options.php:47
+#: admin/partials/metaboxes/email-options-view.php:47
 msgid "Subject"
 msgstr "Sujet"
 
-#: admin/partials/metaboxes/metabox-email-options.php:51
+#: admin/partials/metaboxes/email-options-view.php:51
 msgid "Html Content"
 msgstr "Contenu Html"
 
-#: admin/partials/metaboxes/metabox-email-options.php:66
+#: admin/partials/metaboxes/email-options-view.php:66
 msgid "Plain Text Content"
 msgstr "Texte brut"
 
@@ -282,6 +286,14 @@ msgstr "Description"
 msgid "Options"
 msgstr "Options"
 
+#: includes/emails/class-wp-ng-email.php:320
+msgid "True"
+msgstr "Vrai"
+
+#: includes/emails/class-wp-ng-email.php:321
+msgid "False"
+msgstr "Faux"
+
 #: includes/wp-ng-core-functions.php:363
 msgid "Visit module site"
 msgstr "Visitez le site du module"
@@ -323,77 +335,83 @@ msgstr "Wrapper Angular pour l’envoi log sur Rollbar."
 #: includes/wp-ng-modules-descriptor.php:882
 #: includes/wp-ng-modules-descriptor.php:917
 #: includes/wp-ng-modules-descriptor.php:946
-#: includes/wp-ng-modules-descriptor.php:987
-#: includes/wp-ng-modules-descriptor.php:1028
+#: includes/wp-ng-modules-descriptor.php:975
+#: includes/wp-ng-modules-descriptor.php:1016
 #: includes/wp-ng-modules-descriptor.php:1057
-#: includes/wp-ng-modules-descriptor.php:1092
+#: includes/wp-ng-modules-descriptor.php:1086
 #: includes/wp-ng-modules-descriptor.php:1121
-#: includes/wp-ng-modules-descriptor.php:1216
+#: includes/wp-ng-modules-descriptor.php:1150
 #: includes/wp-ng-modules-descriptor.php:1245
 #: includes/wp-ng-modules-descriptor.php:1274
 #: includes/wp-ng-modules-descriptor.php:1303
-#: includes/wp-ng-modules-descriptor.php:1338
-#: includes/wp-ng-modules-descriptor.php:1373
+#: includes/wp-ng-modules-descriptor.php:1332
+#: includes/wp-ng-modules-descriptor.php:1367
 #: includes/wp-ng-modules-descriptor.php:1402
 #: includes/wp-ng-modules-descriptor.php:1431
-#: includes/wp-ng-modules-descriptor.php:1466
-#: includes/wp-ng-modules-descriptor.php:1513
-#: includes/wp-ng-modules-descriptor.php:1548
+#: includes/wp-ng-modules-descriptor.php:1460
+#: includes/wp-ng-modules-descriptor.php:1495
+#: includes/wp-ng-modules-descriptor.php:1542
 #: includes/wp-ng-modules-descriptor.php:1577
-#: includes/wp-ng-modules-descriptor.php:1613
+#: includes/wp-ng-modules-descriptor.php:1606
 #: includes/wp-ng-modules-descriptor.php:1642
 #: includes/wp-ng-modules-descriptor.php:1671
-#: includes/wp-ng-modules-descriptor.php:1714
+#: includes/wp-ng-modules-descriptor.php:1700
 #: includes/wp-ng-modules-descriptor.php:1743
-#: includes/wp-ng-modules-descriptor.php:1778
+#: includes/wp-ng-modules-descriptor.php:1772
 #: includes/wp-ng-modules-descriptor.php:1807
 #: includes/wp-ng-modules-descriptor.php:1836
 #: includes/wp-ng-modules-descriptor.php:1865
-#: includes/wp-ng-modules-descriptor.php:1900
-#: includes/wp-ng-modules-descriptor.php:1935
-#: includes/wp-ng-modules-descriptor.php:1970
+#: includes/wp-ng-modules-descriptor.php:1894
+#: includes/wp-ng-modules-descriptor.php:1929
+#: includes/wp-ng-modules-descriptor.php:1964
 #: includes/wp-ng-modules-descriptor.php:1999
 #: includes/wp-ng-modules-descriptor.php:2028
-#: includes/wp-ng-modules-descriptor.php:2063
+#: includes/wp-ng-modules-descriptor.php:2057
 #: includes/wp-ng-modules-descriptor.php:2092
-#: includes/wp-ng-modules-descriptor.php:2127
-#: includes/wp-ng-modules-descriptor.php:2190
+#: includes/wp-ng-modules-descriptor.php:2121
+#: includes/wp-ng-modules-descriptor.php:2156
 #: includes/wp-ng-modules-descriptor.php:2219
 #: includes/wp-ng-modules-descriptor.php:2248
 #: includes/wp-ng-modules-descriptor.php:2277
-#: includes/wp-ng-modules-descriptor.php:2312
-#: includes/wp-ng-modules-descriptor.php:2342
+#: includes/wp-ng-modules-descriptor.php:2306
+#: includes/wp-ng-modules-descriptor.php:2341
 #: includes/wp-ng-modules-descriptor.php:2371
-#: includes/wp-ng-modules-descriptor.php:2420
+#: includes/wp-ng-modules-descriptor.php:2400
 #: includes/wp-ng-modules-descriptor.php:2449
-#: includes/wp-ng-modules-descriptor.php:2496
-#: includes/wp-ng-modules-descriptor.php:2575
+#: includes/wp-ng-modules-descriptor.php:2478
+#: includes/wp-ng-modules-descriptor.php:2525
 #: includes/wp-ng-modules-descriptor.php:2604
 #: includes/wp-ng-modules-descriptor.php:2633
-#: includes/wp-ng-modules-descriptor.php:2669
-#: includes/wp-ng-modules-descriptor.php:2705
-#: includes/wp-ng-modules-descriptor.php:2741
+#: includes/wp-ng-modules-descriptor.php:2662
+#: includes/wp-ng-modules-descriptor.php:2698
+#: includes/wp-ng-modules-descriptor.php:2734
 #: includes/wp-ng-modules-descriptor.php:2770
-#: includes/wp-ng-modules-descriptor.php:2806
+#: includes/wp-ng-modules-descriptor.php:2799
 #: includes/wp-ng-modules-descriptor.php:2835
 #: includes/wp-ng-modules-descriptor.php:2864
-#: includes/wp-ng-modules-descriptor.php:2900
-#: includes/wp-ng-modules-descriptor.php:2936
-#: includes/wp-ng-modules-descriptor.php:2972
-#: includes/wp-ng-modules-descriptor.php:3007
-#: includes/wp-ng-modules-descriptor.php:3042
-#: includes/wp-ng-modules-descriptor.php:3077
-#: includes/wp-ng-modules-descriptor.php:3112
-#: includes/wp-ng-modules-descriptor.php:3147
-#: includes/wp-ng-modules-descriptor.php:3182
-#: includes/wp-ng-modules-descriptor.php:3229
-#: includes/wp-ng-modules-descriptor.php:3264
-#: includes/wp-ng-modules-descriptor.php:3299
+#: includes/wp-ng-modules-descriptor.php:2893
+#: includes/wp-ng-modules-descriptor.php:2929
+#: includes/wp-ng-modules-descriptor.php:2965
+#: includes/wp-ng-modules-descriptor.php:3001
+#: includes/wp-ng-modules-descriptor.php:3036
+#: includes/wp-ng-modules-descriptor.php:3071
+#: includes/wp-ng-modules-descriptor.php:3106
+#: includes/wp-ng-modules-descriptor.php:3141
+#: includes/wp-ng-modules-descriptor.php:3176
+#: includes/wp-ng-modules-descriptor.php:3211
+#: includes/wp-ng-modules-descriptor.php:3258
+#: includes/wp-ng-modules-descriptor.php:3293
 #: includes/wp-ng-modules-descriptor.php:3328
 #: includes/wp-ng-modules-descriptor.php:3357
 #: includes/wp-ng-modules-descriptor.php:3386
-#: includes/wp-ng-modules-descriptor.php:3421
-#: includes/wp-ng-modules-descriptor.php:3450 public/class-wp-ng-public.php:140
+#: includes/wp-ng-modules-descriptor.php:3415
+#: includes/wp-ng-modules-descriptor.php:3450
+#: includes/wp-ng-modules-descriptor.php:3479
+#: includes/wp-ng-modules-descriptor.php:3514
+#: includes/wp-ng-modules-descriptor.php:3543
+#: includes/wp-ng-modules-descriptor.php:3572
+#: includes/wp-ng-modules-descriptor.php:3601
+#: includes/wp-ng-modules-descriptor.php:3641 public/class-wp-ng-public.php:140
 msgid "Load on conditions."
 msgstr "Charger sur conditions."
 
@@ -411,31 +429,33 @@ msgstr ""
 #: includes/wp-ng-modules-descriptor.php:812
 #: includes/wp-ng-modules-descriptor.php:876
 #: includes/wp-ng-modules-descriptor.php:911
-#: includes/wp-ng-modules-descriptor.php:975
-#: includes/wp-ng-modules-descriptor.php:1016
-#: includes/wp-ng-modules-descriptor.php:1086
-#: includes/wp-ng-modules-descriptor.php:1332
-#: includes/wp-ng-modules-descriptor.php:1367
-#: includes/wp-ng-modules-descriptor.php:1460
-#: includes/wp-ng-modules-descriptor.php:1495
-#: includes/wp-ng-modules-descriptor.php:1542
-#: includes/wp-ng-modules-descriptor.php:1772
-#: includes/wp-ng-modules-descriptor.php:1894
-#: includes/wp-ng-modules-descriptor.php:1929
-#: includes/wp-ng-modules-descriptor.php:1964
-#: includes/wp-ng-modules-descriptor.php:2057
-#: includes/wp-ng-modules-descriptor.php:2121
-#: includes/wp-ng-modules-descriptor.php:2306
-#: includes/wp-ng-modules-descriptor.php:3001
-#: includes/wp-ng-modules-descriptor.php:3036
-#: includes/wp-ng-modules-descriptor.php:3071
-#: includes/wp-ng-modules-descriptor.php:3106
-#: includes/wp-ng-modules-descriptor.php:3141
-#: includes/wp-ng-modules-descriptor.php:3176
-#: includes/wp-ng-modules-descriptor.php:3211
-#: includes/wp-ng-modules-descriptor.php:3258
-#: includes/wp-ng-modules-descriptor.php:3293
-#: includes/wp-ng-modules-descriptor.php:3415 public/class-wp-ng-public.php:327
+#: includes/wp-ng-modules-descriptor.php:1004
+#: includes/wp-ng-modules-descriptor.php:1045
+#: includes/wp-ng-modules-descriptor.php:1115
+#: includes/wp-ng-modules-descriptor.php:1361
+#: includes/wp-ng-modules-descriptor.php:1396
+#: includes/wp-ng-modules-descriptor.php:1489
+#: includes/wp-ng-modules-descriptor.php:1524
+#: includes/wp-ng-modules-descriptor.php:1571
+#: includes/wp-ng-modules-descriptor.php:1801
+#: includes/wp-ng-modules-descriptor.php:1923
+#: includes/wp-ng-modules-descriptor.php:1958
+#: includes/wp-ng-modules-descriptor.php:1993
+#: includes/wp-ng-modules-descriptor.php:2086
+#: includes/wp-ng-modules-descriptor.php:2150
+#: includes/wp-ng-modules-descriptor.php:2335
+#: includes/wp-ng-modules-descriptor.php:3030
+#: includes/wp-ng-modules-descriptor.php:3065
+#: includes/wp-ng-modules-descriptor.php:3100
+#: includes/wp-ng-modules-descriptor.php:3135
+#: includes/wp-ng-modules-descriptor.php:3170
+#: includes/wp-ng-modules-descriptor.php:3205
+#: includes/wp-ng-modules-descriptor.php:3240
+#: includes/wp-ng-modules-descriptor.php:3287
+#: includes/wp-ng-modules-descriptor.php:3322
+#: includes/wp-ng-modules-descriptor.php:3444
+#: includes/wp-ng-modules-descriptor.php:3508
+#: includes/wp-ng-modules-descriptor.php:3630 public/class-wp-ng-public.php:327
 msgid "Load style."
 msgstr "Chargement style."
 
@@ -462,6 +482,7 @@ msgstr ""
 #: includes/wp-ng-modules-descriptor.php:205
 #: includes/wp-ng-modules-descriptor.php:490
 #: includes/wp-ng-modules-descriptor.php:555
+#: includes/wp-ng-modules-descriptor.php:3634
 msgid "No Style"
 msgstr "Pas de style"
 
@@ -623,258 +644,264 @@ msgid ""
 msgstr ""
 
 #: includes/wp-ng-modules-descriptor.php:930
-msgid "Angular is only dependency (no jQuery). 8K minified or 2K gzipped."
+msgid ""
+"This directive is for jquery-nicescroll in angular js whithout writing "
+"single line of javascript code."
 msgstr ""
 
 #: includes/wp-ng-modules-descriptor.php:959
+msgid "Angular is only dependency (no jQuery). 8K minified or 2K gzipped."
+msgstr ""
+
+#: includes/wp-ng-modules-descriptor.php:988
 msgid "Angular directive for slick jquery carousel."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:981
-#: includes/wp-ng-modules-descriptor.php:1022
+#: includes/wp-ng-modules-descriptor.php:1010
+#: includes/wp-ng-modules-descriptor.php:1051
 msgid "Load Theme style."
 msgstr "Chargement style thème."
 
-#: includes/wp-ng-modules-descriptor.php:1000
+#: includes/wp-ng-modules-descriptor.php:1029
 msgid "Angular directive for slick-carousel."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1041
+#: includes/wp-ng-modules-descriptor.php:1070
 msgid "A Grid Pinterest like responsive masonry grid system for angular."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1070
+#: includes/wp-ng-modules-descriptor.php:1099
 msgid "AngularJS directive for simple image magnification."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1105
+#: includes/wp-ng-modules-descriptor.php:1134
 msgid ""
 "ngInfiniteScroll is a directive for AngularJS to evaluate an expression when "
 "the bottom of the directive's element approaches the bottom of the browser "
 "window, which can be used to implement infinite scrolling."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1134
+#: includes/wp-ng-modules-descriptor.php:1163
 msgid ""
 "AngularJS directive for the Leaflet Javascript Library. This software aims "
 "to easily embed maps managed by Leaflet on your project."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1150
+#: includes/wp-ng-modules-descriptor.php:1179
 msgid "Load script layers."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1157
+#: includes/wp-ng-modules-descriptor.php:1186
 msgid "Load script layer google map."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1164
+#: includes/wp-ng-modules-descriptor.php:1193
 msgid "Load script awesome markers."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1171
+#: includes/wp-ng-modules-descriptor.php:1200
 msgid "Load script vector markers."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1178
+#: includes/wp-ng-modules-descriptor.php:1207
 msgid "Load style leaflet."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1184
+#: includes/wp-ng-modules-descriptor.php:1213
 msgid "Load style awesome markers."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1190
+#: includes/wp-ng-modules-descriptor.php:1219
 msgid "Load style vector markers."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1229
+#: includes/wp-ng-modules-descriptor.php:1258
 msgid "AngularJS provider to work with RESTful wordpress."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1258
+#: includes/wp-ng-modules-descriptor.php:1287
 msgid "AngularJS provider to work with woocommerce currency."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1287
+#: includes/wp-ng-modules-descriptor.php:1316
 msgid ""
 "To have simplified log levels where a supporting angular module's log levels "
 "are independent of the application."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1316
+#: includes/wp-ng-modules-descriptor.php:1345
 msgid ""
 "An AngularJS directive which slides another panel over your browser to "
 "reveal an additional interaction pane."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1351
+#: includes/wp-ng-modules-descriptor.php:1380
 msgid ""
 "The trusty password security checklist. This is a simple password strength "
 "meter & validator inspired by MailChimp's signup form."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1386
+#: includes/wp-ng-modules-descriptor.php:1415
 msgid "General-purpose validator for ngModel."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1415
+#: includes/wp-ng-modules-descriptor.php:1444
 msgid ""
 "Apply a mask on an input field so the user can only type pre-determined "
 "pattern."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1444
+#: includes/wp-ng-modules-descriptor.php:1473
 msgid "An AngularJS data grid."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1479
+#: includes/wp-ng-modules-descriptor.php:1508
 msgid "AngularJS select,search,... input."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1501
+#: includes/wp-ng-modules-descriptor.php:1530
 msgid "Load style selectize."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1507
+#: includes/wp-ng-modules-descriptor.php:1536
 msgid "Load style foundation."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1526
+#: includes/wp-ng-modules-descriptor.php:1555
 msgid "Most modern mobile touch slider for angular js."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1561
+#: includes/wp-ng-modules-descriptor.php:1590
 msgid "Angular Antimoderate CSS3 filter."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1590
+#: includes/wp-ng-modules-descriptor.php:1619
 msgid ""
 "Geonames ( http://www.geonames.org ) Based on ui-leaflet directive structure "
 "( https://github.com/angular-ui/ui-leaflet )."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1626
+#: includes/wp-ng-modules-descriptor.php:1655
 msgid "Color Utils"
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1655
+#: includes/wp-ng-modules-descriptor.php:1684
 msgid ""
 "Flexible and easy social sharing directives for Twitter, Google Plus, "
 "Facebook, Pinterest, StumbleUpon, LinkedIn, and Reddit."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1684
+#: includes/wp-ng-modules-descriptor.php:1713
 msgid ""
 "Angular Socialshare is an angularjs directive for sharing urls and content "
 "on social networks such as (facebook, google+, twitter, pinterest and so on)."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1727
+#: includes/wp-ng-modules-descriptor.php:1756
 msgid "Lightweight Angular directive to upload files."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1756
+#: includes/wp-ng-modules-descriptor.php:1785
 msgid ""
 "The idea is simple: Add a loading bar / progress bar whenever an XHR request "
 "goes out in angular."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1791
+#: includes/wp-ng-modules-descriptor.php:1820
 msgid "AngularJS module that uses SVG to create a circular progressbar."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1820
+#: includes/wp-ng-modules-descriptor.php:1849
 msgid ""
 "angular-gauge is a highly customizable gauge directive for Angular JS apps "
 "and dashboards. It provides multitude of options to customize as per your "
 "needs."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1849
+#: includes/wp-ng-modules-descriptor.php:1878
 msgid " support for AngularJS."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1878
+#: includes/wp-ng-modules-descriptor.php:1907
 msgid ""
 "Angular-xeditable is a bundle of AngularJS directives that allows you to "
 "create editable elements in your projects."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1913
+#: includes/wp-ng-modules-descriptor.php:1942
 msgid ""
 "Tags input directive for AngularJS. Check out the ngTagsInput website for "
 "more information."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1948
+#: includes/wp-ng-modules-descriptor.php:1977
 msgid ""
 "Pure javascript AngularJS directive to make elements stick when scrolling."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:1983
+#: includes/wp-ng-modules-descriptor.php:2012
 msgid "Sticky Footer."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2012
+#: includes/wp-ng-modules-descriptor.php:2041
 msgid ""
 "An attribute directive that will trigger focus on an element under specified "
 "conditions. It can also be used as a cross-browser replacement for the "
 "autofocus attribute."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2041
+#: includes/wp-ng-modules-descriptor.php:2070
 msgid ""
 "ng-input is a fork from <a href=\"https://github.com/codrops/TextInputEffects"
 "\">codrops - Text Input Effects</a>, to work with angular directives."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2076
+#: includes/wp-ng-modules-descriptor.php:2105
 msgid ""
 "Lightweight lazy load images plugin. Only 1kb after gziping. Pure "
 "JavaScript, only Angular as dependency."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2105
+#: includes/wp-ng-modules-descriptor.php:2134
 msgid "Angular Live Search."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2140
+#: includes/wp-ng-modules-descriptor.php:2169
 msgid ""
 "Videogular is an HTML5 video player for AngularJS. Videogular is a wrapper "
 "over the HTML5 video tag, so you just could add whatever you want. This "
 "provides a very powerful, but simple to use solution, for everybody."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2156
+#: includes/wp-ng-modules-descriptor.php:2185
 msgid "Load script buffering."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2163
+#: includes/wp-ng-modules-descriptor.php:2192
 msgid "Load script controls."
 msgstr "Chargement script controls."
 
-#: includes/wp-ng-modules-descriptor.php:2170
+#: includes/wp-ng-modules-descriptor.php:2199
 msgid "Load script overlay play."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2177
+#: includes/wp-ng-modules-descriptor.php:2206
 msgid "Load script poster."
 msgstr "Chargement style."
 
-#: includes/wp-ng-modules-descriptor.php:2184
+#: includes/wp-ng-modules-descriptor.php:2213
 msgid "Load style videogular."
 msgstr "Chargement style."
 
-#: includes/wp-ng-modules-descriptor.php:2203
+#: includes/wp-ng-modules-descriptor.php:2232
 msgid "Videogular youtube plugin."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2232
+#: includes/wp-ng-modules-descriptor.php:2261
 msgid "Videogular vimeo plugin."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2261
+#: includes/wp-ng-modules-descriptor.php:2290
 msgid ""
 "Satellizer is a simple to use, end-to-end, token-based authentication module "
 "for AngularJS with built-in support for Google, Facebook, LinkedIn, Twitter, "
@@ -882,7 +909,7 @@ msgid ""
 "providers, as well as Email and Password sign-in."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2290
+#: includes/wp-ng-modules-descriptor.php:2319
 msgid ""
 "A set of flat and 3D progress button styles where the button itself serves "
 "as a progress indicator. 3D styles are used for showing the progress "
@@ -890,14 +917,14 @@ msgid ""
 "perspective."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2325
+#: includes/wp-ng-modules-descriptor.php:2354
 msgid ""
 "This is a simple library written as a module for AngularJS for sorting "
 "elements in the UI. It supports both single elements list, and multiple "
 "connected lists, where an element can be moved from one to another."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2326
+#: includes/wp-ng-modules-descriptor.php:2355
 msgid ""
 "This library requires no dependencies whatsoever (except angular.js of "
 "course), so you no longer need to include jQuery and jQueryUI and angularUI "
@@ -905,76 +932,76 @@ msgid ""
 "angular-sortable-view is only ***5kB minified!***."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2355
 #: includes/wp-ng-modules-descriptor.php:2384
+#: includes/wp-ng-modules-descriptor.php:2413
 msgid "Insert the icons in 30 seconds using the new Icon Sets technology."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2402
+#: includes/wp-ng-modules-descriptor.php:2431
 msgid "Select svg file"
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2407
+#: includes/wp-ng-modules-descriptor.php:2436
 msgid "Load SVG Spinners."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2413
+#: includes/wp-ng-modules-descriptor.php:2442
 msgid "Enter the alias"
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2433
+#: includes/wp-ng-modules-descriptor.php:2462
 msgid ""
 "Angular Directive Modal Wrapper for \"Bootstrap\", \"Foundation\" and "
 "\"ngDialog\"."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2462
+#: includes/wp-ng-modules-descriptor.php:2491
 msgid "Angular module to manage file gallery and upload file with crop."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2478
+#: includes/wp-ng-modules-descriptor.php:2507
 msgid "Load dialog style."
 msgstr "Chargement style."
 
-#: includes/wp-ng-modules-descriptor.php:2484
+#: includes/wp-ng-modules-descriptor.php:2513
 msgid "Load select style."
 msgstr "Sélectionner le style."
 
-#: includes/wp-ng-modules-descriptor.php:2490
+#: includes/wp-ng-modules-descriptor.php:2519
 msgid "Load Foundation style."
 msgstr "Charger le style de Foundation."
 
-#: includes/wp-ng-modules-descriptor.php:2509
+#: includes/wp-ng-modules-descriptor.php:2538
 #, fuzzy
 #| msgid "Angular wrapper for sending log to Rollbar."
 msgid "Angular wrapper for Unitegallery and Galleria."
 msgstr "Wrapper Angular pour l’envoi log sur Rollbar."
 
-#: includes/wp-ng-modules-descriptor.php:2525
+#: includes/wp-ng-modules-descriptor.php:2554
 msgid "Load unitegallery plugin."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2532
+#: includes/wp-ng-modules-descriptor.php:2561
 msgid "Load galleria plugin."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2539
+#: includes/wp-ng-modules-descriptor.php:2568
 msgid "Add the admin media gallery in create gallery."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2549
+#: includes/wp-ng-modules-descriptor.php:2578
 msgid "Load themes Unite Gallery."
 msgstr "Charger les thèmes de UniteGallery."
 
-#: includes/wp-ng-modules-descriptor.php:2565
+#: includes/wp-ng-modules-descriptor.php:2594
 msgid "Load themes Galleria."
 msgstr "Charger les thèmes de Galleria."
 
-#: includes/wp-ng-modules-descriptor.php:2588
+#: includes/wp-ng-modules-descriptor.php:2617
 msgid "AngularJS wrapper for galleria."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2617
+#: includes/wp-ng-modules-descriptor.php:2646
 msgid ""
 "apiNG is an AngularJS module that enables you to receive and display data "
 "from one or more sources. The data can be aggregated, limited and ordered. "
@@ -982,94 +1009,94 @@ msgid ""
 "html."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2646
+#: includes/wp-ng-modules-descriptor.php:2675
 msgid "apiNG-plugin-instagram is a Instagram REST API plugin for apiNG."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2662
-#: includes/wp-ng-modules-descriptor.php:2698
-#: includes/wp-ng-modules-descriptor.php:2893
+#: includes/wp-ng-modules-descriptor.php:2691
+#: includes/wp-ng-modules-descriptor.php:2727
+#: includes/wp-ng-modules-descriptor.php:2922
 #: includes/wp-ng-settings-descriptor.php:213
 msgid "Access Token"
 msgstr "Jeton d'accès"
 
-#: includes/wp-ng-modules-descriptor.php:2682
+#: includes/wp-ng-modules-descriptor.php:2711
 msgid "apiNG-plugin-facebook is a Facebook Graph API plugin for apiNG."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2718
+#: includes/wp-ng-modules-descriptor.php:2747
 msgid "apiNG-plugin-codebird is a Twitter REST API plugin for apiNG."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2734
+#: includes/wp-ng-modules-descriptor.php:2763
 msgid "Bearer Token"
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2754
+#: includes/wp-ng-modules-descriptor.php:2783
 msgid "apiNG-plugin-flickr is a Flickr API plugin for apiNG."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2783
+#: includes/wp-ng-modules-descriptor.php:2812
 msgid "apiNG-plugin-tumblr is a Tumblr API plugin for apiNG."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2799
-#: includes/wp-ng-modules-descriptor.php:2929
-#: includes/wp-ng-modules-descriptor.php:2965
+#: includes/wp-ng-modules-descriptor.php:2828
+#: includes/wp-ng-modules-descriptor.php:2958
+#: includes/wp-ng-modules-descriptor.php:2994
 msgid "Api Key"
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2819
+#: includes/wp-ng-modules-descriptor.php:2848
 msgid "apiNG-plugin-wikipedia is a wikipedia API plugin for apiNG."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2848
+#: includes/wp-ng-modules-descriptor.php:2877
 msgid "apiNG-plugin-dailymotion is a Dailymotion Data API plugin for apiNG."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2877
+#: includes/wp-ng-modules-descriptor.php:2906
 msgid "apiNG-plugin-vimeo is a Vimeo Data API plugin for apiNG."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2913
+#: includes/wp-ng-modules-descriptor.php:2942
 msgid "apiNG-plugin-youtube is a Youtube Data API v3 plugin for apiNG."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2949
+#: includes/wp-ng-modules-descriptor.php:2978
 msgid "apiNG-plugin-openweathermap is a OpenWeatherMap API plugin for apiNG."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:2985
+#: includes/wp-ng-modules-descriptor.php:3014
 msgid ""
 "!!!!! Not compatible with \"angular-foundation-6\". AngularJS directives "
 "allow you to create buttons with a nice ripple effect and \"busy\" "
 "indicator. Inspired by Google material design."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:3020
+#: includes/wp-ng-modules-descriptor.php:3049
 msgid "Simple, flexible and beautiful modal dialogs in AngularJS."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:3055
+#: includes/wp-ng-modules-descriptor.php:3084
 msgid ""
 "- Allows for a nested structure<br>- Works with (or without) ng-repeat<br>- "
 "Allows multiple sections to be open at once"
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:3090
+#: includes/wp-ng-modules-descriptor.php:3119
 msgid ""
 "Dynamic, flexible and accessible AngularJS tabs.<br>- Easy to use and "
 "customize<br>- Keyboard accessible<br>- Works with (or without) ng-repeat"
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:3125
+#: includes/wp-ng-modules-descriptor.php:3154
 msgid ""
 "User-friendly text fields in AngularJS. You can use vTextfild to show (hide) "
 "validation messages, error/success input indicators, or interactive Float "
 "Labels. It basically adds classes to the v-textfield directive."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:3160
+#: includes/wp-ng-modules-descriptor.php:3189
 msgid ""
 "ng-sweet-alert is an directive for sweet alert [sweetalert]. Integration of "
 "sweet alert becomes very easy with angular js.<br>There is no need to write "
@@ -1077,49 +1104,72 @@ msgid ""
 "sweetalert."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:3195
+#: includes/wp-ng-modules-descriptor.php:3224
 msgid "https://github.com/emalikterzi/angular-owl-carousel-2."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:3217
+#: includes/wp-ng-modules-descriptor.php:3246
 msgid "Load Theme Default style."
 msgstr "Charger le style de thème par défaut."
 
-#: includes/wp-ng-modules-descriptor.php:3223
+#: includes/wp-ng-modules-descriptor.php:3252
 msgid "Load Theme Green style."
 msgstr "Charger le style Vert."
 
-#: includes/wp-ng-modules-descriptor.php:3242
+#: includes/wp-ng-modules-descriptor.php:3271
 msgid "AngularJS Wrapper directive for PhotoSwipe."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:3277
+#: includes/wp-ng-modules-descriptor.php:3306
 msgid ""
 "A simple Angular.js directive to create \"Back to top\" button when user "
 "reaches the end of the page."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:3312
+#: includes/wp-ng-modules-descriptor.php:3341
 msgid "Angular Location Search directive."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:3341
+#: includes/wp-ng-modules-descriptor.php:3370
 msgid "Angular Directive to Paginate Anything."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:3370
+#: includes/wp-ng-modules-descriptor.php:3399
 msgid ""
 "Angular directive for getting and displaying image dimensions in the view."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:3399
+#: includes/wp-ng-modules-descriptor.php:3428
 msgid "An implementation of gridster-like widgets for Angular JS."
 msgstr ""
 
-#: includes/wp-ng-modules-descriptor.php:3434
+#: includes/wp-ng-modules-descriptor.php:3463
 msgid ""
 "Lightweight and highly performant AngularJS directive for parallax "
 "scrolling. Script is just 1.6K and about 40K gzipped with dependencies."
+msgstr ""
+
+#: includes/wp-ng-modules-descriptor.php:3492
+msgid "Angular drag&drop based on dragula."
+msgstr ""
+
+#: includes/wp-ng-modules-descriptor.php:3527
+msgid "AngularJS directive for vertical slide down animation."
+msgstr ""
+
+#: includes/wp-ng-modules-descriptor.php:3556
+msgid ""
+"An AngularJS directive to vertically equalize a group of elements with "
+"varying heights. In other words, it dynamically makes a group of elements "
+"the same height."
+msgstr ""
+
+#: includes/wp-ng-modules-descriptor.php:3585
+msgid "ng-ScrollSpy is an AngularJS module for navigation highlighting."
+msgstr ""
+
+#: includes/wp-ng-modules-descriptor.php:3614
+msgid "An angular directive to use flatpickr."
 msgstr ""
 
 #: includes/wp-ng-settings-descriptor.php:21
@@ -1406,13 +1456,16 @@ msgstr ""
 msgid "Cookie nonce is invalid"
 msgstr "Le nonce du cookie n’est pas valide"
 
-#: public/includes/shortcodes/class-wp-ng-shortcodes-form.php:553
+#: public/includes/shortcodes/class-wp-ng-shortcodes-form.php:540
 msgid "Add to Gallery"
 msgstr "Ajouter à la gallerie"
 
-#: wp-ng.php:61
+#: wp-ng.php:63
 msgid "WP NG require minimum wp version: "
 msgstr "WP NG nécessitent la version minimale de wp :"
+
+#~ msgid "true"
+#~ msgstr "Vrai"
 
 #~ msgid "Cloak the document. More info see"
 #~ msgstr "Masque le document. Plus d’informations, consultez"

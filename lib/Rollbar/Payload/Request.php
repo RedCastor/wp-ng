@@ -26,7 +26,6 @@ class Request implements \JsonSerializable
 
     public function setUrl($url)
     {
-        $this->utilities->validateString($url, "url");
         $this->url = $url;
         return $this;
     }
@@ -38,7 +37,6 @@ class Request implements \JsonSerializable
 
     public function setMethod($method)
     {
-        $this->utilities->validateString($method, "method");
         $this->method = $method;
         return $this;
     }
@@ -83,7 +81,6 @@ class Request implements \JsonSerializable
 
     public function setQueryString($queryString)
     {
-        $this->utilities->validateString($queryString, "queryString");
         $this->queryString = $queryString;
         return $this;
     }
@@ -106,7 +103,6 @@ class Request implements \JsonSerializable
 
     public function setBody($body)
     {
-        $this->utilities->validateString($body, "body");
         $this->body = $body;
         return $this;
     }
@@ -118,33 +114,41 @@ class Request implements \JsonSerializable
 
     public function setUserIp($userIp)
     {
-        $this->utilities->validateString($userIp, "userIp");
         $this->userIp = $userIp;
         return $this;
     }
 
-    public function __get($key)
+    public function getExtras()
     {
-        return isset($this->extra[$key]) ? $this->extra[$key] : null;
+        return $this->extra;
     }
 
-    public function __set($key, $val)
+    public function setExtras($extras)
     {
-        $this->extra[$key] = $val;
+        $this->extra = $extras;
+    }
+
+    public function setSession($session)
+    {
+        $this->extra['session'] = $session;
     }
 
     public function jsonSerialize()
     {
-        $result = get_object_vars($this);
-        unset($result['extra']);
-        unset($result['utilities']);
+        $result = array(
+            "url" => $this->url,
+            "method" => $this->method,
+            "headers" => $this->headers,
+            "params" => $this->params,
+            "GET" => $this->get,
+            "query_string" => $this->queryString,
+            "POST" => $this->post,
+            "body" => $this->body,
+            "user_ip" => $this->userIp,
+        );
         foreach ($this->extra as $key => $val) {
             $result[$key] = $val;
         }
-        $overrideNames = array(
-            "get" => "GET",
-            "post" => "POST"
-        );
-        return $this->utilities->serializeForRollbar($result, $overrideNames, array_keys($this->extra));
+        return $this->utilities->serializeForRollbar($result, array_keys($this->extra));
     }
 }

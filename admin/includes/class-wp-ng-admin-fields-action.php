@@ -27,9 +27,10 @@ class Wp_Ng_Admin_Fields_Action {
    *
    * @param $new_value
    * @param $old_value
+   * @param $option
    * @return mixed
    */
-  static public function purge_cache ( $new_value = 'on', $old_value = 'off' ) {
+  static public function purge_cache ( $new_value = 'on', $old_value = 'off', $option = '' ) {
 
     $cache_dir = Wp_Ng_Cache::cache_dir( WP_NG_PLUGIN_NAME );
 
@@ -47,7 +48,32 @@ class Wp_Ng_Admin_Fields_Action {
   }
 
 
-  static public function rollbar_check  ( $new_value = '', $old_value = '' ) {
+  /**
+   * Clean Wp Cache
+   *
+   * @param $new_value
+   * @param $old_value
+   * @param $option
+   * @return mixed
+   */
+  static public function clean_wp_cache ( $new_value = '', $old_value = '', $option = '' ) {
+
+    wp_ng_cache_clean();
+
+    return $new_value;
+  }
+
+
+  /**
+   * Rollbar check connection
+   *
+   * @param string $new_value
+   * @param string $old_value
+   * @param string $option
+   *
+   * @return string
+   */
+  static public function rollbar_check  ( $new_value = '', $old_value = '', $option = '' ) {
 
     if ($new_value['enable'] === 'on') {
 

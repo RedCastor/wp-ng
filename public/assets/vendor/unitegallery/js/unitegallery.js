@@ -45,6 +45,8 @@ function UGFunctions() {
         dataCache: {},
         lastEventType: "",
         lastEventTime: 0,
+        lastTouchStartElement: null,
+        touchThreshold: 700,
         handle: null
     };
     this.debugVar = "";
@@ -1041,6 +1043,7 @@ function UGFunctions() {
         element.off("touchstart");
         element.off("touchend");
         element.off("mousedown");
+        element.off("tap");
     };
     this.setButtonOnClick = function(objButton, onClickFunction) {
         t.setButtonMobileReady(objButton);
@@ -1051,6 +1054,31 @@ function UGFunctions() {
             if (t.validateClickTouchstartEvent(event.type) == false) return true;
             onClickFunction(objThis, event);
         });
+    };
+    this.setButtonOnTap = function(objButton, onClickFunction) {
+        objButton.on("tap", onClickFunction);
+        if (t.isTouchDevice() == false) {
+            objButton.on("click", function(event) {
+                var objElement = jQuery(this);
+                if (t.validateClickTouchstartEvent(event.type) == false) return true;
+                objElement.trigger("tap");
+            });
+        } else {
+            objButton.on("touchstart", function(event) {
+                var objElement = jQuery(this);
+                objElement.addClass("ug-nohover");
+                g_temp.lastTouchStartElement = jQuery(this);
+                g_temp.lastEventTime = jQuery.now();
+            });
+            objButton.on("touchend", function(event) {
+                var objElement = jQuery(this);
+                if (objElement.is(g_temp.lastTouchStartElement) == false) return true;
+                if (!g_temp.lastEventTime) return true;
+                var timePassed = jQuery.now() - g_temp.lastEventTime;
+                if (timePassed > g_temp.touchThreshold) return true;
+                objElement.trigger("tap");
+            });
+        }
     };
     this.loadJs = function(url, addProtocol) {
         if (addProtocol === true) url = location.protocol + "//" + url;
@@ -1625,6 +1653,12 @@ function UGThumbsGeneral() {
     var g_functions = new UGFunctions();
     var g_strip;
     var outer_options;
+    this.type = {
+        GET_THUMBS_ALL: "all",
+        GET_THUMBS_RATIO: "ratio",
+        GET_THUMBS_NO_RATIO: "no_ratio",
+        GET_THUMBS_NEW: "new"
+    };
     this.events = {
         SETOVERSTYLE: "thumbmouseover",
         SETNORMALSTYLE: "thumbmouseout",
@@ -1670,7 +1704,8 @@ function UGThumbsGeneral() {
         isEffectImage: false,
         colorOverlayOpacity: 1,
         thumbInnerReduce: 0,
-        allowOnResize: true
+        allowOnResize: true,
+        classNewThumb: "ug-new-thumb"
     };
     var g_serviceParams = {
         timeout_thumb_check: 100,
@@ -1689,53 +1724,67 @@ function UGThumbsGeneral() {
         g_temp.isEffectImage = g_options.thumb_image_overlay_effect;
     };
     this._____________EXTERNAL_SETTERS__________ = function() {};
-    this.setHtmlThumbs = function(objParent) {
+    function appendHtmlThumbFromItem(itemIndex, imageEffectClass) {
+        var objItem = g_arrItems[itemIndex];
+        var classAddition = "";
+        if (g_temp.customThumbs == false) classAddition = " ug-thumb-generated";
+        var zIndex = objItem.index + 1;
+        var thumbStyle = "style='z-index:" + zIndex + ";'";
+        var htmlThumb = "<div class='ug-thumb-wrapper" + classAddition + "' " + thumbStyle + "></div>";
+        if (g_options.thumb_wrapper_as_link == true) {
+            var urlLink = objItem.link;
+            if (objItem.link == "") urlLink = "javascript:void(0)";
+            var linkTarget = "";
+            if (g_options.thumb_link_newpage == true && objItem.link) linkTarget = " target='_blank'";
+            var htmlThumb = "<a href='" + urlLink + "'" + linkTarget + " class='ug-thumb-wrapper" + classAddition + "'></a>";
+        }
+        var objThumbWrapper = jQuery(htmlThumb);
+        var objImage = objItem.objThumbImage;
+        if (g_temp.customThumbs == false) {
+            if (g_options.thumb_show_loader == true && objImage) {
+                var loaderClass = "ug-thumb-loader-dark";
+                if (g_options.thumb_loader_type == "bright") loaderClass = "ug-thumb-loader-bright";
+                objThumbWrapper.append("<div class='ug-thumb-loader " + loaderClass + "'></div>");
+                objThumbWrapper.append("<div class='ug-thumb-error' style='display:none'></div>");
+            }
+            if (objImage) {
+                objImage.addClass("ug-thumb-image");
+                if (g_options.thumb_image_overlay_effect == true) {
+                    var objImageOverlay = objImage.clone().appendTo(objThumbWrapper);
+                    objImageOverlay.addClass("ug-thumb-image-overlay " + imageEffectClass).removeClass("ug-thumb-image");
+                    objImageOverlay.fadeTo(0, 0);
+                    objItem.objImageOverlay = objImageOverlay;
+                }
+                objThumbWrapper.append(objImage);
+            }
+        }
+        if (g_temp.isEffectBorder) objThumbWrapper.append("<div class='ug-thumb-border-overlay'></div>");
+        if (g_temp.isEffectOverlay) objThumbWrapper.append("<div class='ug-thumb-overlay'></div>");
+        g_objParent.append(objThumbWrapper);
+        if (g_temp.customThumbs) {
+            g_temp.funcSetCustomThumbHtml(objThumbWrapper, objItem);
+        }
+        g_arrItems[itemIndex].objThumbWrapper = objThumbWrapper;
+        return objThumbWrapper;
+    }
+    this.setHtmlThumbs = function(objParent, isAppend) {
         g_objParent = objParent;
-        var numItems = g_gallery.getNumItems();
         if (g_temp.isEffectImage == true) {
             var imageEffectClass = getImageEffectsClass();
         }
-        for (var i = 0; i < numItems; i++) {
-            var objItem = g_arrItems[i];
-            var classAddition = "";
-            if (g_temp.customThumbs == false) classAddition = " ug-thumb-generated";
-            var zIndex = objItem.index + 1;
-            var thumbStyle = "style='z-index:" + zIndex + ";'";
-            var htmlThumb = "<div class='ug-thumb-wrapper" + classAddition + "' " + thumbStyle + "></div>";
-            if (g_options.thumb_wrapper_as_link == true) {
-                var urlLink = objItem.link;
-                if (objItem.link == "") urlLink = "javascript:void(0)";
-                var linkTarget = "";
-                if (g_options.thumb_link_newpage == true && objItem.link) linkTarget = " target='_blank'";
-                var htmlThumb = "<a href='" + urlLink + "'" + linkTarget + " class='ug-thumb-wrapper" + classAddition + "'></a>";
+        if (isAppend !== true) {
+            var numItems = g_gallery.getNumItems();
+            for (var i = 0; i < numItems; i++) {
+                appendHtmlThumbFromItem(i, imageEffectClass);
             }
-            var objThumbWrapper = jQuery(htmlThumb);
-            var objImage = objItem.objThumbImage;
-            if (g_temp.customThumbs == false) {
-                if (g_options.thumb_show_loader == true && objImage) {
-                    var loaderClass = "ug-thumb-loader-dark";
-                    if (g_options.thumb_loader_type == "bright") loaderClass = "ug-thumb-loader-bright";
-                    objThumbWrapper.append("<div class='ug-thumb-loader " + loaderClass + "'></div>");
-                    objThumbWrapper.append("<div class='ug-thumb-error' style='display:none'></div>");
-                }
-                if (objImage) {
-                    objImage.addClass("ug-thumb-image");
-                    if (g_options.thumb_image_overlay_effect == true) {
-                        var objImageOverlay = objImage.clone().appendTo(objThumbWrapper);
-                        objImageOverlay.addClass("ug-thumb-image-overlay " + imageEffectClass).removeClass("ug-thumb-image");
-                        objImageOverlay.fadeTo(0, 0);
-                        objItem.objImageOverlay = objImageOverlay;
-                    }
-                    objThumbWrapper.append(objImage);
-                }
-            }
-            if (g_temp.isEffectBorder) objThumbWrapper.append("<div class='ug-thumb-border-overlay'></div>");
-            if (g_temp.isEffectOverlay) objThumbWrapper.append("<div class='ug-thumb-overlay'></div>");
-            g_objParent.append(objThumbWrapper);
-            if (g_temp.customThumbs) {
-                g_temp.funcSetCustomThumbHtml(objThumbWrapper, objItem);
-            }
-            g_arrItems[i].objThumbWrapper = objThumbWrapper;
+        } else {
+            var objThumbs = t.getThumbs();
+            objThumbs.removeClass(g_temp.classNewThumb);
+            var arrNewIndexes = g_gallery.getNewAddedItemsIndexes();
+            jQuery.each(arrNewIndexes, function(i, itemIndex) {
+                var objThumbWrapper = appendHtmlThumbFromItem(itemIndex, imageEffectClass);
+                objThumbWrapper.addClass(g_temp.classNewThumb);
+            });
         }
     };
     function _______________SETTERS______________() {}
@@ -1751,7 +1800,7 @@ function UGThumbsGeneral() {
         var selectorsString = ".ug-thumb-loader, .ug-thumb-error, .ug-thumb-border-overlay, .ug-thumb-overlay";
         if (objThumb) {
             if (innerOnly !== true) objThumb.css(objCss);
-            objThumb.children(selectorsString).css(objCssInner);
+            objThumb.find(selectorsString).css(objCssInner);
         } else {
             g_objParent.children(".ug-thumb-wrapper").css(objCss);
             g_objParent.find(selectorsString).css(objCssInner);
@@ -1842,12 +1891,17 @@ function UGThumbsGeneral() {
         objThumb.children(".ug-thumb-loader").hide();
         objThumb.children(".ug-thumb-error").show();
     }
-    function setThumbsBorderRadius() {
+    function setThumbsBorderRadius(objThumbs) {
         if (g_options.thumb_round_corners_radius <= 0) return false;
         var objCss = {
             "border-radius": g_options.thumb_round_corners_radius + "px"
         };
-        g_objParent.find(".ug-thumb-wrapper, .ug-thumb-wrapper .ug-thumb-border-overlay").css(objCss);
+        if (objThumbs) {
+            objThumbs.css(objCss);
+            objThumbs.find(".ug-thumb-border-overlay").css(objCss);
+        } else {
+            g_objParent.find(".ug-thumb-wrapper, .ug-thumb-wrapper .ug-thumb-border-overlay").css(objCss);
+        }
     }
     function animateThumb(objThumb, objThumbCss) {
         objThumb.stop(true).animate(objThumbCss, {
@@ -1962,14 +2016,16 @@ function UGThumbsGeneral() {
         objItem.thumbHeight = objSize.height;
         objItem.thumbRatioByWidth = objSize.width / objSize.height;
         objItem.thumbRatioByHeight = objSize.height / objSize.width;
+        objThumb.addClass("ug-thumb-ratio-set");
     }
-    this.setHtmlProperties = function() {
+    this.setHtmlProperties = function(objThumbs) {
+        if (!objThumbs) var objThumbs = t.getThumbs();
         if (g_temp.customThumbs == false) {
             var objThumbCss = {};
-            if (g_options.thumb_fixed_size == true) setThumbSize(g_options.thumb_width, g_options.thumb_height);
-            setThumbsBorderRadius();
+            if (g_options.thumb_fixed_size == true) setThumbSize(g_options.thumb_width, g_options.thumb_height, objThumbs);
+            setThumbsBorderRadius(objThumbs);
         }
-        g_objParent.children(".ug-thumb-wrapper").each(function() {
+        objThumbs.each(function() {
             var objThumb = jQuery(this);
             redrawThumbStyle(objThumb);
         });
@@ -1983,7 +2039,7 @@ function UGThumbsGeneral() {
                     objCss["background-color"] = g_options.thumb_overlay_color;
                     g_temp.colorOverlayOpacity = g_options.thumb_overlay_opacity;
                 }
-                g_objParent.find(".ug-thumb-wrapper .ug-thumb-overlay").css(objCss);
+                objThumbs.find(".ug-thumb-overlay").css(objCss);
             }
         }
     };
@@ -2032,8 +2088,28 @@ function UGThumbsGeneral() {
         var objThumb = jQuery(objThumbs[index]);
         return objThumb;
     };
-    this.getThumbs = function() {
-        return g_objParent.children(".ug-thumb-wrapper");
+    this.getThumbs = function(mode) {
+        var thumbClass = ".ug-thumb-wrapper";
+        var classRatio = ".ug-thumb-ratio-set";
+        switch (mode) {
+          default:
+          case t.type.GET_THUMBS_ALL:
+            var objThumbs = g_objParent.children(thumbClass);
+            break;
+
+          case t.type.GET_THUMBS_NO_RATIO:
+            var objThumbs = g_objParent.children(thumbClass).not(classRatio);
+            break;
+
+          case t.type.GET_THUMBS_RATIO:
+            var objThumbs = g_objParent.children(thumbClass + classRatio);
+            break;
+
+          case t.type.GET_THUMBS_NEW:
+            var objThumbs = g_objParent.children("." + g_temp.classNewThumb);
+            break;
+        }
+        return objThumbs;
     };
     this.getItemByThumb = function(objThumb) {
         var index = objThumb.data("index");
@@ -2054,27 +2130,28 @@ function UGThumbsGeneral() {
     };
     this._____________EXTERNAL_OTHERS__________ = function() {};
     this.initEvents = function() {
-        var objThumbs = g_objParent.find(".ug-thumb-wrapper");
-        objThumbs.on("touchstart", function() {
-            g_temp.touchEnabled = true;
-            objThumbs.off("mouseenter").off("mouseleave");
-        });
+        var selectorThumb = ".ug-thumb-wrapper";
         if (g_temp.allowOnResize == true) g_objWrapper.on(g_serviceParams.eventSizeChange, onThumbSizeChange);
-        objThumbs.hover(function(event) {
+        g_objThis.on(t.events.THUMB_IMAGE_LOADED, onThumbImageLoaded);
+        g_objParent.on("touchstart", selectorThumb, function() {
+            g_temp.touchEnabled = true;
+            g_objParent.off("mouseenter").off("mouseleave");
+        });
+        g_objParent.on("mouseenter", selectorThumb, function(event) {
             var objThumb = jQuery(this);
             onMouseOver(objThumb);
-        }, function(event) {
+        });
+        g_objParent.on("mouseleave", selectorThumb, function(event) {
             var objThumb = jQuery(this);
             onMouseOut(objThumb);
         });
-        g_objThis.on(t.events.THUMB_IMAGE_LOADED, onThumbImageLoaded);
     };
     this.destroy = function() {
-        var objThumbs = g_objParent.find(".ug-thumb-wrapper");
-        objThumbs.off("touchstart");
+        var selectorThumb = ".ug-thumb-wrapper";
+        g_objParent.off("touchstart", selectorThumb);
         g_objWrapper.off(g_serviceParams.eventSizeChange);
-        objThumbs.off("mouseenter");
-        objThumbs.off("mouseleave");
+        g_objParent.off("mouseenter", selectorThumb);
+        g_objParent.off("mouseleave", selectorThumb);
         g_objThis.off(t.events.THUMB_IMAGE_LOADED);
     };
     this.loadThumbsImages = function() {
@@ -4702,11 +4779,11 @@ function UGTiles() {
         ALL_TILES_LOADED: "all_tiles_loaded"
     };
     var g_temp = {
-        isFixedMode: false,
         isFirstTimeRun: true,
         handle: null,
         isTransActive: false,
         isTransInited: false,
+        isFirstPlaced: true,
         isAllLoaded: false
     };
     var g_nestedWork = {
@@ -4740,7 +4817,9 @@ function UGTiles() {
         }
     }
     function setHtml(objParent) {
-        if (!objParent) var objParent = g_objWrapper;
+        if (!objParent) {
+            if (g_objParent) objParent = g_objParent; else var objParent = g_objWrapper;
+        }
         g_objParent = objParent;
         var tilesType = g_options.tiles_type;
         objParent.addClass("ug-tiletype-" + tilesType);
@@ -4837,12 +4916,14 @@ function UGTiles() {
             g_vars.addX = g_vars.galleryWidth - g_vars.totalWidth;
             break;
         }
-        g_vars.maxColHeight = 0;
         g_vars.arrPosx = [];
         for (col = 0; col < g_vars.numCols; col++) {
             var colX = g_functions.getColX(col, g_vars.colWidth, g_vars.colGap);
             g_vars.arrPosx[col] = colX + g_vars.addX;
         }
+    }
+    function initColHeights() {
+        g_vars.maxColHeight = 0;
         g_vars.colHeights = [ 0 ];
     }
     function getTilesMinCol() {
@@ -4861,7 +4942,7 @@ function UGTiles() {
         if (numCol === null || typeof numCol == "undefined") var numCol = getTilesMinCol();
         var posy = 0;
         if (g_vars.colHeights[numCol] !== undefined) posy = g_vars.colHeights[numCol];
-        var itemHeight = g_objTileDesign.getTileHeightByWidth(g_vars.colWidth, objTile, "placeTile");
+        var itemHeight = g_objTileDesign.getTileHeightByWidth(g_vars.colWidth, objTile);
         if (itemHeight === null) {
             if (g_options.tiles_enable_transition == true) throw new Error("Can't know tile height, please turn off transition");
             var itemSize = g_functions.getElementSize(objTile);
@@ -4880,9 +4961,10 @@ function UGTiles() {
     function placeTiles(toShow) {
         if (!toShow) toShow = false;
         fillTilesVars();
-        var objThumbs = g_thumbs.getThumbs();
+        initColHeights();
+        var objThumbs = g_thumbs.getThumbs(g_thumbs.type.GET_THUMBS_RATIO);
         doBeforeTransition();
-        g_objTileDesign.resizeAllTiles(g_vars.colWidth, g_objTileDesign.resizemode.VISIBLE_ELEMENTS);
+        g_objTileDesign.resizeAllTiles(g_vars.colWidth, g_objTileDesign.resizemode.VISIBLE_ELEMENTS, objThumbs);
         for (var index = 0; index < objThumbs.length; index++) {
             var objTile = jQuery(objThumbs[index]);
             var col = undefined;
@@ -4937,48 +5019,41 @@ function UGTiles() {
         }
     }
     function runColumnsType() {
-        var objThumbs = g_thumbs.getThumbs();
+        var objThumbs = g_thumbs.getThumbs(g_thumbs.type.GET_THUMBS_NO_RATIO);
+        if (!objThumbs || objThumbs.length == 0) return false;
         g_temp.isAllLoaded = false;
-        fillTilesVars();
-        var diffWidth = Math.abs(g_vars.galleryWidth - g_vars.totalWidth);
-        if (g_options.tiles_set_initial_height == true && g_functions.isScrollbarExists() == false && diffWidth < 25) {
-            var numThumbs = objThumbs.length;
-            var numRows = Math.ceil(objThumbs.length / g_vars.numCols);
-            var estimateHeight = numRows * g_options.tiles_col_width * .75;
-            g_objParent.height(estimateHeight);
+        if (g_temp.isFirstPlaced == true) {
             fillTilesVars();
+            initColHeights();
+            var diffWidth = Math.abs(g_vars.galleryWidth - g_vars.totalWidth);
+            if (g_options.tiles_set_initial_height == true && g_functions.isScrollbarExists() == false && diffWidth < 25) {
+                var numThumbs = objThumbs.length;
+                var numRows = Math.ceil(objThumbs.length / g_vars.numCols);
+                var estimateHeight = numRows * g_options.tiles_col_width * .75;
+                g_objParent.height(estimateHeight);
+                fillTilesVars();
+            }
         }
         objThumbs.fadeTo(0, 0);
-        var objImages = jQuery(g_objParent).find("img.ug-thumb-image");
-        if (g_temp.isFixedMode == true) {
-            g_objThis.trigger(t.events.TILES_FIRST_PLACED);
-            placeTiles(true);
-            g_functions.checkImagesLoaded(objImages, function() {
-                setTransition();
-                g_objThis.trigger(t.events.ALL_TILES_LOADED);
-            });
-        } else {
-            var initNumCols = g_vars.numCols;
-            var initWidth = g_vars.galleryWidth;
-            var isFirstPlace = false;
-            g_functions.checkImagesLoaded(objImages, function() {
-                fillTilesVars();
-                if (initNumCols != g_vars.numCols || initWidth != g_vars.galleryWidth) {
-                    placeTiles(false);
-                }
-                setTransition();
-                g_objThis.trigger(t.events.ALL_TILES_LOADED);
-            }, function(objImage, isError) {
-                if (isFirstPlace == false) g_objThis.trigger(t.events.TILES_FIRST_PLACED);
-                isFirstPlace = true;
-                onSingleImageLoad(objImage, isError);
-            });
-        }
+        var objImages = objThumbs.find("img.ug-thumb-image");
+        var initNumCols = g_vars.numCols;
+        var initWidth = g_vars.galleryWidth;
+        g_functions.checkImagesLoaded(objImages, function() {
+            fillTilesVars();
+            if (initNumCols != g_vars.numCols || initWidth != g_vars.galleryWidth) {
+                placeTiles(false);
+            }
+            setTransition();
+            g_objThis.trigger(t.events.ALL_TILES_LOADED);
+        }, function(objImage, isError) {
+            if (g_temp.isFirstPlaced == true) g_gallery.triggerEvent(t.events.TILES_FIRST_PLACED);
+            onSingleImageLoad(objImage, isError);
+        });
     }
     function __________JUSTIFIED_TYPE_RELATED_________() {}
     function getJustifiedData() {
         var galleryWidth = getParentWidth();
-        var objTiles = g_thumbs.getThumbs();
+        var objTiles = g_thumbs.getThumbs(true);
         var rowHeightOpt = g_options.tiles_justified_row_height;
         var arrWidths = [];
         var totalWidth = 0;
@@ -5099,7 +5174,7 @@ function UGTiles() {
             setTimeout(function() {
                 placeJustified(true);
                 objTiles.fadeTo(0, 1);
-                g_objThis.trigger(t.events.TILES_FIRST_PLACED);
+                g_gallery.triggerEvent(t.events.TILES_FIRST_PLACED);
                 setTransition();
                 g_objThis.trigger(t.events.ALL_TILES_LOADED);
             });
@@ -5119,7 +5194,7 @@ function UGTiles() {
             if (g_gallery.isMobileMode() == true) {
                 placeTiles(true);
             } else placeNestedImages(true);
-            g_objThis.trigger(t.events.TILES_FIRST_PLACED);
+            g_gallery.triggerEvent(t.events.TILES_FIRST_PLACED);
             setTransition();
             g_objThis.trigger(t.events.ALL_TILES_LOADED);
         }, function(objImage, isError) {
@@ -5147,7 +5222,7 @@ function UGTiles() {
         g_nestedWork.colWidth = g_functions.getItemSizeInSpace(galleryWidth, g_nestedWork.maxColumns, g_nestedWork.currentGap);
         g_nestedWork.gridY = 0;
         g_arrNestedItems = [];
-        var objTiles = g_thumbs.getThumbs();
+        var objTiles = g_thumbs.getThumbs(true);
         objTiles.each(function() {
             var objTile = jQuery(this);
             var sizes = setNestedSize(objTile);
@@ -5679,10 +5754,12 @@ function UGTiles() {
     }
     function initEvents() {
         g_objThis.on(t.events.ALL_TILES_LOADED, function() {
-            if (g_temp.isAllLoaded == true) return true;
             g_temp.isAllLoaded = true;
         });
         g_objGallery.on(g_gallery.events.SIZE_CHANGE, onResize);
+        g_objGallery.on(t.events.TILES_FIRST_PLACED, function() {
+            g_temp.isFirstPlaced = false;
+        });
         g_objTileDesign.initEvents();
     }
     function run() {
@@ -5710,10 +5787,7 @@ function UGTiles() {
     this.destroy = function() {
         g_objGallery.off(g_gallery.events.SIZE_CHANGE);
         g_objTileDesign.destroy();
-    };
-    this.setFixedSizeMode = function() {
-        g_temp.isFixedMode = true;
-        g_objTileDesign.setFixedMode();
+        g_objGallery.off(t.events.TILES_FIRST_PLACED);
     };
     this.init = function(gallery, customOptions) {
         init(gallery, customOptions);
@@ -5726,6 +5800,22 @@ function UGTiles() {
     };
     this.run = function() {
         run();
+    };
+    this.runNewItems = function() {
+        if (!g_objParent) throw new Error("Can't run new items - parent not set");
+        g_objTileDesign.setHtml(g_objParent, true);
+        g_objTileDesign.run(true);
+        switch (g_options.tiles_type) {
+          case "columns":
+            runColumnsType();
+            break;
+
+          default:
+          case "justified":
+          case "nested":
+            throw new Error("Tiles type: " + g_options.tiles_type + " not support load more yet");
+            break;
+        }
     };
 }
 
@@ -6085,7 +6175,7 @@ function UGTileDesign() {
         if (objButton.length == 0) return null;
         return objButton;
     }
-    function getTileRatio(objTile, fromWhere) {
+    function getTileRatio(objTile) {
         var ratio = g_temp.ratioByHeight;
         switch (g_options.tile_size_by) {
           default:
@@ -6244,10 +6334,10 @@ function UGTileDesign() {
         if (objButtonZoom) objButtonZoom.show();
         if (objButtonLink) objButtonLink.show();
     }
-    this.setHtml = function(objParent) {
+    this.setHtml = function(objParent, isAppend) {
         g_objParentWrapper = objParent;
-        modifyOptionsBeforeRender();
-        g_thumbs.setHtmlThumbs(objParent);
+        if (isAppend !== true) modifyOptionsBeforeRender();
+        g_thumbs.setHtmlThumbs(objParent, isAppend);
     };
     function setImageOverlayEffect(objTile, isActive) {
         var objItem = t.getItemByTile(objTile);
@@ -6400,11 +6490,14 @@ function UGTileDesign() {
         jQuery(g_thumbs).on(g_thumbs.events.SETNORMALSTYLE, setNormalStyle);
         jQuery(g_thumbs).on(g_thumbs.events.PLACEIMAGE, onPlaceImage);
         g_objWrapper.on(g_temp.eventSizeChange, onSizeChange);
-        g_objParentWrapper.delegate(".ug-tile .ug-button-play", "click", onZoomButtonClick);
-        g_objParentWrapper.delegate(".ug-tile", "click", onTileClick);
-        g_objParentWrapper.delegate(".ug-tile .ug-icon-link", "click", onLinkButtonClick);
+        g_objParentWrapper.on("click", ".ug-tile", onTileClick);
+        g_objParentWrapper.on("click", ".ug-tile .ug-button-play", onZoomButtonClick);
+        g_objParentWrapper.on("click", ".ug-tile .ug-icon-link", onLinkButtonClick);
     };
     this.destroy = function() {
+        g_objParentWrapper.off("click", ".ug-tile");
+        g_objParentWrapper.off("click", ".ug-tile .ug-button-play");
+        g_objParentWrapper.off("click", ".ug-tile .ug-icon-link");
         jQuery(g_thumbs).off(g_thumbs.events.SETOVERSTYLE);
         jQuery(g_thumbs).off(g_thumbs.events.SETNORMALSTYLE);
         jQuery(g_thumbs).off(g_thumbs.events.PLACEIMAGE);
@@ -6435,7 +6528,7 @@ function UGTileDesign() {
             var newHeight = g_options.tile_height;
         } else {
             if (!newHeight) {
-                var newHeight = t.getTileHeightByWidth(newWidth, objTile, "resizeTile");
+                var newHeight = t.getTileHeightByWidth(newWidth, objTile);
             }
         }
         g_functions.setElementSize(objTile, newWidth, newHeight);
@@ -6461,11 +6554,11 @@ function UGTileDesign() {
             break;
         }
     };
-    this.resizeAllTiles = function(newWidth, resizeMode) {
+    this.resizeAllTiles = function(newWidth, resizeMode, objTiles) {
         modifyOptionsBeforeRender();
         var newHeight = null;
-        if (g_options.tile_size_by == t.sizeby.GLOBAL_RATIO) newHeight = t.getTileHeightByWidth(newWidth, null, "resizeAllTiles");
-        var objTiles = g_thumbs.getThumbs();
+        if (g_options.tile_size_by == t.sizeby.GLOBAL_RATIO) newHeight = t.getTileHeightByWidth(newWidth);
+        if (!objTiles) var objTiles = g_thumbs.getThumbs();
         objTiles.each(function(index, objTile) {
             t.resizeTile(jQuery(objTile), newWidth, newHeight, resizeMode);
         });
@@ -6503,13 +6596,15 @@ function UGTileDesign() {
         g_temp.funcCustomTileHtml = funcCustomHtml;
         g_temp.funcCustomPositionElements = funcPositionElements;
     };
-    this.run = function() {
-        var objThumbs = g_thumbs.getThumbs();
+    this.run = function(newOnly) {
+        var getMode = g_thumbs.type.GET_THUMBS_ALL;
+        if (newOnly === true) getMode = g_thumbs.type.GET_THUMBS_NEW;
+        var objThumbs = g_thumbs.getThumbs(getMode);
         if (g_options.tile_size_by == t.sizeby.GLOBAL_RATIO) {
-            t.resizeAllTiles(g_options.tile_width, t.resizemode.WRAPPER_ONLY);
+            t.resizeAllTiles(g_options.tile_width, t.resizemode.WRAPPER_ONLY, objThumbs);
         }
         if (g_options.tile_enable_image_effect == true && g_options.tile_image_effect_reverse == false) objThumbs.children(".ug-thumb-image").fadeTo(0, 0);
-        g_thumbs.setHtmlProperties();
+        g_thumbs.setHtmlProperties(objThumbs);
         if (g_options.tile_visible_before_image == true) {
             objThumbs.children(".ug-thumb-image").fadeTo(0, 0);
             g_thumbs.loadThumbsImages();
@@ -6529,8 +6624,8 @@ function UGTileDesign() {
     this.getItemByTile = function(objTile) {
         return g_thumbs.getItemByThumb(objTile);
     };
-    this.getTileHeightByWidth = function(newWidth, objTile, fromWhere) {
-        var ratio = getTileRatio(objTile, fromWhere);
+    this.getTileHeightByWidth = function(newWidth, objTile) {
+        var ratio = getTileRatio(objTile);
         if (ratio === null) return null;
         var height = Math.floor((newWidth - g_temp.tileInnerReduce) * ratio) + g_temp.tileInnerReduce;
         if (objTile && g_temp.isTextpanelOutside == true && g_options.tile_size_by == t.sizeby.IMAGE_RATIO) height += getTextPanelHeight(objTile);
@@ -7579,10 +7674,10 @@ function UGSlider() {
         initSlideEvents(g_objSlide2);
         initSlideEvents(g_objSlide3);
         g_objThis.on(t.events.AFTER_PUT_IMAGE, onSlideImageLoaded);
-        g_objSlider.delegate(".ug-item-wrapper img", "mouseenter", function(event) {
+        g_objSlider.on("mouseenter", ".ug-item-wrapper img", function(event) {
             g_objThis.trigger(t.events.IMAGE_MOUSEENTER);
         });
-        g_objSlider.delegate(".ug-item-wrapper img", "mouseleave", function(event) {
+        g_objSlider.on("mouseleave", ".ug-item-wrapper img", function(event) {
             var isMouseOver = t.isMouseInsideSlideImage(event);
             if (isMouseOver == false) g_objThis.trigger(t.events.IMAGE_MOUSELEAVE);
         });
@@ -7602,8 +7697,8 @@ function UGSlider() {
         jQuery(g_objVideoPlayer).off(g_objVideoPlayer.events.SHOW);
         jQuery(g_objVideoPlayer).off(g_objVideoPlayer.events.HIDE);
         g_objVideoPlayer.destroy();
-        g_objSlider.undelegate(".ug-item-wrapper img", "mouseenter");
-        g_objSlider.undelegate(".ug-item-wrapper img", "mouseleave");
+        g_objSlider.off("mouseenter", ".ug-item-wrapper img");
+        g_objSlider.off("mouseleave", ".ug-item-wrapper img");
     };
     function __________GETTERS___________() {}
     function getLoaderClass() {
@@ -8026,7 +8121,9 @@ function UGTextPanel() {
     };
     var g_temp = {
         isFirstTime: true,
-        setInternalHeight: true
+        setInternalHeight: true,
+        lastTitleBottom: 0,
+        lastDescHeight: 0
     };
     function positionElementsTop(animateHeight, startY) {
         if (!startY) var startY = g_options.textpanel_padding_top;
@@ -8034,8 +8131,15 @@ function UGTextPanel() {
         if (g_objTitle) {
             var titleY = maxy;
             g_functions.placeElement(g_objTitle, 0, titleY);
-            var objTitleSize = g_functions.getElementSize(g_objTitle);
-            var maxy = objTitleSize.bottom;
+            var isTitleVisible = g_objTitle.is(":visible");
+            if (isTitleVisible == true) {
+                var objTitleSize = g_functions.getElementSize(g_objTitle);
+                var maxy = objTitleSize.bottom;
+                if (maxy > 0) g_temp.lastTitleBottom = maxy;
+            } else {
+                var maxy = 20;
+                if (g_temp.lastTitleBottom > 0) maxy = g_temp.lastTitleBottom;
+            }
         }
         var textDesc = "";
         if (g_objDesc) textDesc = jQuery.trim(g_objDesc.text());
@@ -8043,8 +8147,16 @@ function UGTextPanel() {
             var descY = maxy;
             if (g_objTitle) descY += g_options.textpanel_padding_title_description;
             g_functions.placeElement(g_objDesc, 0, descY);
-            var objDescSize = g_functions.getElementSize(g_objDesc);
-            maxy = objDescSize.bottom;
+            var isVisible = jQuery(g_objDesc).is(":visible");
+            if (isVisible == true) {
+                var objDescSize = g_functions.getElementSize(g_objDesc);
+                maxy = objDescSize.bottom;
+                if (objDescSize.height > 0) g_temp.lastDescHeight = objDescSize.height;
+            } else {
+                var descHeight = 16;
+                if (g_temp.lastDescHeight > 0) descHeight = g_temp.lastDescHeight;
+                maxy = descY + descHeight;
+            }
         }
         if (!g_options.textpanel_height && g_temp.setInternalHeight == true) {
             var panelHeight = maxy + g_options.textpanel_padding_bottom;
@@ -10155,7 +10267,7 @@ function UniteGalleryMain() {
     var t = this;
     var g_galleryID;
     var g_objGallery = jQuery(t), g_objWrapper, g_objParent;
-    var g_objThumbs, g_objSlider, g_functions = new UGFunctions(), g_objTabs;
+    var g_objThumbs, g_objSlider, g_functions = new UGFunctions(), g_objTabs, g_objLoadMore;
     var g_arrItems = [], g_numItems, g_selectedItem = null, g_selectedItemIndex = -1;
     var g_objTheme, g_objCache = {};
     this.events = {
@@ -10195,6 +10307,7 @@ function UniteGalleryMain() {
         gallery_shuffle: false,
         gallery_urlajax: null,
         gallery_enable_tabs: false,
+        gallery_enable_loadmore: false,
         gallery_enable_cache: true,
         gallery_initial_catid: ""
     };
@@ -10308,6 +10421,10 @@ function UniteGalleryMain() {
             g_objTabs = new UGTabs();
             g_objTabs.init(t, g_options);
         }
+        if (g_temp.isRunFirstTime == true && g_options.gallery_enable_loadmore == true) {
+            g_objLoadMore = new UGLoadMore();
+            g_objLoadMore.init(t, g_options);
+        }
         if (isCustomOptions) modifyInitParams(g_temp.objCustomOptions);
         validateParams();
         if (g_options.gallery_shuffle == true) t.shuffleItems();
@@ -10333,7 +10450,7 @@ function UniteGalleryMain() {
         g_temp.isRunFirstTime = false;
     }
     function showErrorMessage(message, prefix) {
-        if (typeof prefix == "undefined") var prefix = "<b>Unite Gallery Error: </b>";
+        if (typeof prefix == "undefined") var prefix = "<b>Unite Gallery Error: </b>"; else prefix = "<b>" + prefix + ": </b>";
         message = prefix + message;
         var html = "<div class='ug-error-message-wrapper'><div class='ug-error-message'>" + message + "</div></div>";
         g_objWrapper.children().remove();
@@ -10396,148 +10513,159 @@ function UniteGalleryMain() {
         if (g_options.gallery_background_color) objCss["background-color"] = g_options.gallery_background_color;
         g_objWrapper.css(objCss);
     }
-    function fillItemsArray(arrChildren) {
-        g_arrItems = [];
+    function fillItemByChild(objChild) {
         var isMobile = t.isMobileMode();
-        var numIndex = 0;
-        for (var i = 0; i < arrChildren.length; i++) {
-            var objChild = jQuery(arrChildren[i]);
+        var tagname = objChild.prop("tagName").toLowerCase();
+        var itemLink = "";
+        if (tagname == "a") {
+            itemLink = objChild.attr("href");
+            objChild = objChild.children();
             var tagname = objChild.prop("tagName").toLowerCase();
-            var itemLink = "";
-            if (tagname == "a") {
-                itemLink = objChild.attr("href");
-                objChild = objChild.children();
-                var tagname = objChild.prop("tagName").toLowerCase();
+        }
+        var itemType = objChild.data("type");
+        if (itemType == undefined) itemType = "image";
+        var objItem = {};
+        objItem.type = itemType;
+        if (tagname == "img") {
+            var lasyLoadSrc = objChild.data("lazyload-src");
+            if (lasyLoadSrc && lasyLoadSrc != "") {
+                objChild.attr("src", lasyLoadSrc);
+                jQuery.removeData(objChild, "lazyload-src");
             }
-            var itemType = objChild.data("type");
-            if (itemType == undefined) itemType = "image";
-            var objItem = {};
-            objItem.type = itemType;
-            if (tagname == "img") {
-                var lasyLoadSrc = objChild.data("lazyload-src");
-                if (lasyLoadSrc && lasyLoadSrc != "") {
-                    objChild.attr("src", lasyLoadSrc);
-                    jQuery.removeData(objChild, "lazyload-src");
-                }
-                var urlImage = objChild.data("image");
-                var urlThumb = objChild.data("thumb");
-                if (typeof urlImage == "undefined") urlImage = null;
-                if (typeof urlThumb == "undefined") urlThumb = null;
-                var imageSrc = objChild.attr("src");
-                if (!urlImage) urlImage = imageSrc;
-                if (!urlThumb) urlThumb = imageSrc;
-                if (!urlThumb) urlThumb = urlImage;
-                if (!urlImage) urlImage = urlThumb;
-                objItem.urlThumb = urlThumb;
-                objItem.urlImage = urlImage;
-                objItem.title = objChild.attr("alt");
-                objItem.objThumbImage = objChild;
-                objItem.objThumbImage.attr("src", objItem.urlThumb);
-            } else {
-                if (itemType == "image") {
-                    trace("Problematic gallery item found:");
-                    trace(objChild);
-                    trace("Please look for some third party js script that could add this item to the gallery");
-                    throw new Error("The item should not be image type");
-                }
-                objItem.urlThumb = objChild.data("thumb");
-                objItem.title = objChild.data("title");
-                objItem.objThumbImage = null;
-                objItem.urlImage = objChild.data("image");
+            var urlImage = objChild.data("image");
+            var urlThumb = objChild.data("thumb");
+            if (typeof urlImage == "undefined") urlImage = null;
+            if (typeof urlThumb == "undefined") urlThumb = null;
+            var imageSrc = objChild.attr("src");
+            if (!urlImage) urlImage = imageSrc;
+            if (!urlThumb) urlThumb = imageSrc;
+            if (!urlThumb) urlThumb = urlImage;
+            if (!urlImage) urlImage = urlThumb;
+            objItem.urlThumb = urlThumb;
+            objItem.urlImage = urlImage;
+            objItem.title = objChild.attr("alt");
+            objItem.objThumbImage = objChild;
+            objItem.objThumbImage.attr("src", objItem.urlThumb);
+        } else {
+            if (itemType == "image") {
+                trace("Problematic gallery item found:");
+                trace(objChild);
+                trace("Please look for some third party js script that could add this item to the gallery");
+                throw new Error("The item should not be image type");
             }
-            if (isMobile == true) {
-                var urlThumbMobile = objChild.data("thumb-mobile");
-                if (typeof urlThumbMobile != "undefined" && urlThumbMobile != "") {
-                    objItem.urlThumb = urlThumbMobile;
+            objItem.urlThumb = objChild.data("thumb");
+            objItem.title = objChild.data("title");
+            objItem.objThumbImage = null;
+            objItem.urlImage = objChild.data("image");
+        }
+        if (isMobile == true) {
+            var urlThumbMobile = objChild.data("thumb-mobile");
+            if (typeof urlThumbMobile != "undefined" && urlThumbMobile != "") {
+                objItem.urlThumb = urlThumbMobile;
+                if (tagname == "img") objChild.attr("src", objItem.urlThumb);
+            }
+            var urlImageMobile = objChild.data("image-mobile");
+            if (typeof urlImageMobile != "undefined" && urlImageMobile != "") objItem.urlImage = urlImageMobile;
+        }
+        objItem.link = itemLink;
+        objItem.description = objChild.attr("title");
+        if (!objItem.description) objItem.description = objChild.data("description");
+        if (!objItem.description) objItem.description = "";
+        objItem.isNewAdded = false;
+        objItem.isLoaded = false;
+        objItem.isThumbImageLoaded = false;
+        objItem.objPreloadImage = null;
+        objItem.isBigImageLoadStarted = false;
+        objItem.isBigImageLoaded = false;
+        objItem.isBigImageLoadError = false;
+        objItem.imageWidth = 0;
+        objItem.imageHeight = 0;
+        objItem.thumbWidth = 0;
+        objItem.thumbHeight = 0;
+        objItem.thumbRatioByWidth = 0;
+        objItem.thumbRatioByHeight = 0;
+        var dataWidth = objChild.data("width");
+        var dataHeight = objChild.data("height");
+        if (dataWidth && typeof dataWidth == "number" && dataHeight && typeof dataHeight == "number") {
+            objItem.thumbWidth = dataWidth;
+            objItem.thumbHeight = dataHeight;
+            objItem.thumbRatioByWidth = dataWidth / dataHeight;
+            objItem.thumbRatioByHeight = dataHeight / dataWidth;
+        }
+        objItem.addHtml = null;
+        var isImageMissing = objItem.urlImage == undefined || objItem.urlImage == "";
+        var isThumbMissing = objItem.urlThumb == undefined || objItem.urlThumb == "";
+        switch (objItem.type) {
+          case "youtube":
+            objItem.videoid = objChild.data("videoid");
+            if (isImageMissing || isThumbMissing) {
+                var objImages = g_ugYoutubeAPI.getVideoImages(objItem.videoid);
+                if (isImageMissing) objItem.urlImage = objImages.preview;
+                if (isThumbMissing) {
+                    objItem.urlThumb = objImages.thumb;
                     if (tagname == "img") objChild.attr("src", objItem.urlThumb);
                 }
-                var urlImageMobile = objChild.data("image-mobile");
-                if (typeof urlImageMobile != "undefined" && urlImageMobile != "") objItem.urlImage = urlImageMobile;
             }
-            objItem.link = itemLink;
-            objItem.description = objChild.attr("title");
-            if (!objItem.description) objItem.description = objChild.data("description");
-            if (!objItem.description) objItem.description = "";
-            objItem.isLoaded = false;
-            objItem.isThumbImageLoaded = false;
-            objItem.objPreloadImage = null;
-            objItem.isBigImageLoadStarted = false;
-            objItem.isBigImageLoaded = false;
-            objItem.isBigImageLoadError = false;
-            objItem.imageWidth = 0;
-            objItem.imageHeight = 0;
-            objItem.thumbWidth = 0;
-            objItem.thumbHeight = 0;
-            objItem.thumbRatioByWidth = 0;
-            objItem.thumbRatioByHeight = 0;
-            var dataWidth = objChild.data("width");
-            var dataHeight = objChild.data("height");
-            if (dataWidth && typeof dataWidth == "number" && dataHeight && typeof dataHeight == "number") {
-                objItem.thumbWidth = dataWidth;
-                objItem.thumbHeight = dataHeight;
-                objItem.thumbRatioByWidth = dataWidth / dataHeight;
-                objItem.thumbRatioByHeight = dataHeight / dataWidth;
+            g_temp.isYoutubePresent = true;
+            break;
+
+          case "vimeo":
+            objItem.videoid = objChild.data("videoid");
+            g_temp.isVimeoPresent = true;
+            break;
+
+          case "html5video":
+            objItem.videoogv = objChild.data("videoogv");
+            objItem.videowebm = objChild.data("videowebm");
+            objItem.videomp4 = objChild.data("videomp4");
+            g_temp.isHtml5VideoPresent = true;
+            break;
+
+          case "soundcloud":
+            objItem.trackid = objChild.data("trackid");
+            g_temp.isSoundCloudPresent = true;
+            break;
+
+          case "wistia":
+            objItem.videoid = objChild.data("videoid");
+            g_temp.isWistiaPresent = true;
+            break;
+
+          case "custom":
+            var objChildImage = objChild.children("img");
+            if (objChildImage.length) {
+                objChildImage = jQuery(objChildImage[0]);
+                objItem.urlThumb = objChildImage.attr("src");
+                objItem.title = objChildImage.attr("alt");
+                objItem.objThumbImage = objChildImage;
             }
-            objItem.addHtml = null;
-            var isImageMissing = objItem.urlImage == undefined || objItem.urlImage == "";
-            var isThumbMissing = objItem.urlThumb == undefined || objItem.urlThumb == "";
-            switch (objItem.type) {
-              case "youtube":
-                objItem.videoid = objChild.data("videoid");
-                if (isImageMissing || isThumbMissing) {
-                    var objImages = g_ugYoutubeAPI.getVideoImages(objItem.videoid);
-                    if (isImageMissing) objItem.urlImage = objImages.preview;
-                    if (isThumbMissing) {
-                        objItem.urlThumb = objImages.thumb;
-                        if (tagname == "img") objChild.attr("src", objItem.urlThumb);
-                    }
-                }
-                g_temp.isYoutubePresent = true;
-                break;
-
-              case "vimeo":
-                objItem.videoid = objChild.data("videoid");
-                g_temp.isVimeoPresent = true;
-                break;
-
-              case "html5video":
-                objItem.videoogv = objChild.data("videoogv");
-                objItem.videowebm = objChild.data("videowebm");
-                objItem.videomp4 = objChild.data("videomp4");
-                g_temp.isHtml5VideoPresent = true;
-                break;
-
-              case "soundcloud":
-                objItem.trackid = objChild.data("trackid");
-                g_temp.isSoundCloudPresent = true;
-                break;
-
-              case "wistia":
-                objItem.videoid = objChild.data("videoid");
-                g_temp.isWistiaPresent = true;
-                break;
-
-              case "custom":
-                var objChildImage = objChild.children("img");
-                if (objChildImage.length) {
-                    objChildImage = jQuery(objChildImage[0]);
-                    objItem.urlThumb = objChildImage.attr("src");
-                    objItem.title = objChildImage.attr("alt");
-                    objItem.objThumbImage = objChildImage;
-                }
-                var objChildren = objChild.children().not("img:first-child");
-                if (objChildren.length) objItem.addHtml = objChildren.clone();
-                break;
-            }
-            if (objItem.objThumbImage) {
-                objItem.objThumbImage.removeAttr("data-description", "");
-                objItem.objThumbImage.removeAttr("data-image", "");
-                objItem.objThumbImage.removeAttr("data-thumb", "");
-                objItem.objThumbImage.removeAttr("title", "");
-            }
+            var objChildren = objChild.children().not("img:first-child");
+            if (objChildren.length) objItem.addHtml = objChildren.clone();
+            break;
+        }
+        if (objItem.objThumbImage) {
+            objItem.objThumbImage.removeAttr("data-description", "");
+            objItem.objThumbImage.removeAttr("data-image", "");
+            objItem.objThumbImage.removeAttr("data-thumb", "");
+            objItem.objThumbImage.removeAttr("title", "");
+        }
+        return objItem;
+    }
+    function fillItemsArray(arrChildren, isAppend) {
+        if (isAppend !== true) {
+            g_arrItems = [];
+        } else {
+            for (var i = 0; i < g_numItems; i++) g_arrItems[i].isNewAdded = false;
+        }
+        for (var i = 0; i < arrChildren.length; i++) {
+            var objChild = jQuery(arrChildren[i]);
+            var objItem = fillItemByChild(objChild);
+            numIndex = g_arrItems.length;
             objItem.index = numIndex;
+            if (isAppend === true) {
+                objItem.isNewAdded = true;
+            }
             g_arrItems.push(objItem);
-            numIndex++;
         }
         g_numItems = g_arrItems.length;
     }
@@ -10710,7 +10838,7 @@ function UniteGalleryMain() {
         if (objSize.width == 0) return true;
         t.setSizeClass();
         var objSize = t.getSize();
-        if (objSize.width != g_temp.lastWidth || objSize.height != g_temp.lastHeight) {
+        if (objSize.width != g_temp.lastWidth || g_temp.isFreestyleMode == false && objSize.height != g_temp.lastHeight) {
             var heightWasSet = false;
             if (g_temp.funcCustomHeight) {
                 var newHeight = g_temp.funcCustomHeight(objSize);
@@ -10885,7 +11013,7 @@ function UniteGalleryMain() {
         var objItem = g_arrItems[nextIndex];
         return objItem;
     };
-    this.getPrevItem = function(index) {
+    this.getPrevItem = function(index, forceCarousel) {
         if (typeof index == "object") index = index.index;
         var prevIndex = index - 1;
         if (prevIndex < 0) {
@@ -10928,7 +11056,7 @@ function UniteGalleryMain() {
     };
     this.setFullScreenToggleButton = function(objButton) {
         objButton.data("ug-button", true);
-        g_functions.setButtonOnClick(objButton, t.toggleFullscreen);
+        g_functions.setButtonOnTap(objButton, t.toggleFullscreen);
         g_objGallery.on(t.events.ENTER_FULLSCREEN, function() {
             objButton.addClass("ug-fullscreenmode");
         });
@@ -10996,8 +11124,12 @@ function UniteGalleryMain() {
     function advanceNextStep() {
         var timeNow = jQuery.now();
         var timeDiff = timeNow - g_temp.playTimeLastStep;
-        g_temp.playTimePassed += timeDiff;
         g_temp.playTimeLastStep = timeNow;
+        var isVisible = t.isGalleryVisible();
+        if (isVisible == false) {
+            return false;
+        }
+        g_temp.playTimePassed += timeDiff;
         if (g_temp.objProgress) {
             var percent = g_temp.playTimePassed / g_options.gallery_play_interval;
             g_temp.objProgress.setProgress(percent);
@@ -11173,9 +11305,33 @@ function UniteGalleryMain() {
         if (windowWidth <= 480) return true;
         return false;
     };
+    this.isGalleryVisible = function() {
+        var isVisible = g_objWrapper.is(":visible");
+        return isVisible;
+    };
     this.changeItems = function(itemsContent, cacheID) {
         if (!itemsContent) var itemsContent = "noitems";
         runGallery(g_galleryID, "nochange", itemsContent, cacheID);
+    };
+    this.addItems = function(itemsContent) {
+        if (!itemsContent || itemsContent.length == 0) return false;
+        var objNewItemsWrapper = g_objWrapper.children(".ug-newitems-wrapper");
+        if (objNewItemsWrapper.length == 0) g_objWrapper.append("<div class='ug-newitems-wrapper' style='display:none'></div>");
+        objNewItemsWrapper = g_objWrapper.children(".ug-newitems-wrapper");
+        objNewItemsWrapper.append(itemsContent);
+        var objChildren = jQuery(objNewItemsWrapper.children());
+        fillItemsArray(objChildren, true);
+        loadAPIs();
+        if (!g_objTheme || typeof g_objTheme.addItems != "function") throw new Error("addItems function not found in the theme");
+        objNewItemsWrapper.remove();
+        g_objTheme.addItems();
+    };
+    this.getNewAddedItemsIndexes = function() {
+        var arrIndexes = [];
+        jQuery.each(g_arrItems, function(index, objItem) {
+            if (objItem.isNewAdded == true) arrIndexes.push(index);
+        });
+        return arrIndexes;
     };
     this.showErrorMessageReplaceGallery = function(message) {
         showErrorMessage(message);
@@ -11183,13 +11339,24 @@ function UniteGalleryMain() {
     this.setFuncCustomHeight = function(func) {
         g_temp.funcCustomHeight = func;
     };
+    this.__________EXTERNAL_EVENTS_______ = function() {};
+    this.triggerEvent = function(event, arrParams) {
+        if (!arrParams) g_objGallery.trigger(event); else {
+            if (jQuery.type(arrParams) != "array") arrParams = [ arrParams ];
+            g_objGallery.trigger(event, arrParams);
+        }
+    };
+    this.onEvent = function(event, func) {
+        g_objGallery.on(event, func);
+    };
+    this.destroyEvent = function(event) {
+        g_objGallery.off(event);
+    };
     this.__________AJAX_REQUEST_______ = function() {};
-    this.ajaxRequest = function(action, data, isJSON, successFunction) {
-        var dataType = "html";
-        if (isJSON == true) dataType = "json";
+    this.ajaxRequest = function(action, data, successFunction, errorFunction) {
         if (!successFunction || typeof successFunction != "function") throw new Error("ajaxRequest error: success function should be passed");
         var urlAjax = g_options.gallery_urlajax;
-        if (urlAjax == "") throw new Error("ajaxRequest error: Ajax url don't passed");
+        if (!urlAjax || urlAjax == "") throw new Error("ajaxRequest error: Ajax url don't passed");
         if (typeof data == "undefined") var data = {};
         var objData = {
             action: "unitegallery_ajax_action",
@@ -11204,25 +11371,22 @@ function UniteGalleryMain() {
             data: objData,
             success: function(response) {
                 if (!response) {
-                    showErrorMessage("Empty ajax response!", "Ajax Error");
-                    return false;
+                    throw new Error("Empty ajax response!");
                 }
-                if (response == -1 || response === 0) {
-                    showErrorMessage("ajax error!!!");
-                    return false;
-                }
-                if (typeof response.success == "undefined") {
-                    showErrorMessage("The 'success' param is a must!");
-                    return false;
-                }
+                if (response == -1 || response === 0) throw new Error("ajax error!!!");
+                if (typeof response.success == "undefined") throw new Error("ajax error!!!");
                 if (response.success == false) {
-                    showErrorMessage(response.message);
+                    showErrorMessage(response.message, "ajax error");
                     return false;
                 }
                 successFunction(response);
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.log("Ajax Error!!! " + textStatus);
+                responseText = jqXHR.responseText;
+                if (errorFunction && typeof errorFunction == "function") {
+                    errorFunction(responseText);
+                } else trace(responseText);
             }
         });
     };
@@ -11237,7 +11401,7 @@ function UniteGalleryMain() {
             g_objGallery.trigger(t.events.GALLERY_BEFORE_REQUEST_ITEMS);
             t.ajaxRequest("front_get_cat_items", {
                 catid: catID
-            }, true, function(response) {
+            }, function(response) {
                 var htmlItems = response.html;
                 t.changeItems(htmlItems, cacheID);
             });
@@ -12790,5 +12954,74 @@ function UG_API(gallery) {
         g_gallery.destroy();
     };
     g_objGallery.trigger(t.events.API_INIT_FUNCTIONS, t);
+}
+
+function UGLoadMore() {
+    var t = this, g_objThis = jQuery(this), g_objGallery;
+    var g_gallery = new UniteGalleryMain(), g_functions = new UGFunctions();
+    var g_objWrapper, g_objButton, g_objLoader, g_objError;
+    var g_temp = {
+        isInited: false
+    };
+    var g_options = {
+        loadmore_container: "ug_loadmore_wrapper"
+    };
+    this.events = {};
+    function initObjects() {
+        g_objWrapper = jQuery("#" + g_options.loadmore_container);
+        if (g_objWrapper.length == 0) return false;
+        g_objButton = g_objWrapper.find(".ug-loadmore-button");
+        if (g_objButton.length == 0) return false;
+        g_objLoader = g_objWrapper.find(".ug-loadmore-loader");
+        if (g_objLoader.length == 0) return false;
+        g_objError = g_objWrapper.find(".ug-loadmore-error");
+        if (g_objError.length == 0) return false;
+        g_temp.isInited = true;
+    }
+    function showLoadmore() {
+        g_objWrapper.show();
+    }
+    function onLoadmoreClick() {
+        g_objButton.hide();
+        g_objLoader.show();
+        var data = {
+            numitems: g_gallery.getNumItems()
+        };
+        g_gallery.ajaxRequest("front_loadmore", data, function(response) {
+            g_objLoader.hide();
+            var htmlItems = response.html_items;
+            var showLoadmore = response.show_loadmore;
+            if (showLoadmore == true) {
+                g_objButton.blur().show();
+                g_objLoader.hide();
+            } else {
+                g_objWrapper.hide();
+            }
+            g_gallery.addItems(htmlItems);
+        }, function(errorText) {
+            errorText = "Ajax Error!" + errorText;
+            g_objLoader.hide();
+            g_objError.show();
+            g_objError.html(errorText);
+        });
+    }
+    function initEvents() {
+        g_gallery.onEvent("tiles_first_placed", showLoadmore);
+        g_objButton.click(onLoadmoreClick);
+    }
+    this.destroy = function() {
+        if (g_temp.isInited == false) return false;
+    };
+    this.init = function(gallery, customOptions) {
+        g_gallery = gallery;
+        g_objGallery = jQuery(g_gallery);
+        g_options = jQuery.extend(g_options, customOptions);
+        initObjects();
+        if (g_temp.isInited == false) {
+            trace("load more not inited, something is wrong");
+            return false;
+        }
+        initEvents();
+    };
 }
 //# sourceMappingURL=unitegallery.js.map

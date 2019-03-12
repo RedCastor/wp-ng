@@ -26,8 +26,8 @@ class Wp_Ng_Template
   protected static $_instance = null;
 
 
-  private $template_theme_path;   // <theme>/<plugin>/
-  private $template_plugin_path;  // <plugin>/templates/
+  private $template_path;   // <theme>/<plugin>/
+  private $template_default_path;  // <plugin>/templates/
 
   /**
    * Initialize the class and set its properties.
@@ -38,7 +38,6 @@ class Wp_Ng_Template
 
     $this->template_path =  WP_NG_PLUGIN_NAME . '/';
     $this->template_default_path = 'public/templates/';
-
   }
 
   /**
@@ -97,8 +96,6 @@ class Wp_Ng_Template
     }
 
 
-
-
     $located = locate_template( array(
       $template_path,
       $default_path
@@ -109,6 +106,37 @@ class Wp_Ng_Template
     }
 
     return apply_filters( 'wp_ng_locate-template', $located, $template_name );
+  }
+
+
+  /**
+   * Get template part.
+   *
+   * @since    1.7.7
+   *
+   * @access public
+   * @param mixed  $slug Template slug.
+   * @param string $name Template name (default: '').
+   */
+  public function get_template_part( $slug, $name = '', $plugin_name = null ) {
+
+    $template = '';
+
+    if ( $name ) {
+      $template = $this->locate_template("{$slug}-{$name}.php", $plugin_name);
+    }
+
+    if ( ! $template ) {
+      $template = $this->locate_template( "{$slug}.php", $plugin_name);
+    }
+
+
+    // Allow 3rd party plugins to filter template file from their plugin.
+    $template = apply_filters( 'wp_ng_get_template_part', $template, $slug, $name );
+
+    if ( $template ) {
+      load_template( $template, false );
+    }
   }
 
 
@@ -127,6 +155,17 @@ class Wp_Ng_Template
 
     $located = $this->locate_template( $template_name, $plugin_name );
 
+    if ( ! file_exists( $located ) ) {
+
+      _doing_it_wrong( __FUNCTION__, sprintf( __( '%s does not exist.', 'woocommerce-ng' ), '<code>' . $located . '</code>' ), '1.7.7' );
+
+      return $return ? '' : false;
+    }
+
+    if (empty($located)) {
+      return false;
+    }
+
     if ( ! empty( $args ) && is_array( $args ) ) {
       extract( $args );
     }
@@ -135,28 +174,58 @@ class Wp_Ng_Template
       ob_start();
     }
 
+    do_action( 'wp_ng_before_template_part', $template_name, $located, $args );
+
     // include file located
     include($located);
 
+    do_action( 'wp_ng_after_template_part', $template_name, $located, $args );
+
     if( $return ) {
-      return ob_get_clean();
+      return wp_ng_trim_all(ob_get_clean());
     }
 
-    return false;
+    return true;
   }
-
 
 
   /**
    * Get a list of template.
    *
    * @since    1.4.2
-   * @return array list of template
+   *
+   * @param string $path
+   * @param bool   $only_dir
+   *
+   * @return mixed|void
    */
-  public function get_template_list( $path = '') {
+  public function get_template_list( $path = '', $plugin_name = null, $only_dir = false ) {
 
-    $list_files = glob( trailingslashit( get_stylesheet_directory() ) . $this->template_path . $path . '*.php' );
-    $list_files = array_merge($list_files, glob( $this->template_default_path . $path . '*.php' ));
+    if ( $plugin_name ) {
+      $template_path = trailingslashit( trailingslashit(WP_PLUGIN_DIR)  . $plugin_name );  // Search in <plugin>/templates/
+    }
+    else {
+      $template_path = trailingslashit( WP_PLUGIN_DIR ) . $this->template_path; // Search in <theme>/<plugin>/
+    }
+
+    $list_theme = glob( trailingslashit( get_stylesheet_directory() ) . ($plugin_name ? trailingslashit($plugin_name) : trailingslashit($this->template_path)) . $path );
+    $list_plugin = glob( $template_path . $this->template_default_path . $path );
+
+    if (is_array($list_theme) && is_array($list_plugin)) {
+      $list_files = array_merge($list_plugin, $list_theme);
+    }
+    else if (is_array($list_theme)) {
+      $list_files = $list_theme;
+    }
+    else {
+      $list_files = $list_plugin;
+    }
+
+    if ($only_dir) {
+      $list_files = array_filter($list_files, function($dir) {
+        return is_dir($dir);
+      });
+    }
 
     $list_names = array();
 

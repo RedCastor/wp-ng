@@ -1,0 +1,12 @@
+//
+// Elementor Frontend
+// --------------------------------------------------
+
+.elementor {
+
+  //Fix Elementor image with object fit class
+  img.fit {
+    height: 100%;
+    width: 100%;
+  }
+}

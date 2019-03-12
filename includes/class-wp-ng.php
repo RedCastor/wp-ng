@@ -99,6 +99,11 @@ class Wp_Ng {
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/wp-ng-modules-descriptor.php';
 
     /**
+     * Modules Descriptor of the plugin.
+     */
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/wp-ng-scripts-descriptor.php';
+
+    /**
      * Settings Descriptor of the plugin.
      */
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/wp-ng-settings-descriptor.php';
@@ -130,6 +135,7 @@ class Wp_Ng {
     /**
      * The class responsible for load emails
      */
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/emails/class-wp-ng-email.php';
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-ng-emails.php';
 
     /**
@@ -186,6 +192,11 @@ class Wp_Ng {
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-ng-bower.php';
 
     /**
+     * The class responsible for orchestrating the addon scripts
+     */
+    require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-ng-scripts.php';
+
+    /**
      * The class responsible for orchestrating the ng modules
      */
     require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-ng-modules.php';
@@ -235,6 +246,7 @@ class Wp_Ng {
 	private function define_admin_hooks() {
 
 	  if ( is_admin() ) {
+
       $plugin_admin = new Wp_Ng_Admin( $this->get_plugin_name(), $this->get_version() );
 
       $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles', 100 );
@@ -242,6 +254,7 @@ class Wp_Ng {
 
       $this->loader->add_action( 'admin_menu', $plugin_admin, 'settings', 100 );
       $this->loader->add_action( 'admin_init', $plugin_admin, 'settings_init' );
+      $this->loader->add_action( 'admin_init', $plugin_admin, 'init' );
 
       $this->loader->add_filter( 'tiny_mce_before_init', $plugin_admin, 'tiny_mce_before_init', 100 );
     }
@@ -256,34 +269,57 @@ class Wp_Ng {
 	 */
 	private function define_public_hooks() {
 
-		$plugin_public = new Wp_Ng_Public( $this->get_plugin_name(), $this->get_version() );
-
     //Create Instance settings
     Wp_Ng_Settings::createInstance( $this->plugin_name, $this->version );
 
+		$plugin_public = new Wp_Ng_Public( $this->get_plugin_name(), $this->get_version() );
+
+    $this->loader->add_action( 'plugins_loaded',  $plugin_public, 'load_pluggable_dependencies' );
 
 		//Default Scripts and styles
 		$this->loader->add_action( 'wp_default_scripts',  $plugin_public, 'default_scripts' );
 		$this->loader->add_action( 'wp_default_styles',   $plugin_public, 'default_styles' );
 
     //Script and style
-		$this->loader->add_action( 'wp_enqueue_scripts',  $plugin_public, 'external_modules' );
-    $this->loader->add_action( 'wp_enqueue_scripts',  $plugin_public, 'enqueue_scripts' );
-		$this->loader->add_action( 'wp_enqueue_scripts',  $plugin_public, 'enqueue_styles' );
-    $this->loader->add_action( 'wp_enqueue_scripts',  $plugin_public, 'enqueue_script_jquery', 2 );
+		$this->loader->add_action( 'wp_enqueue_scripts',  $plugin_public, 'external_modules', 8 );
+
+    $this->loader->add_action( 'wp_enqueue_scripts',  $plugin_public, 'enqueue_scripts', 8 );
+    $this->loader->add_action( 'wp_enqueue_scripts',  $plugin_public, 'enqueue_styles' );
+
+		$this->loader->add_action( 'wp_enqueue_scripts',  $plugin_public, 'enqueue_script_jquery', 2 );
     $this->loader->add_action( 'wp_enqueue_scripts',  $plugin_public, 'enqueue_script_angular', 2 );
 
     //Process Script and style.
-    $this->loader->add_action( 'wp_enqueue_scripts',  $plugin_public, 'process_style_angular_modules', 1000 );
-    $this->loader->add_action( 'wp_enqueue_scripts',  $plugin_public, 'process_script_angular_modules', 1000 );
+    $this->loader->add_action( 'wp_footer',               $plugin_public, 'print_template', 100 );
+    $this->loader->add_action( 'wp_print_styles',         $plugin_public, 'process_styles', 1000 );
+    $this->loader->add_action( 'wp_print_footer_scripts', $plugin_public, 'process_scripts', 7 );
 
     //After Theme Setup
-		$this->loader->add_action( 'after_setup_theme',   $plugin_public, 'init_options', 5);
-    $this->loader->add_action( 'after_setup_theme',   $plugin_public, 'init_emails', 5);
-    $this->loader->add_action( 'after_setup_theme',   $plugin_public, 'init_logging', 7);
+    if (is_admin()) {
+      $this->loader->add_action( 'init',   $plugin_public, 'init_options', -1);  //Priority before other plugins
+      $this->loader->add_action( 'init',   $plugin_public, 'init_emails', 5);
+      $this->loader->add_action( 'init',   $plugin_public, 'init_logging', 7);
+      $this->loader->add_action( 'init',   $plugin_public, 'init_modules', 100);
+    }
+    else {
+      $this->loader->add_action( 'after_setup_theme', $plugin_public, 'init_options', -1); //Priority before other plugins
+      $this->loader->add_action( 'after_setup_theme', $plugin_public, 'init_emails', 5);
+      $this->loader->add_action( 'after_setup_theme', $plugin_public, 'init_logging', 7);
+      $this->loader->add_action( 'after_setup_theme', $plugin_public, 'init_modules', 100);
+    }
+
 
     //Body Classes.
-    $this->loader->add_filter( 'body_class',          $plugin_public, 'body_class' );
+    $this->loader->add_filter( 'body_class',  $plugin_public, 'body_class' );
+
+    //Template Redirection
+    $this->loader->add_action('template_redirect', $plugin_public, 'template_redirect_outdated_browser', -1 );
+
+    //Init, Logoout Cookie Config (Use for WP_CACHE enabled)
+    $this->loader->add_action('init',       $plugin_public, 'init_update_cookie_config', 1000 );
+    $this->loader->add_action('wp_logout',  $plugin_public, 'logout_update_cookie_config', 1000 );
+    $this->loader->add_action('wp_logout',  $plugin_public, 'logout_end', 100000 );
+
 
     //Remove and Add WPAUTOP
     $this->loader->add_action( 'acf/init',            $plugin_public, 'remove_wpautop' ); //Acf plugin

@@ -132,6 +132,7 @@ class Wp_Ng_Modules {
    */
   public function default_scripts ( &$scripts ) {
 
+    $lang_code = apply_filters('wp_ng_current_language', '');
     $bower = new Wp_Ng_Bower();
 
     $scripts->add( 'wp-ng_bootstrap',     wp_ng_get_asset_path('scripts/bootstrap.js'),  array( 'jquery' ), $bower->get_version('bootstrap'), 1 );
@@ -143,10 +144,18 @@ class Wp_Ng_Modules {
     $scripts->add( 'wp-ng_es6-shim',      wp_ng_get_asset_path('scripts/es6-shim.js'),  array(), $bower->get_version('es6-shim'), 1 );
     $scripts->add( 'wp-ng_custom-event-polyfill', wp_ng_get_asset_path('scripts/custom-event-polyfill.js'), array(), $bower->get_version('custom-event-polyfill'), 1 );
     $scripts->add( 'wp-ng_mutationObserver-shim', wp_ng_get_asset_path('scripts/mutationObserver-shim.js'), array(), $bower->get_version('MutationObserver-shim'), 1 );
+    $scripts->add( 'wp-ng_jquery.nicescroll', wp_ng_get_asset_path('scripts/jquery-nicescroll.js'), array('jquery'), $bower->get_version('jquery.nicescroll'), 1 );
+
+
+    //Date Picker Input
     $scripts->add( 'wp-ng_flatpickr', wp_ng_get_asset_path('scripts/flatpickr.js'), array(), $bower->get_version('flatpickr'), 1 );
-    $scripts->add( 'wp-ng_jquery.nicescroll', wp_ng_get_asset_path('scripts/jquery-nicescroll.js'), array(), $bower->get_version('jquery.nicescroll'), 1 );
+    $flatpickr_dep = array('wp-ng_flatpickr');
+    if ($lang_code !== 'en') {
+      $scripts->add( 'wp-ng_flatpickr-locale', wp_ng_get_asset_path("vendor/flatpickr/l10n/{$lang_code}.js"), array(), $bower->get_version('flatpickr'), 1 );
+      $flatpickr_dep[] = 'wp-ng_flatpickr-locale';
+    }
 
-
+    //Translate
     $scripts->add( 'wp-ng_pascalprecht.translate-static', wp_ng_get_asset_path('scripts/angular-translate-loader-static-files.js'), array( 'wp-ng_pascalprecht.translate' ), $bower->get_version('angular-translate-loader-static-files'), 1 );
     $scripts->add( 'wp-ng_pascalprecht.translate-cookie', wp_ng_get_asset_path('scripts/angular-translate-storage-cookie.js'),      array( 'wp-ng_pascalprecht.translate' ), $bower->get_version('angular-translate-storage-cookie'), 1 );
 
@@ -162,7 +171,7 @@ class Wp_Ng_Modules {
     $scripts->add( 'wp-ng_ui-leaflet-awesome-markers', wp_ng_get_asset_path('scripts/leaflet-awesome-markers.js'), array( 'wp-ng_ui-leaflet' ), $bower->get_version('Leaflet.awesome-markers'), 1 );
     $scripts->add( 'wp-ng_ui-leaflet-vector-markers',  wp_ng_get_asset_path('scripts/leaflet-vector-markers.js'),  array( 'wp-ng_ui-leaflet' ), $bower->get_version('Leaflet.vector-markers'), 1 );
 
-
+    //Logging
     $scripts->add( 'wp-ng_rcRollbar', wp_ng_get_asset_path('scripts/rc-rollbar.js'),  array( $this->prefix ), $bower->get_version('rc-rollbar'), 1 );
     add_filter('wp_ng_rcRollbar_config', function ( $config ) {
 
@@ -200,6 +209,16 @@ class Wp_Ng_Modules {
     $scripts->add( 'wp-ng_angular-json-pretty', wp_ng_get_asset_path('scripts/angular-json-pretty.js'),  array( $this->prefix ), $bower->get_version('angular-json-pretty'), 1 );
 
     $scripts->add( 'wp-ng_oc.lazyLoad',wp_ng_get_asset_path('scripts/oclazyload.js'),           array( $this->prefix ), $bower->get_version('oclazyload'), 1 );
+    add_filter('wp_ng_oc.lazyLoad_config', function ( $config ) {
+
+      $defaults = array(
+        'debug' => false,
+        'events' => true,
+        'modules' => array(),
+      );
+
+      return wp_parse_args($config, $defaults);
+    });
 
     $scripts->add( 'wp-ng_nemLogging', wp_ng_get_asset_path('scripts/angular-simple-logger.js'),array( $this->prefix ), $bower->get_version('angular-simple-logger'), 1 );
 
@@ -265,7 +284,8 @@ class Wp_Ng_Modules {
     //Utils
     $scripts->add( 'wp-ng_breakpointApp', wp_ng_get_asset_path('scripts/angularjs-breakpoint.js'), array( $this->prefix ), $bower->get_version('angularjs-breakpoint'), 1 );
     $scripts->add( 'wp-ng_bs.screenSize', wp_ng_get_asset_path('scripts/bootstrap-screensize.js'), array( $this->prefix ), $bower->get_version('bootstrap-screensize'), 1 );
-    $scripts->add( 'wp-ng_ng.deviceDetector', wp_ng_get_asset_path('scripts/ng-device-detector.js'), array( $this->prefix ), $bower->get_version('ng-device-detector'), 1 );
+    $scripts->add( 'wp-ng_ismobile',      wp_ng_get_asset_path('scripts/angular-ismobile.js'),     array( $this->prefix ), $bower->get_version('angular-ismobile'), 1 );
+    $scripts->add( 'wp-ng_angular-inview',wp_ng_get_asset_path('scripts/angular-inview.js'),       array( $this->prefix ), $bower->get_version('angular-inview'), 1 );
 
 
     $scripts->add( 'wp-ng_mm.foundation', wp_ng_get_asset_path('scripts/angular-foundation-6.js'), array( $this->prefix, 'wp-ng_es6-shim', 'wp-ng_ngTouch' ), $bower->get_version('angular-foundation-6'), 1 );
@@ -285,11 +305,27 @@ class Wp_Ng_Modules {
 
       $options = wp_ng_get_module_options( 'wp-ng_ui.router' );
 
+      $wrap = false;
+
+      //Wrap only on base url
+      if ( wp_ng_get_base_url() === wp_ng_get_current_url() ) {
+        $wrap = (isset($options['wrap'])) ? $options['wrap'] : '#main';
+      }
+
       $defaults = array(
-        'selectView' => 'main',
-        'preventState' => array(
-          'enable' => (isset($options['prevent_base_url']) && $options['prevent_base_url'] === 'on') ? true : false,
-        )
+        'preventState'  => array(
+          'enable'        => (isset($options['prevent_base_url']) && $options['prevent_base_url'] === 'on') ? true : false,
+        ),
+        'wrap_enable'   => is_front_page(),
+        'wrap'          => $wrap,
+        'wrap_exclude'  => (isset($options['wrap_exclude'])) ? $options['wrap_exclude'] : '',
+        'templates'     => array(
+          'notFound'      => wp_ng_get_template( 'global/ui-router-not-found.php', null, null, false ),
+          'base'          => wp_ng_get_template( 'global/ui-router-base.php', null, null, false ),
+          'wrapperStart'  => wp_ng_get_template( 'global/wrapper-ui-router-start.php', null, null, false ),
+          'wrapperEnd'    => wp_ng_get_template( 'global/wrapper-ui-router-end.php', null, null, false )
+        ),
+        'states'          => Wp_Ng_Public_Ui_Router::get_ng_router_states(),
       );
 
       return wp_parse_args($config, $defaults);
@@ -299,6 +335,7 @@ class Wp_Ng_Modules {
     $scripts->add( 'wp-ng_ui.validate',   wp_ng_get_asset_path('scripts/angular-ui-validate.js'), array( $this->prefix ), $bower->get_version('angular-ui-validate'), 1 );
     $scripts->add( 'wp-ng_ui.mask',       wp_ng_get_asset_path('scripts/angular-ui-mask.js'),   array( $this->prefix ), $bower->get_version('angular-ui-mask'), 1 );
     $scripts->add( 'wp-ng_ui.select',     wp_ng_get_asset_path('scripts/angular-ui-select.js'), array( $this->prefix), $bower->get_version('angular-ui-select'), 1 );
+    $scripts->add( 'wp-ng_ui.select.zf6', wp_ng_get_asset_path('scripts/ui-select-zf6.js'),     array( $this->prefix, 'wp-ng_ui.select'), $bower->get_version('ui-select-zf6'), 1 );
     add_filter('wp_ng_ui.select_config', function ( $config ) {
 
       $defaults = array(
@@ -307,6 +344,11 @@ class Wp_Ng_Modules {
 
       return wp_parse_args($config, $defaults);
     });
+    $scripts->add( 'wp-ng_checklist-model', wp_ng_get_asset_path('scripts/angular-checklist-model.js'),   array( $this->prefix ), $bower->get_version('checklist-model'), 1 );
+
+    $scripts->add( 'wp-ng_ui.swiper', wp_ng_get_asset_path('scripts/angular-ui-swiper.js'), array( $this->prefix ), $bower->get_version('angular-ui-swiper'), 1 );
+    $scripts->add( 'wp-ng_ui.event', wp_ng_get_asset_path('scripts/angular-ui-event.js'), array( $this->prefix ), $bower->get_version('angular-ui-event'), 1 );
+
 
     //Password Trust
     $scripts->add( 'wp-ng_trTrustpass',   wp_ng_get_asset_path('scripts/angular-trustpass.js'), array( $this->prefix ), $bower->get_version('angular-trustpass'), 1 );
@@ -321,7 +363,24 @@ class Wp_Ng_Modules {
     $scripts->add( 'wp-ng_ngDialog',      wp_ng_get_asset_path('scripts/ng-dialog.js'),         array( $this->prefix ), $bower->get_version('ng-dialog'), 1 );
 
     //Scroll Bar
-    $scripts->add( 'wp-ng_smoothScroll',  wp_ng_get_asset_path('scripts/ngSmoothScroll.js'),    array( $this->prefix ), $bower->get_version('ngSmoothScroll'), 1 );
+    $scripts->add( 'wp-ng_smoothScroll_by_id', wp_ng_get_asset_path('scripts/wp-ng-smoothScroll.js'), array(), WP_NG_PLUGIN_VERSION, 1 );
+    $scripts->add( 'wp-ng_smoothScroll',  wp_ng_get_asset_path('scripts/ngSmoothScroll.js'),    array( $this->prefix, 'wp-ng_smoothScroll_by_id' ), $bower->get_version('ngSmoothScroll'), 1 );
+    add_filter('wp_ng_smoothScroll_config', function ( $config ) {
+
+      $options = wp_ng_get_module_options( 'wp-ng_smoothScroll' );
+
+      $defaults = array(
+        'scroll_by_id'  => (isset($options['scroll_by_id']) && $options['scroll_by_id'] === 'on') ? true : false,
+        'easing'        => (isset($options['easing'])) ? $options['easing'] : '',
+        'duration'      => (isset($options['duration'])) ? absint($options['duration']) : 800,
+        'offset'        => (isset($options['offset'])) ? absint($options['offset']) : 0,
+        'offset_selector' => (isset($options['offset_selector'])) ? $options['offset_selector'] : '',
+      );
+
+      return wp_parse_args($config, $defaults);
+    });
+
+
     $scripts->add( 'wp-ng_ngScrollbars',  wp_ng_get_asset_path('scripts/ng-scrollbars.js'),     array( $this->prefix ), $bower->get_version('ng-scrollbars'), 1 );
     add_filter('wp_ng_ngScrollbars_config', function ( $config ) {
 
@@ -344,9 +403,11 @@ class Wp_Ng_Modules {
 
     //Scroll
     $scripts->add( 'wp-ng_ngScrollSpy',  wp_ng_get_asset_path('scripts/ng-ScrollSpy.js'),    array( $this->prefix ), $bower->get_version('ng-ScrollSpy.js'), 1 );
+    $scripts->add( 'wp-ng_snapscroll',  wp_ng_get_asset_path('scripts/angular-snapscroll.js'),    array( $this->prefix ), $bower->get_version('angular-snapscroll'), 1 );
     $scripts->add( 'wp-ng_duScroll', wp_ng_get_asset_path('scripts/angular-scroll.js'), array( $this->prefix ), $bower->get_version('angular-scroll'), 1 );
     $scripts->add( 'wp-ng_ngTinyScrollbar', wp_ng_get_asset_path('scripts/ng-tiny-scrollbar.js'), array( $this->prefix, 'wp-ng_mutationObserver-shim' ), $bower->get_version('ngTinyScrollbar'), 1 );
 
+    $scripts->add( 'wp-ng_swipe',  wp_ng_get_asset_path('scripts/angular-swipe.js'),    array( $this->prefix ), $bower->get_version('angular-swipe'), 1 );
     $scripts->add( 'wp-ng_angular.vertilize', wp_ng_get_asset_path('scripts/angular-vertilize.js'), array( $this->prefix ), $bower->get_version('angular-vertilize'), 1 );
 
     //Image Gallery and Carousel
@@ -355,7 +416,6 @@ class Wp_Ng_Modules {
 
     $scripts->add( 'wp-ng_angular-owl-carousel-2', wp_ng_get_asset_path('scripts/angular-owl-carousel2.js'), array( $this->prefix, 'wp-ng_owl-carousel' ), $bower->get_version('angular-owl-carousel2'), 1 );
     $scripts->add( 'wp-ng_angularGrid', wp_ng_get_asset_path('scripts/angulargrid.js'), array( $this->prefix ), $bower->get_version('angulargrid'), 1 );
-    $scripts->add( 'wp-ng_ui.swiper', wp_ng_get_asset_path('scripts/angular-ui-swiper.js'), array( $this->prefix ), $bower->get_version('angular-ui-swiper'), 1 );
 
     $scripts->add( 'wp-ng_rcGallery', wp_ng_get_asset_path('scripts/rc-gallery.js'), array( $this->prefix ), $bower->get_version('rc-gallery'), 1 );
     $scripts->add( 'wp-ng_rcGalleryUnitegallery', wp_ng_get_asset_path('scripts/rc-gallery-unitegallery.js'), array( $this->prefix, 'wp-ng_rcGallery' ), $bower->get_version('rc-gallery-unitegallery'), 1 );
@@ -536,8 +596,11 @@ class Wp_Ng_Modules {
       return wp_parse_args($config, $defaults);
     });
 
+    //Tooltips
+    $scripts->add( 'wp-ng_720kb.tooltips', wp_ng_get_asset_path('scripts/angular-tooltips.js'), array( $this->prefix ), $bower->get_version('angular-tooltips'), 1 );
 
-    $scripts->add( 'wp-ng_ngMagnify',     wp_ng_get_asset_path('scripts/ng-magnify.js'),           array( $this->prefix ), $bower->get_version('ng-magnify'), 1 );
+    //Image Magnify
+    $scripts->add( 'wp-ng_ngMagnify', wp_ng_get_asset_path('scripts/ng-magnify.js'), array( $this->prefix ), $bower->get_version('ng-magnify'), 1 );
 
     //Sticky
     $scripts->add( 'wp-ng_hl.sticky',       wp_ng_get_asset_path('scripts/angular-sticky-plugin.js'), array( $this->prefix ), $bower->get_version('angular-sticky'), 1 );
@@ -551,13 +614,13 @@ class Wp_Ng_Modules {
     $scripts->add( 'wp-ng_LiveSearch', wp_ng_get_asset_path('scripts/angular-livesearch.js'), array( $this->prefix ), $bower->get_version('angular-livesearch'), 1 );
 
     //Videogular
-    $scripts->add( 'wp-ng_com.2fdevs.videogular', wp_ng_get_asset_path('scripts/videogular.js'), array( $this->prefix, 'wp-ng_custom-event-polyfill', 'wp-ng_ngSanitize' ), $bower->get_version('videogular'), 1 );
-    $scripts->add( 'wp-ng_com.2fdevs.videogular.plugins.buffering',   wp_ng_get_asset_path('scripts/videogular-buffering.js'),    array( $this->prefix, 'wp-ng_com.2fdevs.videogular' ), $bower->get_version('videogular-buffering'), 1 );
-    $scripts->add( 'wp-ng_com.2fdevs.videogular.plugins.controls',    wp_ng_get_asset_path('scripts/videogular-controls.js'),     array( $this->prefix, 'wp-ng_com.2fdevs.videogular' ), $bower->get_version('videogular-controls'), 1 );
-    $scripts->add( 'wp-ng_com.2fdevs.videogular.plugins.overlayplay', wp_ng_get_asset_path('scripts/videogular-overlay-play.js'), array( $this->prefix, 'wp-ng_com.2fdevs.videogular' ), $bower->get_version('videogular-overlay-play'), 1 );
-    $scripts->add( 'wp-ng_com.2fdevs.videogular.plugins.poster',      wp_ng_get_asset_path('scripts/videogular-poster.js'),       array( $this->prefix, 'wp-ng_com.2fdevs.videogular' ), $bower->get_version('videogular-poster'), 1 );
-    $scripts->add( 'wp-ng_info.vietnamcode.nampnq.videogular.plugins.youtube', wp_ng_get_asset_path('scripts/videogular-youtube.js'), array( $this->prefix, 'wp-ng_com.2fdevs.videogular' ), $bower->get_version('bower-videogular-youtube'), 1 );
-    $scripts->add( 'wp-ng_videogular.plugins.vimeo',                  wp_ng_get_asset_path('scripts/videogular-vimeo.js'),        array( $this->prefix, 'wp-ng_com.2fdevs.videogular' ), $bower->get_version('videogular-vimeo'), 1 );
+    $scripts->add( 'wp-ng_com.2fdevs.videogular', wp_ng_get_asset_path('scripts/videogular.js'), array( $this->prefix, 'wp-ng_custom-event-polyfill', 'wp-ng_ngSanitize' ), $bower->get_version('rc-videogular'), 1 );
+    $scripts->add( 'wp-ng_com.2fdevs.videogular.plugins.buffering',   wp_ng_get_asset_path('scripts/videogular-buffering.js'),    array( $this->prefix, 'wp-ng_com.2fdevs.videogular' ), $bower->get_version('rc-videogular'), 1 );
+    $scripts->add( 'wp-ng_com.2fdevs.videogular.plugins.controls',    wp_ng_get_asset_path('scripts/videogular-controls.js'),     array( $this->prefix, 'wp-ng_com.2fdevs.videogular' ), $bower->get_version('rc-videogular'), 1 );
+    $scripts->add( 'wp-ng_com.2fdevs.videogular.plugins.overlayplay', wp_ng_get_asset_path('scripts/videogular-overlay-play.js'), array( $this->prefix, 'wp-ng_com.2fdevs.videogular' ), $bower->get_version('rc-videogular'), 1 );
+    $scripts->add( 'wp-ng_com.2fdevs.videogular.plugins.poster',      wp_ng_get_asset_path('scripts/videogular-poster.js'),       array( $this->prefix, 'wp-ng_com.2fdevs.videogular' ), $bower->get_version('rc-videogular'), 1 );
+    $scripts->add( 'wp-ng_rc-videogular.plugins.youtube',             wp_ng_get_asset_path('scripts/videogular-youtube.js'), array( $this->prefix, 'wp-ng_com.2fdevs.videogular' ), $bower->get_version('rc-videogular'), 1 );
+    $scripts->add( 'wp-ng_rc-videogular.plugins.vimeo',               wp_ng_get_asset_path('scripts/videogular-vimeo.js'),        array( $this->prefix, 'wp-ng_com.2fdevs.videogular' ), $bower->get_version('rc-videogular'), 1 );
 
     //Authentication Satellizer
     $scripts->add( 'wp-ng_satellizer', wp_ng_get_asset_path('scripts/satellizer.js'), array( $this->prefix ), $bower->get_version('satellizer'), 1 );
@@ -582,6 +645,16 @@ class Wp_Ng_Modules {
         $defaults['sources']['spinner'] = wp_ng_get_asset_path('images/icons-spin.svg');
       }
 
+      //Parse additional sources
+      if (isset($webicon['sources']) && is_array($webicon['sources'])) {
+        $defaults['sources'] = array_map('esc_url', $webicon['sources']);
+      }
+
+      //Parse additional aliases
+      if (isset($webicon['aliases']) && is_array($webicon['aliases'])) {
+        $defaults['alias'] = $webicon['aliases'];
+      }
+
       if (isset($webicon['svg_icons']) && !empty($webicon['svg_icons'])) {
         $icon_url = $webicon['svg_icons'];
         $parsed_url= parse_url($icon_url);
@@ -590,7 +663,7 @@ class Wp_Ng_Modules {
         $icon_name = basename($parsed_url['path'], '.svg');
 
         $defaults['sources'][$icon_name] = esc_url($webicon['svg_icons']);
-        $defaults['alias'][$icon_name] = $icon_alias;
+        $defaults['alias'][$icon_alias] = $icon_name;
       }
 
       foreach ($config as $key => $val) {
@@ -600,7 +673,7 @@ class Wp_Ng_Modules {
         }
       }
 
-      return wp_parse_args($config, $defaults);;
+      return wp_parse_args($config, $defaults);
     });
 
     //Media
@@ -702,13 +775,19 @@ class Wp_Ng_Modules {
     $scripts->add( 'wp-ng_duParallax',  wp_ng_get_asset_path('scripts/angular-parallax.js'), array( $this->prefix, 'wp-ng_duScroll' ), $bower->get_version('angular-parallax'), 1 );
 
     //javascript datetime picker
-    $scripts->add( 'wp-ng_angular-flatpickr',  wp_ng_get_asset_path('scripts/angular-flatpickr.js'), array( $this->prefix, 'wp-ng_flatpickr' ), $bower->get_version('angular-flatpickr'), 1 );
+    $scripts->add( 'wp-ng_angular-flatpickr',  wp_ng_get_asset_path('scripts/angular-flatpickr.js'), array_merge(array( $this->prefix ), $flatpickr_dep), $bower->get_version('angular-flatpickr'), 1 );
 
     //Drag and Drop
     $scripts->add( 'wp-ng_dragularModule',  wp_ng_get_asset_path('scripts/dragular.js'), array( $this->prefix ), $bower->get_version('dragular'), 1 );
 
     //Animate slide up and down
     $scripts->add( 'wp-ng_ng-slide-down',  wp_ng_get_asset_path('scripts/ng-slide-down.js'), array( $this->prefix ), $bower->get_version('ng-slide-down'), 1 );
+
+    //Rating
+    $scripts->add( 'wp-ng_ngRateIt',  wp_ng_get_asset_path('scripts/ng-rateit.js'), array( $this->prefix ), $bower->get_version('angular-rateit'), 1 );
+
+    //HTTP
+    $scripts->add( 'wp-ng_rcHttp',  wp_ng_get_asset_path('scripts/rc-http.js'), array( $this->prefix ), $bower->get_version('rc-http'), 1 );
 
   }
 
@@ -725,8 +804,7 @@ class Wp_Ng_Modules {
     $styles->add( 'wp-ng_ngAnimate-all', wp_ng_get_asset_path('styles/angular-animate-css-all.css'), array(), $bower->get_version('angular-animate-css'), 'all' );
 
     //javascript datetime picker
-    $styles->add( 'wp-ng_flatpickr',  wp_ng_get_asset_path('styles/wp-ng_flatpickr.css'), array( $this->prefix ), $bower->get_version('flatpickr'), 'all' );
-
+    $styles->add( 'wp-ng_flatpickr',  wp_ng_get_asset_path('styles/flatpickr.css'), array(), $bower->get_version('flatpickr'), 'all' );
 
     //Bootstrap
     $styles->add( 'wp-ng_bootstrap', wp_ng_get_asset_path('styles/bootstrap.css'), array(), $bower->get_version('bootstrap'), 'all' );
@@ -754,7 +832,9 @@ class Wp_Ng_Modules {
 
     $styles->add( 'wp-ng_ngDialog',         wp_ng_get_asset_path('styles/ng-dialog.css'), array( $this->prefix ), $bower->get_version('ng-dialog'), 'all' );
 
-    $styles->add( 'wp-ng_ngMagnify',    wp_ng_get_asset_path('styles/ng-magnify.css'),    array( $this->prefix ), $bower->get_version('ng-magnify'), 'all' );
+    $styles->add( 'wp-ng_720kb.tooltips', wp_ng_get_asset_path('styles/angular-tooltips.css'), array( $this->prefix ), $bower->get_version('angular-tooltips'), 'all' );
+
+    $styles->add( 'wp-ng_ngMagnify', wp_ng_get_asset_path('styles/ng-magnify.css'), array( $this->prefix ), $bower->get_version('ng-magnify'), 'all' );
 
     $styles->add( 'wp-ng_ngTinyScrollbar', wp_ng_get_asset_path('styles/ng-tiny-scrollbar.css'), array( $this->prefix ), $bower->get_version('ngTinyScrollbar'), 'all' );
     $styles->add( 'wp-ng_ngScrollbars', wp_ng_get_asset_path('styles/ng-scrollbars.css'),        array( $this->prefix ), $bower->get_version('ng-scrollbars'), 'all' );
@@ -770,6 +850,9 @@ class Wp_Ng_Modules {
     $styles->add( 'wp-ng_angular-owl-carousel-2-theme-green', wp_ng_get_asset_path('styles/owl-carousel-theme-green.css'), array( 'wp-ng_angular-owl-carousel-2' ), $bower->get_version('owl.carousel'), 'all' );
 
     $styles->add( 'wp-ng_ui.swiper', wp_ng_get_asset_path('styles/angular-ui-swiper.css'), array( $this->prefix ), $bower->get_version('angular-ui-swiper'), 'all' );
+
+    //Icons
+    $styles->add( 'wp-ng_webicon', wp_ng_get_asset_path('styles/webicon.css'), array( $this->prefix ), $bower->get_version('webicon'), 'all' );
 
     //Loading Bar
     $styles->add( 'wp-ng_angular-loading-bar',  wp_ng_get_asset_path('styles/angular-loading-bar.css'), array( $this->prefix ), $bower->get_version('angular-loading-bar'), 'all' );
@@ -787,7 +870,7 @@ class Wp_Ng_Modules {
     $styles->add( 'wp-ng_ui.grid',      wp_ng_get_asset_path('styles/angular-ui-grid.css'),   array( $this->prefix ), $bower->get_version('angular-ui-grid'), 'all' );
     $styles->add( 'wp-ng_ui.select',    wp_ng_get_asset_path('styles/angular-ui-select.css'), array( $this->prefix ), $bower->get_version('angular-ui-select'), 'all' );
     $styles->add( 'wp-ng_ui.select-selectize', wp_ng_get_asset_path('styles/selectize.css'), array( 'wp-ng_ui.select' ), $bower->get_version('angular-ui-select'), 'all' );
-    $styles->add( 'wp-ng_ui.select-bs-2-zf', wp_ng_get_asset_path('styles/select-bs-2-zf.css'), array( 'wp-ng_ui.select' ), $bower->get_version('angular-ui-select'), 'all' );
+    $styles->add( 'wp-ng_ui.select.zf6', wp_ng_get_asset_path('styles/ui-select-zf6.css'), array( $this->prefix, 'wp-ng_ui.select' ), $bower->get_version('ui-select-zf6'), 'all' );
 
     $styles->add( 'wp-ng_trTrustpass',      wp_ng_get_asset_path('styles/angular-trustpass.css'),   array( $this->prefix ), $bower->get_version('angular-trustpass'), 'all' );
 
@@ -797,7 +880,7 @@ class Wp_Ng_Modules {
 
     $styles->add( 'wp-ng_LiveSearch',    wp_ng_get_asset_path('styles/angular-livesearch.css'), array( $this->prefix ), $bower->get_version('angular-livesearch'), 'all' );
 
-    $styles->add( 'wp-ng_com.2fdevs.videogular', wp_ng_get_asset_path('styles/videogular.css'), array( $this->prefix ), $bower->get_version('videogular-themes-default'), 'all' );
+    $styles->add( 'wp-ng_com.2fdevs.videogular', wp_ng_get_asset_path('styles/videogular.css'), array( $this->prefix ), $bower->get_version('rc-videogular'), 'all' );
 
     //Button Styles with loading
     $styles->add( 'wp-ng_ngProgressButtonStyles', wp_ng_get_asset_path('styles/ng-progress-button-styles.css'), array( $this->prefix ), $bower->get_version('ng-progress-button-styles'), 'all' );
@@ -808,27 +891,42 @@ class Wp_Ng_Modules {
     $styles->add( 'wp-ng_rcMedia-zf',     wp_ng_get_asset_path('styles/rc-media-zf.css'),     array( $this->prefix ), $bower->get_version('rc-media'), 'all' );
 
     //V by Lukasz Watroba https://github.com/LukaszWatroba
-    $styles->add( 'wp-ng_valitycss',   wp_ng_get_asset_path('styles/valitycss.css'), array(), $bower->get_version('valitycss'), 'all' );
-    $styles->add( 'wp-ng_vButton',     wp_ng_get_asset_path('styles/v-button.css'),    array( $this->prefix, 'wp-ng_valitycss' ), $bower->get_version('v-button'),    'all' );
-    $styles->add( 'wp-ng_vTabs',       wp_ng_get_asset_path('styles/v-tabs.css'),      array( $this->prefix, 'wp-ng_valitycss' ), $bower->get_version('v-tabs'),      'all' );
-    $styles->add( 'wp-ng_vAccordion',  wp_ng_get_asset_path('styles/v-accordion.css'), array( $this->prefix, 'wp-ng_valitycss' ), $bower->get_version('v-accordion'), 'all' );
-    $styles->add( 'wp-ng_vModal',      wp_ng_get_asset_path('styles/v-modal.css'),     array( $this->prefix, 'wp-ng_valitycss' ), $bower->get_version('v-modal'),     'all' );
-    $styles->add( 'wp-ng_vTextfield',  wp_ng_get_asset_path('styles/v-textfield.css'), array( $this->prefix, 'wp-ng_valitycss' ), $bower->get_version('v-textfield'), 'all' );
+    //Check dependencie of active valitycss
+    $v_button = wp_ng_get_module_option('style_valitycss', 'vButton', false);
+    $v_tabs = wp_ng_get_module_option('style_valitycss', 'vTabs', false);
+    $v_accordion = wp_ng_get_module_option('style_valitycss', 'vAccordion', false);
+    $v_modal = wp_ng_get_module_option('style_valitycss', 'vModal', false);
+    $v_textfield = wp_ng_get_module_option('style_valitycss', 'vTextfield', false);
+    $v_dep = array ($this->prefix );
+
+    if ($v_button == 'on' || $v_tabs == 'on' || $v_accordion == 'on' || $v_modal == 'on' || $v_textfield == 'on') {
+      $v_dep[] = 'wp-ng_valitycss';
+    }
+
+    $styles->add( 'wp-ng_valitycss',   wp_ng_get_asset_path('styles/valitycss.css'),  array(), $bower->get_version('valitycss'), 'all' );
+    $styles->add( 'wp-ng_vButton',     wp_ng_get_asset_path('styles/v-button.css'),    $v_dep, $bower->get_version('v-button'),    'all' );
+    $styles->add( 'wp-ng_vTabs',       wp_ng_get_asset_path('styles/v-tabs.css'),      $v_dep, $bower->get_version('v-tabs'),      'all' );
+    $styles->add( 'wp-ng_vAccordion',  wp_ng_get_asset_path('styles/v-accordion.css'), $v_dep, $bower->get_version('v-accordion'), 'all' );
+    $styles->add( 'wp-ng_vModal',      wp_ng_get_asset_path('styles/v-modal.css'),     $v_dep, $bower->get_version('v-modal'),     'all' );
+    $styles->add( 'wp-ng_vTextfield',  wp_ng_get_asset_path('styles/v-textfield.css'), $v_dep, $bower->get_version('v-textfield'), 'all' );
 
     //Sweet Alert
-    $styles->add( 'wp-ng_ng-sweet-alert',  wp_ng_get_asset_path('styles/ng-sweet-alert.css'), array( $this->prefix ), $bower->get_version('ng-sweet-alert'), 'all' );
+    $styles->add( 'wp-ng_ng-sweet-alert',   wp_ng_get_asset_path('styles/ng-sweet-alert.css'), array( $this->prefix ), $bower->get_version('ng-sweet-alert'), 'all' );
 
     //PhotoSwipe
-    $styles->add( 'wp-ng_rcPhotoswipe',  wp_ng_get_asset_path('styles/photoswipe.css'), array( $this->prefix ), $bower->get_version('rc-photoswipe'), 'all' );
+    $styles->add( 'wp-ng_rcPhotoswipe',     wp_ng_get_asset_path('styles/photoswipe.css'), array( $this->prefix ), $bower->get_version('rc-photoswipe'), 'all' );
 
     //Back Top Button
     $styles->add( 'wp-ng_angular.backtop',  wp_ng_get_asset_path('styles/angular-backtop.css'), array( $this->prefix ), $bower->get_version('angular-backtop'), 'all' );
 
     //Gridster2
-    $styles->add( 'wp-ng_angular-gridster2',  wp_ng_get_asset_path('styles/angular-gridster2-1.css'), array( $this->prefix ), $bower->get_version('angular-gridster2-1'), 'all' );
+    $styles->add( 'wp-ng_angular-gridster2', wp_ng_get_asset_path('styles/angular-gridster2-1.css'), array( $this->prefix ), $bower->get_version('angular-gridster2-1'), 'all' );
 
     //Drag and Drop
-    $styles->add( 'wp-ng_dragularModule',  wp_ng_get_asset_path('styles/dragular.css'), array( $this->prefix ), $bower->get_version('dragular'), 'all' );
+    $styles->add( 'wp-ng_dragularModule',   wp_ng_get_asset_path('styles/dragular.css'), array( $this->prefix ), $bower->get_version('dragular'), 'all' );
+
+    //Rating
+    $styles->add( 'wp-ng_ngRateIt',         wp_ng_get_asset_path('styles/ng-rateit.css'), array( $this->prefix ), $bower->get_version('angular-rateit'), 'all' );
   }
 
   /**
@@ -853,7 +951,8 @@ class Wp_Ng_Modules {
    * @return array
    */
   public function get_ng_module_from_handles_script() {
-    global $wp_scripts;
+
+    $wp_scripts = wp_scripts();
 
     $ng_modules = $this->get_ng_modules_from_handles( $this->scripts_src, $wp_scripts );
 
@@ -866,7 +965,8 @@ class Wp_Ng_Modules {
    * @return array
    */
   public function get_ng_module_from_handles_style() {
-    global $wp_styles;
+
+    $wp_styles = wp_styles();
 
     $ng_modules = $this->get_ng_modules_from_handles( $this->styles_src, $wp_styles );
 

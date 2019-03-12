@@ -1,6 +1,6 @@
 <?php namespace Rollbar\Payload;
 
-class Trace extends ContentInterface
+class Trace implements ContentInterface
 {
     private $frames;
     private $exception;
@@ -13,6 +13,11 @@ class Trace extends ContentInterface
         $this->setException($exception);
     }
 
+    public function getKey()
+    {
+        return 'trace';
+    }
+
     public function getFrames()
     {
         return $this->frames;
@@ -20,11 +25,6 @@ class Trace extends ContentInterface
 
     public function setFrames(array $frames)
     {
-        foreach ($frames as $frame) {
-            if (!$frame instanceof Frame) {
-                throw new \InvalidArgumentException("\$frames must all be Rollbar\Payload\Frames");
-            }
-        }
         $this->frames = $frames;
         return $this;
     }
@@ -42,8 +42,10 @@ class Trace extends ContentInterface
 
     public function jsonSerialize()
     {
-        $result = get_object_vars($this);
-        unset($result['utilities']);
+        $result = array(
+            "frames" => $this->frames,
+            "exception" => $this->exception,
+        );
         return $this->utilities->serializeForRollbar($result);
     }
 }

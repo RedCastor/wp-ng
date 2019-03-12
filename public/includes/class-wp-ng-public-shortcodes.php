@@ -33,8 +33,10 @@ class Wp_Ng_Public_Shortcodes {
   public static function map_modules_gallery () {
 
     $modules_map = array(
-      'rcGallery' => 'Wp_Ng_Shortcodes_Gallery::rc_gallery',
-      'angular-owl-carousel-2' => 'Wp_Ng_Shortcodes_Gallery::owl2',
+      'rcGallery'               => 'Wp_Ng_Shortcodes_Gallery::rc_gallery',
+      'angular-owl-carousel-2'  => 'Wp_Ng_Shortcodes_Gallery::owl2',
+      'slick'                   => 'Wp_Ng_Shortcodes_Gallery::slick',
+      'ui.swiper'               => 'Wp_Ng_Shortcodes_Gallery::swiper',
     );
 
     return apply_filters('wp_ng_shortcode_map_modules_gallery', $modules_map);
@@ -57,33 +59,64 @@ class Wp_Ng_Public_Shortcodes {
     add_shortcode( 'ng-form-token',   'Wp_Ng_Shortcodes_Form::token' );
     add_shortcode( 'ng-form-media-select','Wp_Ng_Shortcodes_Form::media_select' );
 
-    add_shortcode( 'ng-alert',          'Wp_Ng_Shortcodes_Directive::alert' );
+    add_shortcode( 'ng-directive',    'Wp_Ng_Shortcodes_Directive::directive' );
+    add_shortcode( 'ng-webicon',      'Wp_Ng_Shortcodes_Directive::webicon' );
+    add_shortcode( 'ng-button',       'Wp_Ng_Shortcodes_Directive::button' );
+    add_shortcode( 'ng-socialshare',  'Wp_Ng_Shortcodes_Directive::socialshare' );
+    add_shortcode( 'ng-alert',        'Wp_Ng_Shortcodes_Directive::alert' );
 
-    add_shortcode( 'ng-socialshare',    'Wp_Ng_Shortcodes_720kbSocialShare::socialshare' );
+    add_shortcode( 'ng-accordion',     'Wp_Ng_Shortcodes_Accordion::ng_accordion' );
+    add_shortcode( 'ng-accordion-item','Wp_Ng_Shortcodes_Accordion::ng_accordion_item' );
+    add_shortcode( 'ng-accordion-header','Wp_Ng_Shortcodes_Accordion::ng_accordion_header' );
+    add_shortcode( 'ng-accordion-content','Wp_Ng_Shortcodes_Accordion::ng_accordion_content' );
 
-    add_shortcode( 'ui-leaflet',        'Wp_Ng_Shortcodes_Map::leaflet' );
-    add_shortcode( 'ui-leaflet-google', 'Wp_Ng_Shortcodes_Map::leaflet_google' );
+    add_shortcode( '_ng-accordion',     'Wp_Ng_Shortcodes_Accordion::_ng_accordion' );
+    add_shortcode( '_ng-accordion-item','Wp_Ng_Shortcodes_Accordion::ng_accordion_item' );
+    add_shortcode( '_ng-accordion-header','Wp_Ng_Shortcodes_Accordion::ng_accordion_header' );
+    add_shortcode( '_ng-accordion-content','Wp_Ng_Shortcodes_Accordion::ng_accordion_content' );
 
-    add_shortcode( 'ng-gallery',        'Wp_Ng_Shortcodes_Gallery::ng_gallery' );
-    add_shortcode( 'rc-gallery',        'Wp_Ng_Shortcodes_Gallery::rc_gallery' );
-    add_shortcode( 'rc-gallery-unitegallery', 'Wp_Ng_Shortcodes_Gallery::rc_gallery_unitegallery' );
-    add_shortcode( 'rc-gallery-galleria',     'Wp_Ng_Shortcodes_Gallery::rc_gallery_galleria' );
+    add_shortcode( 'ng-tabset',        'Wp_Ng_Shortcodes_Tabs::ng_tabset' );
+    add_shortcode( 'ng-tab',           'Wp_Ng_Shortcodes_Tabs::ng_tab' );
+    add_shortcode( 'ng-tab-header',    'Wp_Ng_Shortcodes_Tabs::ng_tab_header' );
+    add_shortcode( 'ng-tab-content',   'Wp_Ng_Shortcodes_Tabs::ng_tab_content' );
+
+    add_shortcode( '_ng-tabset',        'Wp_Ng_Shortcodes_Tabs::_ng_tabset' );
+    add_shortcode( '_ng-tab',           'Wp_Ng_Shortcodes_Tabs::ng_tab' );
+    add_shortcode( '_ng-tab-header',    'Wp_Ng_Shortcodes_Tabs::ng_tab_header' );
+    add_shortcode( '_ng-tab-content',   'Wp_Ng_Shortcodes_Tabs::ng_tab_content' );
+
+    add_shortcode( 'ng-dialog',       'Wp_Ng_Shortcodes_Dialog::ng_dialog' );
+    add_shortcode( 'rc-dialog',       'Wp_Ng_Shortcodes_Dialog::rc_dialog' );
+
+    add_shortcode( 'ui-leaflet',      'Wp_Ng_Shortcodes_Map::leaflet' );
+    add_shortcode( 'ui-leaflet-google','Wp_Ng_Shortcodes_Map::leaflet_google' );
+
+    add_shortcode( 'ng-gallery',      'Wp_Ng_Shortcodes_Gallery::ng_gallery' );
+    add_shortcode( 'rc-gallery',      'Wp_Ng_Shortcodes_Gallery::rc_gallery' );
+    add_shortcode( 'rc-gallery-unitegallery','Wp_Ng_Shortcodes_Gallery::rc_gallery_unitegallery' );
+    add_shortcode( 'rc-gallery-galleria', 'Wp_Ng_Shortcodes_Gallery::rc_gallery_galleria' );
     add_shortcode( 'ng-gallery-owl2',     'Wp_Ng_Shortcodes_Gallery::owl2' );
+    add_shortcode( 'ng-gallery-slick',    'Wp_Ng_Shortcodes_Gallery::slick' );
+    add_shortcode( 'ng-gallery-swiper',   'Wp_Ng_Shortcodes_Gallery::swiper' );
+
+    add_shortcode( 'ng-social-share-links', 'Wp_Ng_Shortcodes_Social_Share::links' );
+
+    add_shortcode( 'ng-pageslide',     'Wp_Ng_Shortcodes_Pageslide::ng_pageslide' );
+    add_shortcode( 'ng-pageslide-button','Wp_Ng_Shortcodes_Pageslide::ng_pageslide_button' );
+    add_shortcode( 'ng-pageslide-content','Wp_Ng_Shortcodes_Pageslide::ng_pageslide_content' );
 
 
-    if ( wp_ng_is_admin_gallery() ) {
-
-      add_filter('post_gallery', 'Wp_Ng_Public_Shortcodes::post_gallery', 10, 3);
-    }
+    //Filter default shortcode gallery
+    add_filter('post_gallery', 'Wp_Ng_Public_Shortcodes::post_gallery', 10, 3);
   }
 
 
   private static function load_dependencies() {
 
     /**
-     * Include shortcode form class
+     * Include shortcodes directive class
      */
-    require_once dirname( __FILE__ ) . '/shortcodes/class-wp-ng-shortcodes-directive.php';
+    require_once dirname( __FILE__ ) . '/shortcodes/class-wp-ng-shortcodes-directives.php';
 
     /**
      * Include shortcode form class
@@ -91,9 +124,19 @@ class Wp_Ng_Public_Shortcodes {
     require_once dirname( __FILE__ ) . '/shortcodes/class-wp-ng-shortcodes-form.php';
 
     /**
-     * Include shortcode 720kb Social Share class
+     * Include shortcode accordion class
      */
-    require_once dirname( __FILE__ ) . '/shortcodes/class-wp-ng-shortcodes-720kb.socialshare.php';
+    require_once dirname( __FILE__ ) . '/shortcodes/class-wp-ng-shortcodes-accordion.php';
+
+    /**
+     * Include shortcode tabs class
+     */
+    require_once dirname( __FILE__ ) . '/shortcodes/class-wp-ng-shortcodes-tabs.php';
+
+    /**
+     * Include shortcode dialog class
+     */
+    require_once dirname( __FILE__ ) . '/shortcodes/class-wp-ng-shortcodes-dialog.php';
 
     /**
      * Include shortcode leaflet class
@@ -104,6 +147,11 @@ class Wp_Ng_Public_Shortcodes {
      * Include shortcode gallery class
      */
     require_once dirname( __FILE__ ) . '/shortcodes/class-wp-ng-shortcodes-gallery.php';
+
+    /**
+     * Include shortcode pageslide class
+     */
+    require_once dirname( __FILE__ ) . '/shortcodes/class-wp-ng-shortcodes-pageslide.php';
 
   }
 
@@ -117,15 +165,26 @@ class Wp_Ng_Public_Shortcodes {
    * @param $instance
    * @return mixed
    */
-  public static function post_gallery( $output, $atts, $instance ) {
+  public static function post_gallery( $output, $attr, $instance ) {
 
-    if ( empty($output) && isset($atts['ng_module']) ) {
+    if ( empty($output) && isset($attr['ng_module']) ) {
 
-      if ( !isset($atts['id']) ) {
-        $post = get_post();
-        $atts['id'] = $post ? $post->ID : 0;
-      }
+      $post = get_post();
 
+      $html5 = current_theme_supports( 'html5', 'gallery' );
+      $atts = wp_parse_args($attr, array(
+        'order'      => 'ASC',
+        'orderby'    => 'menu_order ID',
+        'id'         => $post ? $post->ID : 0,
+        'itemtag'    => $html5 ? 'figure'     : 'dl',
+        'icontag'    => $html5 ? 'div'        : 'dt',
+        'captiontag' => $html5 ? 'figcaption' : 'dd',
+        'columns'    => 3,
+        'size'       => 'thumbnail',
+        'include'    => '',
+        'exclude'    => '',
+        'link'       => ''
+      ));
 
       $modules_map = self::map_modules_gallery();
       $func_shortcode = !empty($modules_map[$atts['ng_module']]) ? $modules_map[$atts['ng_module']] : false;

@@ -35,6 +35,9 @@ class Wp_Ng_Public_wpml {
     add_action( 'rest_delete_attachment', array( __CLASS__, 'rest_delete_attachment_post'), 10, 3 );
     //Hook Rest Api for insert translated attachment
     add_action( 'rest_insert_attachment', array( __CLASS__, 'rest_insert_attachment_post'), 10, 3 );
+
+    //Hook filter for get a translation by id
+    add_filter( 'wp_ng_translate_id', 	  array(__CLASS__, 'get_translate_id'), 10, 3 );
   }
 
 
@@ -109,5 +112,18 @@ class Wp_Ng_Public_wpml {
     return $translated_ids;
   }
 
+
+  /**
+   * Get translate id
+   *
+   * @param $post_id
+   * @param $post_type
+   * @param $original
+   * @return mixed|void
+   */
+  public static function get_translate_id ( $post_id, $post_type, $original = false ) {
+
+    return apply_filters( 'wpml_object_id', $post_id, $post_type, $original );
+  }
 
 }

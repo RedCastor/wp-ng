@@ -316,6 +316,10 @@ class Wp_Ng_Email {
 	  $find = apply_filters( 'wp_ng_email_format_string_find', $this->find, $this );
     $replace = apply_filters( 'wp_ng_email_format_string_replace', $this->replace, $this );
 
+    //Transaltion for boolean.
+    if($replace === 'true') { $replace = __('True', 'wp-ng'); }
+    if($replace === 'false') { $replace = __('False', 'wp-ng'); }
+
     return $this->clean_string(str_replace( $find, $replace,  $string ));
 	}
 

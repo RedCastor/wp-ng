@@ -1,0 +1,1 @@
+!function(){"use strict";angular.module("ui.event",[]).directive("uiEvent",["$parse",function(i){return function(r,t,n){var e=r.$eval(n.uiEvent);angular.forEach(e,function(n,e){var a=i(n);t.bind(e,function(n){var e=Array.prototype.slice.call(arguments);e=e.splice(1),a(r,{$event:n,$params:e}),r.$$phase||r.$apply()})})}}])}();

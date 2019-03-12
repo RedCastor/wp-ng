@@ -2,9 +2,9 @@
 Contributors: redcastor
 Tags: wp-ng, WP-NG, WPNG, wp ng, wpng, wp-angular, wp angular, wp-angularjs, wp angularjs, angular, angular js, AngularJs,  bootstrapper, bootstrap, module, ng, script, enqueue, rest, wp-rest, wp-api, ngResource, rollbar, Rollbar, logging, logs, logger
 Requires at least: 4.5
-Requires PHP: 5.6.31
-Tested up to: 4.8
-Stable tag: 1.5.0
+Requires PHP: 5.6
+Tested up to: 5.1
+Stable tag: 1.7.8
 License: MIT License
 License URI: http://opensource.org/licenses/MIT
 
@@ -17,8 +17,12 @@ WP-NG is a plugin to automatic bootstrap angular application. Activate module by
 
 = Features =
 
+* New Compatibility with Elementor plugin (https://wordpress.org/plugins/elementor)
+* New create routed page for ui-router with admin page option in page attributes
+* New add script tab options with WebFont, objectFitImages, AOS, AOT, animsition, scrollify.
+* New custom cdn url jquery and angular.
 * New Support Rollbar logging (https://rollbar.com)
-* New Shortcodes for galleries, form, map, social
+* New Shortcodes for galleries, form, map, social, ...
 * New angular modules
 * New built-in directive, decorator form directive
 * Automatic bootstrapper angular application.
@@ -82,6 +86,7 @@ List of handle available
 * wp-ng_ngGeonames
 * wp-ng_socialLinks
 * wp-ng_720kb.socialshare
+* wp-ng_720kb.tooltips
 * wp-ng_angular-translate-loader-static-files
 * wp-ng_bootstrap
 * wp-ng_foundation
@@ -131,6 +136,18 @@ List of handle available
 * wp-ng_angularGrid
 * wp-ng_ngImageDimensions
 * wp-ng_angular-gridster2
+* wp-ng_angular-nicescroll
+* wp-ng_duParallax
+* wp-ng_dragularModule
+* wp-ng_ng-slide-down
+* wp-ng_angular.vertilize
+* wp-ng_ngScrollSpy
+* wp-ng_angular-flatpickr
+* wp-ng_ngRateIt
+* wp-ng_snapscroll
+* wp-ng_swipe
+* wp-ng_ismobile
+* wp-ng_angular-inview
 
 
 = Default Registered modules styles =
@@ -176,6 +193,7 @@ List of handle available
 * wp-ng_ng-sweet-alert
 * wp-ng_angular.backtop
 * wp-ng_angular-gridster2
+* wp-ng_720kb.tooltips
 
 
 = Hook Filters =
@@ -199,6 +217,7 @@ List of hook available
 * wp_ng_json_decode
 * wp_ng_json_encode_shortcode
 * wp_ng_get_language
+* wp_ng_current_language
 * wp_ng_apply_translation
 * wp_ng_create_onetime_nonce
 * wp_ng_verify_onetime_nonce
@@ -229,15 +248,175 @@ List of hook available
 
 == Upgrade Notice ==
 Major Update.
-* New feature logging with Rollbar
-* New feature shortcodes for galleries, form, map, social
+* New compatibility Elementor
+* New add script tab options with WebFont, objectFitImages, AOS, AOT, animsition, scrollify.
+* New create routed page for ui-router.
+* New custom cdn url jquery and angular.
 * New angular modules
-* Update Angular v1.6.4
-* Update angular foundation v0.11.5
-* Update foundation to v6.3.1
-* Update ui.bootstrap to v2.5.0
+* New lazyload action template.
+* update angular 1.6.9 to 1.7.4
 
 == Changelog ==
+
+= 1.7.8 =
+* Add 720k angular-tooltips module
+* Fix sticky sass
+* Fix template list
+* Fix wp-ng-router base state
+* Replace component mm.foundation
+* Fix module init
+* Fix url ui-router
+* Fix wp_ng_get_ng_router_url with nested route
+* Add transient cache ui router states
+* Bug fix controllerAs and rename with prefix $
+* Fix smoothscrool offset selector not found.
+* Add foundation angularjs dropdown pane-align top for dropup
+
+= 1.7.7 =
+* Remove woocommerce fix cart cookie on rest request.
+* Add some function class template. Fix list template add action template
+* Bug fixing wp-ng-router set otherwise to all url not only wrapped.
+* Update ng-location-search to v1.1.2
+* Update slick-carousel
+* Add template_plugin, template_plugin_item params to ng-gallery shortcode.
+* ng-gallery fix gallery shortcode content not empty
+* Fix html attributes change empty val to null val
+* Remove antimoderate svg. Only jpeg or png.
+* Bug fix initial-value if input number
+* Fix foundation init
+* Add reinit object fit on module loaded by oc.lazyload
+
+= 1.7.6 =
+* Fix not exist $current_screen
+* Fix ui-router
+* Add ui-router option for set baseUrl
+* Add multiple aliases and multiple sources webicon for default settings.
+
+= 1.7.5 =
+* Fix webfont class
+* Add shortcode pageslide
+* Add foundation reinit on module loaded with oc.lazyload
+* Some bug fix
+* Fix slider height auto
+* Fix wp_ng_json_encode unicode for shortcode
+* Add module rc-http
+
+= 1.7.4 =
+* Add parser tools
+
+= 1.7.3 =
+* Fix unitegallery error
+
+= 1.7.2 =
+* Fix aping gallery template link target and add rel attribute.
+
+= 1.7.1 =
+* Add module ngRateIt
+* Fix do_shortcode for content by apply_filters 'the_content'
+
+= 1.7.1 =
+* Add module ngRateIt
+
+= 1.7.0 =
+* Update Angular to 1.7.4
+* Various bug fixing
+* Add shortcode ng-social-share-links
+* Bug fixing ui-router restrict metabox for manage_options user
+* Bug fix ui-router redirect page url or state name
+* Refactoring ui-router page
+* Small Refactoring
+* Fix shortcode hook gallery for ngGallery
+* Add module checkox-list
+
+= 1.6.5 =
+* Fix ng-dialog button css.
+* Add rest set language action.
+* Fix clear cache on update section
+* Fix smoothscroll default param value
+* Add no-anim-out class for animsition for remove out animation.
+* Add Resend one time request for nonce update
+* Add extend nonce life time from same as cache third party (wp cache enabler)
+* Fix elementor post id support
+* Fix ngDialog style overflow .ngdialog-content
+* Replace wpautop by wpngautop for content in template shortcode
+* Fix elementor pages for woocommerce and stag-catalog
+* Bug Fix style ValityCss. Add option style valitycss on v modules and
+  add dependencie if one of v modules is active
+* Add scroll by id with smoothScroll module.
+* Add smoothScrool Options in descriptor modules
+* Update rc-gallery to v1.1.1
+* Add tabs shortcode
+* Update ng-dialog to v1.4.0
+* Add Accordion shortcode
+* Fix wpng_json_encode single.
+* Add ui-router wrap_exclude
+* Fix logout destroy_session not exist.
+* Fix wpngautop function for not wrap paragraph if not contain html and shortcode
+
+= 1.6.4 =
+* Update module ui.select.zf6
+* Add compatibility wp_cache_clear_cache
+* Add mode shuffle sources for shortcode gallery
+
+= 1.6.3 =
+* Fix webfontloader async display
+* Add action clean cache for compatibility with cache enabler.
+* Update angular module ui.select and bs3-2-zf6
+* Update ng-location-search
+* Add module ui.select.zf6
+* Add check global function wp_ng_is_advanced_cache
+* Add Outdated browser template redirect for ie under 11.
+* Remove angular module ng.deviceDetector
+
+= 1.6.2 =
+* Add routed page with ui-router module
+* Update ui-router to v0.4.2
+* Update rollbar-php to v1.4.2
+* Update rc-rollbar to v2.3.9
+* Update foundation to v6.4.3
+* Update ng-location-search to v1.0.2
+* Update awesome-foundation6-checkbox to v1.0.2
+* Update bs3tozf6 to v1.1.1
+* Update angular-translate to v2.17.0
+
+= 1.6.1 =
+* Fix anisition not load href empty.
+* update angular 1.6.4 to 1.6.9
+* Fix select bs2zf
+* Fix parser shortcode map type
+* Fix wp_ng_get_module_options and wp_ng_get_script_options if use module with dot (ui.router)
+
+= 1.6.0 =
+* Elementor Compatibility widget to invoke the angular compile.
+* Elementor Compatibility lazyload angular module.
+* Elementor Compatibility for combine script and style.
+* Fix input form.
+* Add console icon
+* Add angular flatpickr fix
+* Add translation boolean
+* Fix Checkbox value initial.
+* Add module ui-event.
+* Update module ng-antimoderate.
+* Fix input translation label for checkbox and radio.
+* Add Lib Google Geocode
+* Add is active module.
+* Fix module check is module handle already have prefix.
+* Add Extra Scripts options
+* Add extra script object-fit.js and aos.js
+* Fix get_template return at string Remove undesired characters like trim but for all string.
+* Add function wp_ng_trim_all
+* Add function wp_ng_get_modules_scripts
+* Add function wp_ng_get_modules_styles
+* Add function wp_ng_get_html_attributes
+* Add implementation of lazyload modules.
+* Add template and action hook for lazyload.
+* Add module angular-snapscroll and angular-swipe
+* Add options for custom handles to combine script and style.
+* Add options for custom cdn url angular and jquery.
+* Add WebFont Loader script.
+* Add AOT Animate On Trigger
+* Add ui-swiper templates
+* Add template galleries for aping support.
 
 = 1.5.0 =
 * Add wp-ng Built-in directives

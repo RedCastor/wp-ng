@@ -1,0 +1,16 @@
+//
+// WP-NG
+// --------------------------------------------------
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+[ng\:cloak\:animation], [ng-cloak-animation], [data-ng-cloak-animation], [x-ng-cloak-animation], .ng-cloak-animation, .x-ng-cloak-animation {
+  transition: none !important;
+}
+[ng\:preload] *, [ng-preload] *, [data-ng-preload] *, [x-ng-preload] *, .ng-preload *, .x-ng-preload * {
+  visibility: hidden !important;
+  transition: none !important;
+}
+.ng-animate-disabled {
+  transition: none !important;
+}

@@ -89,7 +89,12 @@ class Wp_Ng_Shortcode_Parser
     }
 
     if (is_numeric($val)) {
-      $val = floatval($val);
+
+      $_val = floatval($val);
+
+      if ( $_val <= PHP_INT_MAX ) {
+        $val = $_val;
+      }
     }
 
     return $val;

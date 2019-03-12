@@ -1,0 +1,7 @@
+/*!--------------------------------------------------------------------
+STYLES "Outdated Browser"
+Version:    1.1.2 - 2015
+author:     Burocratik
+website:    http://www.burocratik.com
+* @preserve
+-----------------------------------------------------------------------*/#outdated{position:fixed;top:0;left:0;width:100%;height:500px;text-align:center;text-transform:uppercase;z-index:1500;background-color:#bc0825;color:#fff}#outdated h6{font-size:32px;line-height:64px;margin:128px 0 10px}#outdated p{font-size:14px;line-height:14px;margin:0}#outdated #btnUpdateBrowser{display:block;position:relative;padding:10px 20px;margin:30px auto 0;width:230px;color:#fff;text-decoration:none;border:2px solid #fff;cursor:pointer}#outdated #btnUpdateBrowser:hover{color:#bc0825;background-color:#fff}#outdated .last{position:absolute;top:10px;right:25px;width:20px;height:20px}#outdated .last[dir=rtl]{right:auto!important;left:25px!important}* html #outdated{position:absolute}

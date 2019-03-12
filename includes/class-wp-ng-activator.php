@@ -31,6 +31,7 @@ class Wp_Ng_Activator {
 	 */
 	public static function activate() {
 
+
 	}
 
 }

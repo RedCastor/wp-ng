@@ -19,10 +19,10 @@ class Defaults
     private static function getGitHash()
     {
         try {
-            if (function_exists('exec')) {
-                exec('git rev-parse --verify HEAD 2> /dev/null', $output);
+            if (function_exists('shell_exec')) {
+                $output = rtrim(shell_exec('git rev-parse --verify HEAD 2> /dev/null'));
                 if ($output) {
-                    return $output[0];
+                    return $output;
                 }
             }
             return null;
@@ -34,10 +34,10 @@ class Defaults
     private static function getGitBranch()
     {
         try {
-            if (function_exists('exec')) {
-                exec('git rev-parse --abbrev-ref HEAD 2> /dev/null', $output);
+            if (function_exists('shell_exec')) {
+                $output = rtrim(shell_exec('git rev-parse --abbrev-ref HEAD 2> /dev/null'));
                 if ($output) {
-                    return $output[0];
+                    return $output;
                 }
             }
             return null;
@@ -108,8 +108,28 @@ class Defaults
         return $rawRequestBody !== null ? $rawRequestBody : $this->defaultRawRequestBody;
     }
 
+    private $defaultAgentLogLocation = '/var/tmp';
+    private $defaultAllowExec = true;
     private $defaultMessageLevel = "warning";
     private $defaultExceptionLevel = "error";
+    private $defaultEndpoint = 'https://api.rollbar.com/api/1/';
+    private $defaultCaptureErrorStacktraces = true;
+    private $defaultCheckIgnore = null;
+    private $defaultCustom = null;
+    private $defaultEnabled = true;
+    private $defaultEnvironment = 'production';
+    private $defaultErrorSampleRates;
+    private $defaultExceptionSampleRates;
+    private $defaultFluentHost = '127.0.0.1';
+    private $defaultFluentPort = 24224;
+    private $defaultFluentTag = 'rollbar';
+    private $defaultHandler = 'blocking';
+    private $defaultHost = null;
+    private $defaultIncludedErrno;
+    private $defaultTimeout = 3;
+    private $defaultReportSuppressed = false;
+    private $defaultUseErrorReporting = false;
+    private $defaultVerbosity = \Psr\Log\LogLevel::ERROR;
     private $defaultPsrLevels;
     private $defaultCodeVersion;
     private $defaultErrorLevels;
@@ -125,10 +145,9 @@ class Defaults
     private $defaultIncludeExcCodeContext;
     private $defaultRawRequestBody;
     private $defaultLocalVarsDump;
-    private $defaultCaptureErrorStacktraces;
     private $utilities;
 
-    public function __construct($utilties)
+    public function __construct($utilities)
     {
         $this->defaultPsrLevels = array(
             LogLevel::EMERGENCY => "critical",
@@ -177,38 +196,132 @@ class Defaults
         $this->defaultIncludeCodeContext = false;
         $this->defaultIncludeExcCodeContext = false;
         $this->defaultRawRequestBody = false;
-        $this->defaultLocalVarsDump = false;
-        $this->defaultCaptureErrorStacktraces = true;
+        $this->defaultLocalVarsDump = true;
+        $this->defaultErrorSampleRates = array();
+        $this->defaultExceptionSampleRates = array();
+        $this->defaultIncludedErrno = ROLLBAR_INCLUDED_ERRNO_BITMASK;
         
-        $this->utilities = $utilties;
+        $this->utilities = $utilities;
+    }
+    
+    public function agentLogLocation($agentLogLocation = null)
+    {
+        return $agentLogLocation ?: $this->defaultAgentLogLocation;
+    }
+    
+    public function allowExec($allowExec = null)
+    {
+        return $allowExec ?: $this->defaultAllowExec;
+    }
+    
+    public function endpoint($endpoint = null)
+    {
+        return $endpoint ?: $this->defaultEndpoint;
+    }
+    
+    public function checkIgnore($checkIgnore = null)
+    {
+        return $checkIgnore ?: $this->defaultCheckIgnore;
+    }
+    
+    public function custom($custom = null)
+    {
+        return $custom ?: $this->defaultCustom;
+    }
+    
+    public function enabled($enabled = null)
+    {
+        return $enabled ?: $this->defaultEnabled;
+    }
+    
+    public function environment($environment = null)
+    {
+        return $environment ?: $this->defaultEnvironment;
+    }
+    
+    public function errorSampleRates($errorSampleRates = null)
+    {
+        return $errorSampleRates ?: $this->defaultErrorSampleRates;
+    }
+    
+    public function exceptionSampleRates($exceptionSampleRates = null)
+    {
+        return $exceptionSampleRates ?: $this->defaultExceptionSampleRates;
+    }
+    
+    public function fluentHost($fluentHost = null)
+    {
+        return $fluentHost ?: $this->defaultFluentHost;
+    }
+    
+    public function fluentPort($fluentPort = null)
+    {
+        return $fluentPort ?: $this->defaultFluentPort;
+    }
+    
+    public function fluentTag($fluentTag = null)
+    {
+        return $fluentTag ?: $this->defaultFluentTag;
+    }
+    
+    public function handler($handler = null)
+    {
+        return $handler ?: $this->defaultHandler;
+    }
+    
+    public function includedErrno($includedErrno = null)
+    {
+        return $includedErrno ?: $this->defaultIncludedErrno;
+    }
+    
+    public function host($host = null)
+    {
+        return $host ?: $this->defaultHost;
+    }
+    
+    public function timeout($timeout = null)
+    {
+        return $timeout ?: $this->defaultTimeout;
+    }
+    
+    public function reportSuppressed($reportSuppressed = null)
+    {
+        return $reportSuppressed ?: $this->defaultReportSuppressed;
+    }
+    
+    public function useErrorReporting($useErrorReporting = null)
+    {
+        return $useErrorReporting ?: $this->defaultUseErrorReporting;
+    }
+    
+    public function verbosity($verbosity = null)
+    {
+        return $verbosity ?: $this->defaultVerbosity;
     }
 
     public function messageLevel($level = null)
     {
-        return $this->utilities->coalesce($level, $this->defaultMessageLevel);
+        return $level ?: $this->defaultMessageLevel;
     }
 
     public function exceptionLevel($level = null)
     {
-        return $this->utilities->coalesce($level, $this->defaultExceptionLevel);
+        return $level ?: $this->defaultExceptionLevel;
     }
 
     public function errorLevels($level = null)
     {
-        return $this->utilities->coalesce($level, $this->defaultErrorLevels);
+        return $level ?: $this->defaultErrorLevels;
     }
     
     public function psrLevels($level = null)
     {
-        return $this->utilities->coalesce($level, $this->defaultPsrLevels);
+        return $level ?: $this->defaultPsrLevels;
     }
 
     public function codeVersion($codeVersion = null)
     {
-        return $this->utilities->coalesce(
-            $codeVersion,
-            $this->defaultCodeVersion
-        );
+        return $codeVersion ?: $this->defaultCodeVersion;
     }
 
     public function gitHash($gitHash = null, $allowExec = true)
@@ -235,51 +348,36 @@ class Defaults
 
     public function serverRoot($serverRoot = null)
     {
-        return $this->utilities->coalesce(
-            $serverRoot,
-            $this->defaultServerRoot
-        );
+        return $serverRoot ?: $this->defaultServerRoot;
     }
 
     public function platform($platform = null)
     {
-        return $this->utilities->coalesce($platform, $this->defaultPlatform);
+        return $platform ?: $this->defaultPlatform;
     }
 
     public function notifier($notifier = null)
     {
-        return $this->utilities->coalesce($notifier, $this->defaultNotifier);
+        return $notifier ?: $this->defaultNotifier;
     }
 
     public function baseException($baseException = null)
     {
-        return $this->utilities->coalesce(
-            $baseException,
-            $this->defaultBaseException
-        );
+        return $baseException ?: $this->defaultBaseException;
     }
 
     public function scrubFields($scrubFields = null)
     {
-        return $this->utilities->coalesce(
-            $scrubFields,
-            $this->defaultScrubFields
-        );
+        return $scrubFields ?: $this->defaultScrubFields;
     }
 
     public function includeCodeContext($includeCodeContext = null)
     {
-        return $this->utilities->coalesce(
-            $includeCodeContext,
-            $this->defaultIncludeCodeContext
-        );
+        return $includeCodeContext ?: $this->defaultIncludeCodeContext;
     }
 
     public function includeExcCodeContext($includeExcCodeContext = null)
     {
-        return $this->utilities->coalesce(
-            $includeExcCodeContext,
-            $this->defaultIncludeExcCodeContext
-        );
+        return $includeExcCodeContext ?: $this->defaultIncludeExcCodeContext;
     }
 }

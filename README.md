@@ -4,6 +4,7 @@ wp-ng is a plugin to automatic bootstrap your app and inject module in app.
 
 ## Features
 
+* New Compatibility with Elementor plugin (https://wordpress.org/plugins/elementor)
 * New Support Rollbar logging (https://rollbar.com)
 * New Shortcodes for galleries, form, map, social
 * New angular modules
@@ -29,21 +30,21 @@ The process to combine all style change all relative url to absolute url.
 
 | **handle**                   | **dep** | **module name**         | **version** | **old version**  |
 | -----------------------------|---------|-------------------------|-------------|------------------|
-| wp-ng_ngRoute                | wp-ng   | ngRoute                 | 1.6.4       |                  |
-| wp-ng_ngSanitize             | wp-ng   | ngSanitize              | 1.6.4       |                  |
-| wp-ng_ngAnimate              | wp-ng   | ngAnimate               | 1.6.4       |                  |
-| wp-ng_ngResource             | wp-ng   | ngResource              | 1.6.4       |                  |
-| wp-ng_ngCookies              | wp-ng   | ngCookies               | 1.6.4       |                  |
-| wp-ng_ngMessages             | wp-ng   | ngMessages              | 1.6.4       |                  |
-| wp-ng_ngTouch                | wp-ng   | ngTouch                 | 1.6.4       |                  |    
+| wp-ng_ngRoute                | wp-ng   | ngRoute                 | 1.7.4      |                  |
+| wp-ng_ngSanitize             | wp-ng   | ngSanitize              | 1.7.4       |                  |
+| wp-ng_ngAnimate              | wp-ng   | ngAnimate               | 1.7.4       |                  |
+| wp-ng_ngResource             | wp-ng   | ngResource              | 1.7.4       |                  |
+| wp-ng_ngCookies              | wp-ng   | ngCookies               | 1.7.4       |                  |
+| wp-ng_ngMessages             | wp-ng   | ngMessages              | 1.7.4       |                  |
+| wp-ng_ngTouch                | wp-ng   | ngTouch                 | 1.7.4       |                  |    
 | wp-ng_ui.bootstrap           | wp-ng   | ui.bootstrap            | 2.5.0       | 2.1.4            |
-| wp-ng_mm.foundation          | wp-ng   | mm.foundation           | 0.11.5     |                  |
-| wp-ng_ui.router              | wp-ng   | ui.router               | 0.3.1       |                  |
-| wp-ng_pascalprecht.translate | wp-ng, wp-ng_angular-translate-loader-static-files   | pascalprecht.translate  | 1.0.0       | |
+| wp-ng_mm.foundation          | wp-ng   | mm.foundation           | 0.11.5     |                   |
+| wp-ng_ui.router              | wp-ng   | ui.router               | 0.4.2       | 0.3.1            |
+| wp-ng_pascalprecht.translate | wp-ng, wp-ng_angular-translate-loader-static-files   | pascalprecht.translate  | 2.17.0 | 2.13.1 |
 | wp-ng_offClick               | wp-ng   | offClick                | 1.0.8       |                  |
 | wp-ng_nya.bootstrap.select   | wp-ng   | nya.bootstrap.select    | 2.1.9       |                  |
 | wp-ng_oi.select              | wp-ng   | oi.select               | 0.2.21      |                  |
-| wp-ng_ngDialog               | wp-ng   | ngDialog                | 0.6.4       |                  |
+| wp-ng_ngDialog               | wp-ng   | ngDialog                | 1.4.0       |                  |
 | wp-ng_smoothScroll           | wp-ng   | smoothScroll            | 2.0.0       |                  |
 | wp-ng_ngTinyScrollbar        | wp-ng   | ngTinyScrollbar         | 0.10.1      |                  |
 | wp-ng_ngScrollbars           | wp-ng   | ngScrollbars            | 0.0.11      |                  |
@@ -56,20 +57,22 @@ The process to combine all style change all relative url to absolute url.
 | wp-ng_wpNgRest               | wp-ng   | wpNgRest                | 1.0.0       |                  |
 | wp-ng_nemLogging             | wp-ng   | nemLogging              | 0.1.7       |                  |
 | wp-ng_duScroll               | wp-ng   | duScroll                | 1.0.0       |                  |
-| wp-ng_pageslide-directive    | wp-ng   | pageslide-directive     | 2.1.5       |                  |
-| wp-ng_ui.mask                | wp-ng   | ui.mask                 | 1.8.7       |                  |
-| wp-ng_ui.validate            | wp-ng   | ui.validate             | 1.2.2       |                  |
+| wp-ng_pageslide-directive    | wp-ng   | pageslide-directive     | 2.2.0       | 2.1.5            |
 | wp-ng_ngGeonames             | wp-ng   | ngGeonames              | 1.1.0       |                  |
 | wp-ng_ngAntimoderate         | wp-ng   | ngAntimoderate          | 1.1.5       |                  |
 | wp-ng_ngColorUtils           | wp-ng   | ngColorUtils            | 1.0.0       |                  |
 | wp-ng_trTrustpass            | wp-ng   | trTrustpass             | 0.4.0       |                  |
+| wp-ng_ui.mask                | wp-ng   | ui.mask                 | 1.8.7       |                  |
+| wp-ng_ui.validate            | wp-ng   | ui.validate             | 1.2.2       |                  |
 | wp-ng_ui.grid                | wp-ng   | ui.grid                 | 3.2.9       |                  |
 | wp-ng_ui.select              | wp-ng   | ui.select               | 0.19.6      |                  |
 | wp-ng_ui.swiper              | wp-ng   | ui.swiper               | 2.3.8       |                  |
-| wp-ng_ngAntimoderate         | wp-ng   | ngAntimoderate          | 1.0.4       |                  |
+| wp-ng_ui.event               | wp-ng   | ui.event                | 1.0.0       |                  |
+| wp-ng_ngAntimoderate         | wp-ng   | ngAntimoderate          | 1.0.6       | 1.0.5            |
 | wp-ng_ngGeonames             | wp-ng   | ngGeonames              | 1.0.8       |                  |
 | wp-ng_socialLinks            | wp-ng   | socialLinks             | 0.0.23      |                  |
 | wp-ng_720kb.socialshare      | wp-ng   | 720kb.socialshare       | 2.3.7       |                  |
+| wp-ng_720kb.tooltips         | wp-ng   | 720kb.tooltips          | 1.2.2       |                  |
 | wp-ng_ngFileUpload           | wp-ng   | ng-file-upload          | 12.2.13     |                  |
 | wp-ng_angular-loading-bar    | wp-ng   | angular-loading-bar     | 0.9.0       |                  |
 | wp-ng_angular-svg-round-progressbar| wp-ng | angular-svg-round-progressbar | 0.4.8 |              |
@@ -81,7 +84,6 @@ The process to combine all style change all relative url to absolute url.
 | wp-ng_angularLazyImg         | wp-ng   | angularLazyImg          | 1.2.2       |                  |
 | wp-ng_breakpointApp          | wp-ng   | breakpointApp           | master      |                  |
 | wp-ng_bs.screenSize          | wp-ng   | bs.screenSize           | 1.0.5       |                  |
-| wp-ng_ng.deviceDetector      | wp-ng   | ng.deviceDetector       | 4.0.3       |                  |
 | wp-ng_angularProgressbar     | wp-ng   | angularProgressbar      | 0.1.0       |                  |
 | wp-ng_hl.sticky              | wp-ng   | hl.sticky               | 0.3.0       |                  |
 | wp-ng_focus-if               | wp-ng   | focus-if                | 1.0.7       |                  |
@@ -89,10 +91,10 @@ The process to combine all style change all relative url to absolute url.
 | wp-ng_angular-img-cropper    | wp-ng   | angular-img-cropper     | 1.2.6       |                  |
 | wp-ng_rcDialog               | wp-ng   | rcDialog                | 1.0.4       |                  |
 | wp-ng_rcMedia                | wp-ng   | rcMedia                 | 1.0.0-alpha13|                 |
-| wp-ng_Gallery                | wp-ng   | rcGallery               | 1.0.4       |                  |
+| wp-ng_Gallery                | wp-ng   | rcGallery               | 1.1.1       | 1.0.7            |
 | wp-ng_rcGalleria             | wp-ng   | rcGalleria              | 1.0.0       |                  |
 | wp-ng_webicon                | wp-ng   | webicon                 | 0.10.7      |                  |
-| wp-ng_rcRollbar              | wp-ng   | rcRollbar               | 2.1.0       |                  |
+| wp-ng_rcRollbar              | wp-ng   | rcRollbar               | 2.3.9       | 2.1.0            |
 | wp-ng_jtt_aping              | wp-ng   | jtt_aping               | 1.4.1       |                  |
 | wp-ng_jtt_aping_instagram    | wp-ng   | jtt_aping_instagram     | 0.7.7       |                  |
 | wp-ng_jtt_aping_facebook     | wp-ng   | jtt_aping_facebook      | 0.7.8       |                  |
@@ -116,7 +118,19 @@ The process to combine all style change all relative url to absolute url.
 | wp-ng_angularGrid            | wp-ng   | angularGrid             | 0.6.5       |                  |
 | wp-ng_ngImageDimensions      | wp-ng   | ngImageDimensions       | 1.1.0       |                  | 
 | wp-ng_angular-gridster2      | wp-ng   | angular-gridster2       | 1.18.0      |                  |   
-| wp-ng_duParallax             | wp-ng   | duParallax              | 0.2.0       |                  |         
+| wp-ng_duParallax             | wp-ng   | duParallax              | 0.2.0       |                  |
+| wp-ng_angular-nicescroll     | wp-ng   | angular-nicescroll      | 0.0.9       |                  |
+| wp-ng_dragularModule         | wp-ng   | dragularModule          | 4.4.6       |                  |
+| wp-ng_ng-slide-down          | wp-ng   | ng-slide-down           | 1.2.0       |                  |
+| wp-ng_angular.vertilize      | wp-ng   | angular.vertilize       | 1.0.1       |                  |
+| wp-ng_ngScrollSpy            | wp-ng   | ngScrollSpy             | 3.2.2       |                  |     
+| wp-ng_angular-flatpickr      | wp-ng   | angular-flatpickr       | 3.4.0       |                  |
+| wp-ng_snapscroll             | wp-ng   | snapscroll              | 1.3.1       |                  |
+| wp-ng_swipe                  | wp-ng   | swipe                   | 0.2.1       |                  | 
+| wp-ng_ismobile               | wp-ng   | ismobile                | 1.1.0       |                  |
+| wp-ng_angular-inview         | wp-ng   | angular-inview          | 1.1.0       |                  |
+| wp-ng_ngAntimoderate         | wp-ng   | ngAntimoderate          | 1.1.7       |                  |
+| wp-ng_angular-rateit         | wp-ng   | ngRateIt                | 4.0.2       |                  | 
 | wp-ng_angular-translate-loader-static-files | wp-ng_pascalprecht.translate | angular-translate-loader-static-files | 2.13.0 | |
 | wp-ng_bootstrap              | jquery  |                         | 3.3.7       |                  |
 | wp-ng_foundation             | jquery  |                         | 6.3.0       |                  |
@@ -133,7 +147,7 @@ The process to combine all style change all relative url to absolute url.
 | wp-ng_bootstrap            |             | 3.3.7          |
 | wp-ng_foundation           |             | 6.3.0          |
 | wp-ng_foundation-flex      |             | 6.3.0          |
-| wp-ng_font-awesome         |             | 4.6.3          |
+| wp-ng_font-awesome         |             | 4.7.0          |
 | wp-ng_valitycss            |             | 0.3.3          |
 | wp-ng_nya.bootstrap.select | wp-ng       | 2.1.9          |
 | wp-ng_oi.select            | wp-ng       | 0.2.21         |
@@ -154,7 +168,7 @@ The process to combine all style change all relative url to absolute url.
 | wp-ng_angular-loading-bar  | wp-ng       | 0.9.0          |
 | wp-ng_xeditable            | wp-ng       | 0.5.0          |
 | wp-ng_ngTagsInput          | wp-ng       | 3.1.1          |
-| wp-ng_pageslide-directive  | wp-ng       | 2.1.1          |
+| wp-ng_pageslide-directive  | wp-ng       | 2.2.0          |
 | wp-ng_hl.sticky            | wp-ng       | 0.3.0          |
 | wp-ng_LiveSearch           | wp-ng       | 0.2.0          |
 | wp-ng_rcMedia-dialog       | wp-ng       | 1.0.0-alpha13  |
@@ -168,6 +182,7 @@ The process to combine all style change all relative url to absolute url.
 | wp-ng_ng-sweet-alert       | wp-ng       | 1.0.11         |
 | wp-ng_angular.backtop      | wp-ng       | 0.0.5          |
 | wp-ng_angular-gridster2    | wp-ng       | 1.18.0         |   
+| wp-ng_720kb.tooltips       | wp-ng       | 1.2.2          |
 
 
 ## Hook Filters
@@ -190,7 +205,8 @@ The process to combine all style change all relative url to absolute url.
 | wp_ng_json_encode            | Encode to json format with single quote               | empty value and array         |
 | wp_ng_json_decode            | Decode from json                                      | empty value and array         |
 | wp_ng_json_encode_shortcode  | Same as wp_ng_json_encode but encode bracket (json array) to url encode | empty value and array |
-| wp_ng_get_language           | Get Default and current Language. Compatibility with WPML | empty value
+| wp_ng_get_language           | Get Default and current Language. Compatibility with WPML | empty value               |
+| wp_ng_current_language       | Get current Language. Compatibility with WPML         | empty value               |
 | wp_ng_apply_translation      | Apply translation shortcodes WPML (Add string translation) | $atts, $default, $name, $domain
 | wp_ng_create_onetime_nonce   | Create a one time nonce (for forms)                   | $empty_value, $action, $expiration |
 | wp_ng_verify_onetime_nonce   | Verify a one time nonce (for forms)                   | $empty_value, $nonce, $action, $invalidate |

@@ -1,8 +1,10 @@
 //
 // Angular Sticky Plugin
 // --------------------------------------------------
-
-.hl-sticky {
+.hl-sticky{
   z-index: 900 !important;
+}
+
+.hl-sticky:not(.is-sticky) {
   left: auto !important;
 }

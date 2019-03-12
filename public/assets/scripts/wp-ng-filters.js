@@ -54,4 +54,22 @@
     };
   }]);
 
+
+  wpNg.app.filter('shuffle', [ function ($filter) {
+
+    return function( data ) {
+
+      var m = data.length, t, i;
+
+      while( m ) {
+        i = Math.floor(Math.random() * m--);
+        t = data[m];
+        data[m] = data[i];
+        data[i] = t;
+      }
+
+      return data;
+    };
+  }]);
+
 })(angular, wpNg);

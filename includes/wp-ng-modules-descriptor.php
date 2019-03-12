@@ -17,12 +17,22 @@
 function wp_ng_modules_fields( $fields = array() )
 {
 
+  //Todo Support ui-router Post types
+  //$post_types = get_post_types( array('public'   => true,) );
+
+
   $fields['wp_ng_load_modules'] = array(
     'title' => __('Modules', 'wp-ng'),
     'sections' => array(
       'modules' => array(
         'title' => 'Load Angular Modules',
         'display'=> 'table',
+        'actions' => array(
+          array(
+            'function_to_add' => array( 'Wp_Ng_Admin_Fields_Action', 'clean_wp_cache' ),
+            'priority' => 100
+          )
+        ),
         'fields' => array(
           array(
             'name'  => 'rcRollbar',
@@ -422,15 +432,44 @@ function wp_ng_modules_fields( $fields = array() )
             ),
           ),
           array(
-            'name'  => 'ng__dot__deviceDetector',
-            'label' => 'Angular detect OS / Browser / Device',
-            'title' => 'ng.deviceDetector',
+            'name'  => 'ismobile',
+            'label' => 'is a mobile',
+            'title' => 'ismobile',
             'desc'  => wp_ng_settings_sections_desc_html(
-              'bootstrap-screensize',
-              __( 'Uses user-agent to set CSS classes or directly usable via JS.', 'wp-ng'),
+              'angular-ismobile',
+              __( 'A Angular wrapper provider-service for isMobile (https://github.com/kaimallea/isMobile).', 'wp-ng'),
               '',
-              'https://github.com/srfrnk/ng-device-detector',
-              'https://srfrnk.github.io/ng-device-detector'
+              'https://github.com/ronnyhaase/angular-ismobile',
+              ''
+            ),
+            'type'        => 'sub_fields',
+            'sub_fields' => array(
+              array(
+                'name'        => 'active',
+                'label'       => 'Active',
+                'default'     => 'off',
+                'type'        => 'checkbox',
+              ),
+              array(
+                'name'        => 'conditions',
+                'label'       => 'Conditions',
+                'desc'        => __( 'Load on conditions.', 'wp-ng'),
+                'default'     => 'off',
+                'type'        => 'checkbox',
+                'conditions'  => true,
+              ),
+            ),
+          ),
+          array(
+            'name'  => 'angular-inview',
+            'label' => 'Visible viewport',
+            'title' => 'angular-inview',
+            'desc'  => wp_ng_settings_sections_desc_html(
+              'angular-inview',
+              __( 'Check if a DOM element is or not in the browser current visible viewport.', 'wp-ng'),
+              '',
+              'https://github.com/thenikso/angular-inview',
+              ''
             ),
             'type'        => 'sub_fields',
             'sub_fields' => array(
@@ -634,6 +673,36 @@ function wp_ng_modules_fields( $fields = array() )
                 'desc'        => __('Enable prevent if is not base url', 'wp-ng'),
                 'default'     => 'off',
                 'type'        => 'checkbox',
+              ),
+              array(
+                'name'        => 'wrap',
+                'label'       => __('Wrap Inner Element (selector)', 'wp-ng'),
+                'default'     => '',
+                'placeholder' => __('Selector', 'wp-ng') . ' ( #main )',
+                'type'        => 'text',
+              ),
+              array(
+                'name'        => 'wrap_exclude',
+                'label'       => __('Exclude Wrap Inner Element (selector)', 'wp-ng'),
+                'default'     => '',
+                'placeholder' => __('Selector', 'wp-ng'),
+                'type'        => 'text',
+              ),
+              array(
+                'name'        => 'base_page_id',
+                'label'       => __( 'Enter the id of the base page', 'wp-ng'),
+                'desc'        => __( 'Enter the id of the base page', 'wp-ng'),
+                'type'        => 'number',
+                'default'     => 0,
+              ),
+              array(
+                'name'        => 'routed_post_types',
+                'label'       => __( 'Enable Routed Post Type', 'wp-ng'),
+                'desc'        => __( 'Enable Routed Post Type', 'wp-ng'),
+                'type'        => 'multiselect',
+                'default'     => '',
+                //'options'     => wp_parse_args($post_types, array()),
+                'options'     => array('page' => 'Page')
               ),
               array(
                 'name'        => 'conditions',
@@ -842,6 +911,53 @@ function wp_ng_modules_fields( $fields = array() )
                 'type'        => 'checkbox',
               ),
               array(
+                'name'        => 'scroll_by_id',
+                'label'       => 'Scroll by element ID',
+                'desc'        => __('Enable Scroll by element ID', 'wp-ng'),
+                'default'     => 'off',
+                'type'        => 'checkbox',
+              ),
+              array(
+                'name'        => 'duration',
+                'placeholder' => __('Duration of scroll', 'wp-ng'),
+                'default'     => '800',
+                'type'        => 'number',
+              ),
+              array(
+                'name'        => 'offset',
+                'placeholder' => __('Offset end scroll', 'wp-ng'),
+                'default'     => '0',
+                'type'        => 'number',
+              ),
+              array(
+                'name'        => 'easing',
+                'label'       => 'Easing animation',
+                'desc'        => __( 'Easing animation.', 'wp-ng'),
+                'type'        => 'select',
+                'default'     => 'easeOutQuart',
+                'options'     => array(
+                  'easeInQuad' => 'easeInQuad',
+                  'easeOutQuad' => 'easeOutQuad',
+                  'easeInOutQuad' => 'easeInOutQuad',
+                  'easeInCubic' => 'easeInCubic',
+                  'easeOutCubic' => 'easeOutCubic',
+                  'easeInOutCubic' => 'easeInOutCubic',
+                  'easeInQuart' => 'easeInQuart',
+                  'easeOutQuart' => 'easeOutQuart',
+                  'easeInOutQuart' => 'easeInOutQuart',
+                  'easeInQuint' => 'easeInQuint',
+                  'easeOutQuint' => 'easeOutQuint',
+                  'easeInOutQuint' => 'easeInOutQuint',
+                ),
+              ),
+              array(
+                'name'        => 'offset_selector',
+                'label'       => __('Offset selector', 'wp-ng'),
+                'default'     => '.hl-sticky',
+                'placeholder' => __('Selector', 'wp-ng') . ' ( .hl-sticky )',
+                'type'        => 'text',
+              ),
+              array(
                 'name'        => 'conditions',
                 'label'       => 'Conditions',
                 'desc'        => __( 'Load on conditions.', 'wp-ng'),
@@ -1008,6 +1124,12 @@ function wp_ng_modules_fields( $fields = array() )
                 'name'        => 'style_theme',
                 'label'       => 'Style Theme',
                 'desc'        => __( 'Load Theme style.', 'wp-ng'),
+                'type'        => 'checkbox',
+              ),
+              array(
+                'name'        => 'admin_gallery',
+                'label'       => 'Add admin gallery in create gallery',
+                'desc'        => __( 'Add the admin media gallery in create gallery.', 'wp-ng'),
                 'type'        => 'checkbox',
               ),
               array(
@@ -1465,6 +1587,35 @@ function wp_ng_modules_fields( $fields = array() )
             ),
           ),
           array(
+            'name'  => 'checklist-model',
+            'label' => 'Angular Checkbox List',
+            'title' => 'checklist-model',
+            'desc'  => wp_ng_settings_sections_desc_html(
+              'checklist-model',
+              __( 'AngularJS directive for list of checkboxes.', 'wp-ng'),
+              '',
+              'https://github.com/vitalets/checklist-model',
+              'http://vitalets.github.io/checklist-model/'
+            ),
+            'type'        => 'sub_fields',
+            'sub_fields' => array(
+              array(
+                'name'        => 'active',
+                'label'       => 'Active',
+                'default'     => 'off',
+                'type'        => 'checkbox',
+              ),
+              array(
+                'name'        => 'conditions',
+                'label'       => 'Conditions',
+                'desc'        => __( 'Load on conditions.', 'wp-ng'),
+                'default'     => 'off',
+                'type'        => 'checkbox',
+                'conditions'  => true,
+              ),
+            ),
+          ),
+          array(
             'name'  => 'ui__dot__grid',
             'label' => 'Angular UI Grid',
             'title' => 'ui.grid',
@@ -1531,9 +1682,38 @@ function wp_ng_modules_fields( $fields = array() )
                 'type'        => 'checkbox',
               ),
               array(
-                'name'        => 'style-bs-2-zf',
-                'label'       => 'Style Bootstrap to Foundation',
-                'desc'        => __( 'Load style foundation.', 'wp-ng'),
+                'name'        => 'conditions',
+                'label'       => 'Conditions',
+                'desc'        => __( 'Load on conditions.', 'wp-ng'),
+                'default'     => 'off',
+                'type'        => 'checkbox',
+                'conditions'  => true,
+              ),
+            ),
+          ),
+          array(
+            'name'  => 'ui__dot__select__dot__zf6',
+            'label' => 'Angular UI-SELECT Zurb Foundation 6',
+            'title' => 'ui.select.zf6',
+            'desc'  => wp_ng_settings_sections_desc_html(
+              'ui-select-zf6',
+              __( 'ui-select Foundation 6 ui-select Zurb Foundation 6. CSS Foundation 6.', 'wp-ng'),
+              '',
+              'https://github.com/RedCastor/ui-select-zf6',
+              'https://redcastor.github.io/ui-select-zf6/demo/'
+            ),
+            'type'        => 'sub_fields',
+            'sub_fields' => array(
+              array(
+                'name'        => 'active',
+                'label'       => 'Active',
+                'default'     => 'off',
+                'type'        => 'checkbox',
+              ),
+              array(
+                'name'        => 'style',
+                'label'       => 'Style',
+                'desc'        => __( 'Load style.', 'wp-ng'),
                 'type'        => 'checkbox',
               ),
               array(
@@ -1572,6 +1752,41 @@ function wp_ng_modules_fields( $fields = array() )
                 'type'        => 'checkbox',
               ),
               array(
+                'name'        => 'admin_gallery',
+                'label'       => 'Add admin gallery in create gallery',
+                'desc'        => __( 'Add the admin media gallery in create gallery.', 'wp-ng'),
+                'type'        => 'checkbox',
+              ),
+              array(
+                'name'        => 'conditions',
+                'label'       => 'Conditions',
+                'desc'        => __( 'Load on conditions.', 'wp-ng'),
+                'default'     => 'off',
+                'type'        => 'checkbox',
+                'conditions'  => true,
+              ),
+            ),
+          ),
+          array(
+            'name'  => 'ui__dot__event',
+            'label' => 'Angular UI Event',
+            'title' => 'ui.event',
+            'desc'  => wp_ng_settings_sections_desc_html(
+              'angular-ui-event',
+              __( 'Bind a callback to any event not natively supported by Angular. For Blurs, Focus, Double-Clicks or any other event you may choose that isn\'t built-in.', 'wp-ng'),
+              '',
+              'https://github.com/angular-ui/ui-event',
+              'https://htmlpreview.github.io/?https://github.com/angular-ui/ui-event/master/demo/index.html'
+            ),
+            'type'        => 'sub_fields',
+            'sub_fields' => array(
+              array(
+                'name'        => 'active',
+                'label'       => 'Active',
+                'default'     => 'off',
+                'type'        => 'checkbox',
+              ),
+              array(
                 'name'        => 'conditions',
                 'label'       => 'Conditions',
                 'desc'        => __( 'Load on conditions.', 'wp-ng'),
@@ -1597,6 +1812,13 @@ function wp_ng_modules_fields( $fields = array() )
               array(
                 'name'        => 'active',
                 'label'       => 'Active',
+                'default'     => 'off',
+                'type'        => 'checkbox',
+              ),
+              array(
+                'name'        => 'wp_images',
+                'label' 	  => 'wp images',
+                'desc'        => __( 'Lazyload wp images (You must regenerate thumbnails for new image size micro)', 'wp-ng'),
                 'default'     => 'off',
                 'type'        => 'checkbox',
               ),
@@ -1736,6 +1958,41 @@ function wp_ng_modules_fields( $fields = array() )
                 'placeholder' => 'Twitter Username',
                 'default'     => '',
                 'type'        => 'text',
+              ),
+              array(
+                'name'        => 'conditions',
+                'label'       => 'Conditions',
+                'desc'        => __( 'Load on conditions.', 'wp-ng'),
+                'default'     => 'off',
+                'type'        => 'checkbox',
+                'conditions'  => true,
+              ),
+            ),
+          ),
+          array(
+            'name'  => '720kb__dot__tooltips',
+            'label' => 'Angular Tooltips',
+            'title' => '720kb.tooltips',
+            'desc'  => wp_ng_settings_sections_desc_html(
+              'angular-tooltips',
+              __( 'Angular Tooltips is an AngularJS directive that generates a tooltip on your element.', 'wp-ng'),
+              '',
+              'https://github.com/720kb/angular-tooltips',
+              'https://720kb.github.io/angular-tooltips/'
+            ),
+            'type'        => 'sub_fields',
+            'sub_fields' => array(
+              array(
+                'name'        => 'active',
+                'label'       => 'Active',
+                'default'     => 'off',
+                'type'        => 'checkbox',
+              ),
+              array(
+                'name'        => 'style',
+                'label'       => 'Style',
+                'desc'        => __( 'Load style.', 'wp-ng'),
+                'type'        => 'checkbox',
               ),
               array(
                 'name'        => 'conditions',
@@ -2098,7 +2355,7 @@ function wp_ng_modules_fields( $fields = array() )
           ),
           array(
             'name'  => 'angularLazyImg',
-            'label' => 'Angular Lazy Imgage',
+            'label' => 'Angular Lazy Image',
             'title' => 'angularLazyImg',
             'desc'  => wp_ng_settings_sections_desc_html(
               'angular-lazy-img',
@@ -2165,10 +2422,10 @@ function wp_ng_modules_fields( $fields = array() )
             'label' => 'Videogular',
             'title' => 'com.2fdevs.videogular',
             'desc'  => wp_ng_settings_sections_desc_html(
-              'videogular',
+              'rc-videogular',
               __( 'Videogular is an HTML5 video player for AngularJS. Videogular is a wrapper over the HTML5 video tag, so you just could add whatever you want. This provides a very powerful, but simple to use solution, for everybody.', 'wp-ng'),
               '',
-              'http://www.videogular.com/',
+              'https://github.com/RedCastor/rc-videogular',
               'http://www.videogular.com/examples/'
             ),
             'type'        => 'sub_fields',
@@ -2224,15 +2481,15 @@ function wp_ng_modules_fields( $fields = array() )
             ),
           ),
           array(
-            'name'  => 'info__dot__vietnamcode__dot__nampnq__dot__videogular__dot__plugins__dot__youtube',
+            'name'  => 'rc-videogular__dot__plugins__dot__youtube',
             'label' => 'Videogular Youtube',
-            'title' => 'info.vietnamcode.nampnq.videogular.plugins.youtube',
+            'title' => 'rc-videogular.plugins.youtube',
             'desc'  => wp_ng_settings_sections_desc_html(
-              'bower-videogular-youtube',
+              'rc-videogular',
               __( 'Videogular youtube plugin.', 'wp-ng'),
               '',
-              'https://github.com/NamPNQ/bower-videogular-youtube',
-              'http://codepen.io/2fdevs/pen/qOBRpO'
+              'https://github.com/RedCastor/rc-videogular',
+              ''
             ),
             'type'        => 'sub_fields',
             'sub_fields' => array(
@@ -2253,14 +2510,14 @@ function wp_ng_modules_fields( $fields = array() )
             ),
           ),
           array(
-            'name'  => 'videogular__dot__plugins__dot__vimeo',
+            'name'  => 'rc-videogular__dot__plugins__dot__vimeo',
             'label' => 'Videogular Vimeo',
-            'title' => 'videogular.plugins.vimeo',
+            'title' => 'rc-videogular.plugins.vimeo',
             'desc'  => wp_ng_settings_sections_desc_html(
-              'videogular-vimeo',
+              'rc-videogular',
               __( 'Videogular vimeo plugin.', 'wp-ng'),
               '',
-              'https://github.com/bagabont/videogular-vimeo',
+              'https://github.com/RedCastor/rc-videogular',
               ''
             ),
             'type'        => 'sub_fields',
@@ -2424,6 +2681,12 @@ function wp_ng_modules_fields( $fields = array() )
                 'type'        => 'checkbox',
               ),
               array(
+                'name'        => 'style',
+                'label'       => 'Style',
+                'desc'        => __( 'Load style.', 'wp-ng'),
+                'type'        => 'checkbox',
+              ),
+              array(
                 'name'      => 'svg_icons',
                 'type'      => 'file',
                 'options'   => array(
@@ -2581,6 +2844,7 @@ function wp_ng_modules_fields( $fields = array() )
                   'default'   => 'Default',
                   'compact'   => 'Compact',
                   'slider'    => 'Slider',
+                  'sliderfull'    => 'Slider Full',
                   'carousel'  => 'Carousel',
                   'tiles'     => 'Tiles',
                   'tilesgrid' => 'Tiles Grid',
@@ -2618,6 +2882,34 @@ function wp_ng_modules_fields( $fields = array() )
               '',
               'https://github.com/RedCastor/rc-galleria',
               ''
+            ),
+            'type'        => 'sub_fields',
+            'sub_fields' => array(
+              array(
+                'name'        => 'active',
+                'label'       => 'Active',
+                'default'     => 'off',
+                'type'        => 'checkbox',
+              ),
+              array(
+                'name'        => 'conditions',
+                'label'       => 'Conditions',
+                'desc'        => __( 'Load on conditions.', 'wp-ng'),
+                'default'     => 'off',
+                'type'        => 'checkbox',
+                'conditions'  => true,
+              ),
+            ),
+          ),
+          array(
+            'name'  => 'rcHttp',
+            'label' => 'Angular Http',
+            'title' => 'rcHttp',
+            'desc'  => wp_ng_settings_sections_desc_html(
+              'rc-http',
+                __( 'Angular Directive http request', 'wp-ng'),
+              '',
+              'https://github.com/RedCastor/rc-http'
             ),
             'type'        => 'sub_fields',
             'sub_fields' => array(
@@ -3031,6 +3323,12 @@ function wp_ng_modules_fields( $fields = array() )
                 'type'        => 'checkbox',
               ),
               array(
+                'name'        => 'style_valitycss',
+                'label'       => 'Style ValityCss',
+                'desc'        => __( 'Load style.', 'wp-ng') . ' ValityCss',
+                'type'        => 'checkbox',
+              ),
+              array(
                 'name'        => 'conditions',
                 'label'       => 'Conditions',
                 'desc'        => __( 'Load on conditions.', 'wp-ng'),
@@ -3063,6 +3361,12 @@ function wp_ng_modules_fields( $fields = array() )
                 'name'        => 'style',
                 'label'       => 'Style',
                 'desc'        => __( 'Load style.', 'wp-ng'),
+                'type'        => 'checkbox',
+              ),
+              array(
+                'name'        => 'style_valitycss',
+                'label'       => 'Style ValityCss',
+                'desc'        => __( 'Load style.', 'wp-ng') . ' ValityCss',
                 'type'        => 'checkbox',
               ),
               array(
@@ -3101,6 +3405,12 @@ function wp_ng_modules_fields( $fields = array() )
                 'type'        => 'checkbox',
               ),
               array(
+                'name'        => 'style_valitycss',
+                'label'       => 'Style ValityCss',
+                'desc'        => __( 'Load style.', 'wp-ng') . ' ValityCss',
+                'type'        => 'checkbox',
+              ),
+              array(
                 'name'        => 'conditions',
                 'label'       => 'Conditions',
                 'desc'        => __( 'Load on conditions.', 'wp-ng'),
@@ -3136,6 +3446,12 @@ function wp_ng_modules_fields( $fields = array() )
                 'type'        => 'checkbox',
               ),
               array(
+                'name'        => 'style_valitycss',
+                'label'       => 'Style ValityCss',
+                'desc'        => __( 'Load style.', 'wp-ng') . ' ValityCss',
+                'type'        => 'checkbox',
+              ),
+              array(
                 'name'        => 'conditions',
                 'label'       => 'Conditions',
                 'desc'        => __( 'Load on conditions.', 'wp-ng'),
@@ -3168,6 +3484,12 @@ function wp_ng_modules_fields( $fields = array() )
                 'name'        => 'style',
                 'label'       => 'Style',
                 'desc'        => __( 'Load style.', 'wp-ng'),
+                'type'        => 'checkbox',
+              ),
+              array(
+                'name'        => 'style_valitycss',
+                'label'       => 'Style ValityCss',
+                'desc'        => __( 'Load style.', 'wp-ng') . ' ValityCss',
                 'type'        => 'checkbox',
               ),
               array(
@@ -3250,6 +3572,12 @@ function wp_ng_modules_fields( $fields = array() )
                 'name'        => 'style_theme-green',
                 'label'       => 'Style Theme Green',
                 'desc'        => __( 'Load Theme Green style.', 'wp-ng'),
+                'type'        => 'checkbox',
+              ),
+              array(
+                'name'        => 'admin_gallery',
+                'label'       => 'Add admin gallery in create gallery',
+                'desc'        => __( 'Add the admin media gallery in create gallery.', 'wp-ng'),
                 'type'        => 'checkbox',
               ),
               array(
@@ -3549,7 +3877,7 @@ function wp_ng_modules_fields( $fields = array() )
           ),
           array(
             'name'  => 'angular__dot__vertilize',
-            'label' => 'Angular Slide up and down',
+            'label' => 'Angular Vertically Equalize',
             'title' => 'angular.vertilize',
             'desc'  => wp_ng_settings_sections_desc_html(
               'angular-vertilize',
@@ -3557,6 +3885,35 @@ function wp_ng_modules_fields( $fields = array() )
               '',
               'https://github.com/Sixthdim/angular-vertilize',
               'http://sixthdim.github.io/angular-vertilize/'
+            ),
+            'type'        => 'sub_fields',
+            'sub_fields' => array(
+              array(
+                'name'        => 'active',
+                'label'       => 'Active',
+                'default'     => 'off',
+                'type'        => 'checkbox',
+              ),
+              array(
+                'name'        => 'conditions',
+                'label'       => 'Conditions',
+                'desc'        => __( 'Load on conditions.', 'wp-ng'),
+                'default'     => 'off',
+                'type'        => 'checkbox',
+                'conditions'  => true,
+              ),
+            ),
+          ),
+          array(
+            'name'  => 'swipe',
+            'label' => 'Angular Swipe Gesture',
+            'title' => 'swipe',
+            'desc'  => wp_ng_settings_sections_desc_html(
+              'angular-swipe',
+              __( 'Simple vertical/horizontal swipe gesture directives and a swipe service for angular js >= 1.6. Small extension of the existing angular $swipe service.', 'wp-ng'),
+              '',
+              'https://github.com/adzialocha/angular-swipe',
+              ''
             ),
             'type'        => 'sub_fields',
             'sub_fields' => array(
@@ -3606,6 +3963,35 @@ function wp_ng_modules_fields( $fields = array() )
             ),
           ),
           array(
+            'name'  => 'snapscroll',
+            'label' => 'Angular Snap Scroll',
+            'title' => 'snapscroll',
+            'desc'  => wp_ng_settings_sections_desc_html(
+              'ng-ScrollSpy.js',
+              __( 'angular-snapscroll adds vertical scroll-and-snap functionality to angular.', 'wp-ng'),
+              '',
+              'https://github.com/joelmukuthu/angular-snapscroll',
+              'http://joelmukuthu.github.io/angular-snapscroll/#0'
+            ),
+            'type'        => 'sub_fields',
+            'sub_fields' => array(
+              array(
+                'name'        => 'active',
+                'label'       => 'Active',
+                'default'     => 'off',
+                'type'        => 'checkbox',
+              ),
+              array(
+                'name'        => 'conditions',
+                'label'       => 'Conditions',
+                'desc'        => __( 'Load on conditions.', 'wp-ng'),
+                'default'     => 'off',
+                'type'        => 'checkbox',
+                'conditions'  => true,
+              ),
+            ),
+          ),
+          array(
             'name'  => 'angular-flatpickr',
             'label' => 'Angular Flat Pickr',
             'title' => 'angular-flatpickr',
@@ -3634,6 +4020,70 @@ function wp_ng_modules_fields( $fields = array() )
                   ''                => __('No Style', 'wp-ng'),
                   'flatpickr'      => 'Style Flatpickr',
                 ),
+              ),
+              array(
+                'name'        => 'conditions',
+                'label'       => 'Conditions',
+                'desc'        => __( 'Load on conditions.', 'wp-ng'),
+                'default'     => 'off',
+                'type'        => 'checkbox',
+                'conditions'  => true,
+              ),
+            ),
+          ),
+          array(
+            'name'  => 'ngRateIt',
+            'label' => 'Angular RateIt',
+            'title' => 'ngRateIt',
+            'desc'  => wp_ng_settings_sections_desc_html(
+              'angular-rateit',
+              __( 'This directive was inspired by the jQuery (star)rating plugin RateIt. However this package will work without jQuery and is very light weight.', 'wp-ng'),
+              '',
+              'https://github.com/akempes/angular-rateit',
+              'http://akempes.github.io/angular-rateit/'
+            ),
+            'type'        => 'sub_fields',
+            'sub_fields' => array(
+              array(
+                'name'        => 'active',
+                'label'       => 'Active',
+                'default'     => 'off',
+                'type'        => 'checkbox',
+              ),
+              array(
+                'name'        => 'style',
+                'label'       => 'Style',
+                'desc'        => __( 'Load style.', 'wp-ng'),
+                'type'        => 'checkbox',
+              ),
+              array(
+                'name'        => 'conditions',
+                'label'       => 'Conditions',
+                'desc'        => __( 'Load on conditions.', 'wp-ng'),
+                'default'     => 'off',
+                'type'        => 'checkbox',
+                'conditions'  => true,
+              ),
+            ),
+          ),
+          array(
+            'name'  => 'oc__dot__lazyLoad',
+            'label' => 'Angular Lazy Load',
+            'title' => 'oc.lazyLoad',
+            'desc'  => wp_ng_settings_sections_desc_html(
+              'oclazyload',
+              __( 'Lazy load modules & components in AngularJS.', 'wp-ng'),
+              '',
+              'https://oclazyload.readme.io/docs/getting-started',
+              ''
+            ),
+            'type'        => 'sub_fields',
+            'sub_fields' => array(
+              array(
+                'name'        => 'active',
+                'label'       => 'Active',
+                'default'     => 'off',
+                'type'        => 'checkbox',
               ),
               array(
                 'name'        => 'conditions',

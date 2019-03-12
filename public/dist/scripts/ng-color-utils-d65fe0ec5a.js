@@ -1,0 +1,1 @@
+!function(r){"use strict";window.angular.module("ngColorUtils",[]).factory("hex2rgba",[function(){return{get:function(r,t){var a=/^#([\da-fA-F]{2})([\da-fA-F]{2})([\da-fA-F]{2})$/.exec(r);return"rgba("+parseInt(a[1],16)+","+parseInt(a[2],16)+","+parseInt(a[3],16)+","+parseFloat(t).toFixed(1)+")"}}}])}();
